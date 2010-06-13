@@ -1,0 +1,15 @@
+Revision history for Ubic
+
+1.04    Tue May 25, 2010
+        - important bugfix: service locks fixed!
+        - Ubic::Daemon: join all bin args if bin is arrayref.
+        - Remove old configs from old yandex-ubic package.
+
+1.02    Tue May 4, 2010
+        Remove old configs from old yandex-ubic package.
+
+1.01    Thu Apr 29, 2010
+        Just fixing debian dependency issues.
+
+1.00    Wed Apr 28, 2010
+        First opensource release.

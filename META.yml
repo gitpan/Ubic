@@ -1,0 +1,78 @@
+---
+abstract: 'frontend to all ubic services'
+author:
+  - 'Vyacheslav Matjukhin <mmcleric@yandex-team.ru>'
+build_requires:
+  Test::Exception: 0
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3607'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Ubic
+provides:
+  Ubic:
+    file: lib/Ubic.pm
+    version: 1.04
+  Ubic::AccessGuard:
+    file: lib/Ubic/AccessGuard.pm
+  Ubic::Catalog:
+    file: lib/Ubic/Catalog.pm
+  Ubic::Catalog::Dir:
+    file: lib/Ubic/Catalog/Dir.pm
+  Ubic::Cmd:
+    file: lib/Ubic/Cmd.pm
+  Ubic::Cmd::Results:
+    file: lib/Ubic/Cmd/Results.pm
+  Ubic::Daemon:
+    file: lib/Ubic/Daemon.pm
+  Ubic::Lockf:
+    file: lib/Ubic/Lockf.pm
+  Ubic::Lockf::Alarm:
+    file: lib/Ubic/Lockf.pm
+  Ubic::Logger:
+    file: lib/Ubic/Logger.pm
+  Ubic::Multiservice:
+    file: lib/Ubic/Multiservice.pm
+  Ubic::Multiservice::Dir:
+    file: lib/Ubic/Multiservice/Dir.pm
+  Ubic::Multiservice::Simple:
+    file: lib/Ubic/Multiservice/Simple.pm
+  Ubic::Persistent:
+    file: lib/Ubic/Persistent.pm
+  Ubic::Ping:
+    file: lib/Ubic/Ping.pm
+  Ubic::PortMap:
+    file: lib/Ubic/PortMap.pm
+  Ubic::Result:
+    file: lib/Ubic/Result.pm
+  Ubic::Result::Class:
+    file: lib/Ubic/Result/Class.pm
+  Ubic::Run:
+    file: lib/Ubic/Run.pm
+  Ubic::Service:
+    file: lib/Ubic/Service.pm
+  Ubic::Service::Common:
+    file: lib/Ubic/Service/Common.pm
+  Ubic::Service::SimpleDaemon:
+    file: lib/Ubic/Service/SimpleDaemon.pm
+  Ubic::Service::Skeleton:
+    file: lib/Ubic/Service/Skeleton.pm
+  Ubic::Service::Utils:
+    file: lib/Ubic/Service/Utils.pm
+  Ubic::ServiceLock:
+    file: lib/Ubic.pm
+requires:
+  Class::Accessor: 0
+  HTTP::Server::Simple: 0
+  LWP::UserAgent: 0
+  List::MoreUtils: 0
+  Params::Validate: 0
+  Perl6::Slurp: 0
+  Try::Tiny: 0
+resources:
+  license: http://dev.perl.org/licenses/
+version: 1.04

@@ -1,0 +1,65 @@
+#!/usr/bin/perl
+# Copyright (c) 2009-2010 Yandex.ru
+
+use strict;
+use warnings;
+
+=head1 NAME
+
+ubic - simple viewer of ubic services
+
+=head1 SYNOPSIS
+
+ ubic [-f] COMMAND [SERVICE]...
+
+ Supported commands:
+    status
+    start
+    stop
+    restart
+    reload
+    force-reload
+    cached-status
+    try-restart
+    ...and any service-specific commands
+
+=cut
+
+use Getopt::Long 2.33;
+use Pod::Usage;
+
+use Ubic;
+use Ubic::Cmd;
+
+return 1 if caller();
+
+my $force;
+GetOptions(
+    'f|force' => \$force,
+) or pod2usage(2);
+
+unless (@ARGV) {
+    pod2usage(2);
+}
+
+my $command = shift @ARGV;
+if (@ARGV) {
+    Ubic::Cmd->run({
+        name => [@ARGV],
+        command => $command,
+        force => $force,
+    });
+}
+else {
+    Ubic::Cmd->run({
+        name => undef,
+        command => $command,
+        force => $force,
+    });
+}
+
+=head1 AUTHOR
+
+Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+
+=cut
