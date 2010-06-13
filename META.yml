@@ -16,7 +16,7 @@ name: Ubic
 provides:
   Ubic:
     file: lib/Ubic.pm
-    version: 1.04
+    version: 1.05
   Ubic::AccessGuard:
     file: lib/Ubic/AccessGuard.pm
   Ubic::Catalog:
@@ -75,4 +75,4 @@ requires:
   Try::Tiny: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.04
+version: 1.05
