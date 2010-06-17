@@ -1,4 +1,7 @@
 package Ubic::Cmd::Results;
+BEGIN {
+  $Ubic::Cmd::Results::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -11,6 +14,10 @@ use Params::Validate qw(:all);
 =head1 NAME
 
 Ubic::Cmd::Results - console results set
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -155,4 +162,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

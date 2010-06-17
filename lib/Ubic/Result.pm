@@ -1,4 +1,7 @@
 package Ubic::Result;
+BEGIN {
+  $Ubic::Result::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Result - common return value for many ubic interfaces
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -59,4 +66,3 @@ L<Ubic::Result::Class> - result instance.
 =cut
 
 1;
-

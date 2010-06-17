@@ -1,4 +1,7 @@
 package Ubic::Service;
+BEGIN {
+  $Ubic::Service::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Service - interface and base class for any ubic service
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -213,4 +220,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

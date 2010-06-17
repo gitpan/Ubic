@@ -8,6 +8,10 @@ use warnings;
 
 ubic - simple viewer of ubic services
 
+=head1 VERSION
+
+version 1.06
+
 =head1 SYNOPSIS
 
  ubic [-f] COMMAND [SERVICE]...

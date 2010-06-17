@@ -1,4 +1,7 @@
 package Ubic::Logger;
+BEGIN {
+  $Ubic::Logger::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Logger - very simple logging functions
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -60,4 +67,3 @@ sub ERROR {
 =cut
 
 1;
-

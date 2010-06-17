@@ -1,4 +1,7 @@
 package Ubic::Catalog;
+BEGIN {
+  $Ubic::Catalog::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -9,7 +12,10 @@ use base qw(Ubic::Multiservice);
 
 Ubic::Catalog - deprecated alternate name of Ubic::Multiservice
 
+=head1 VERSION
+
+version 1.06
+
 =cut
 
 1;
-

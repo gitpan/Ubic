@@ -1,4 +1,7 @@
 package Ubic::Multiservice::Dir;
+BEGIN {
+  $Ubic::Multiservice::Dir::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Multiservice::Dir - multiservice which uses directory with configs to instantiate services
+
+=head1 VERSION
+
+version 1.06
 
 =cut
 
@@ -115,4 +122,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

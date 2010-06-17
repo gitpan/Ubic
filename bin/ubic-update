@@ -7,6 +7,10 @@ use warnings;
 
 ubic-update - update ubic metadata
 
+=head1 VERSION
+
+version 1.06
+
 =head1 SYNOPSIS
 
     ubic-date [--help]
@@ -30,4 +34,3 @@ pod2usage(2) if @ARGV;
 use Ubic::PortMap;
 
 Ubic::PortMap::update();
-

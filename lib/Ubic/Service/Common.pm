@@ -1,4 +1,7 @@
 package Ubic::Service::Common;
+BEGIN {
+  $Ubic::Service::Common::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Service::Common - common way to construct new service by specifying several callbacks
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -148,4 +155,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

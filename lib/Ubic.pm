@@ -1,13 +1,20 @@
 package Ubic;
+BEGIN {
+  $Ubic::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
 
-our $VERSION = '1.05';
+# ABSTRACT: Toolkit for describing services on Linux in perl
 
 =head1 NAME
 
 Ubic - frontend to all ubic services
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -576,6 +583,9 @@ sub lock($$) {
 
 {
     package Ubic::ServiceLock;
+BEGIN {
+  $Ubic::ServiceLock::VERSION = '1.06';
+}
     use strict;
     use warnings;
     use Ubic::Lockf;
@@ -714,4 +724,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

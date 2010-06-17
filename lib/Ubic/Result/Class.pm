@@ -1,4 +1,7 @@
 package Ubic::Result::Class;
+BEGIN {
+  $Ubic::Result::Class::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Result::Class - ubic result object
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 

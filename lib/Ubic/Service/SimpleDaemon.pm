@@ -1,4 +1,7 @@
 package Ubic::Service::SimpleDaemon;
+BEGIN {
+  $Ubic::Service::SimpleDaemon::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Service::SimpleDaemon - variant of service when your service is simple daemonized binary
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -137,4 +144,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

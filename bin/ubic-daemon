@@ -8,6 +8,10 @@ use warnings;
 
 ubic-daemon - daemononize any binary
 
+=head1 VERSION
+
+version 1.06
+
 =head1 SYNOPSIS
 
     ubic-daemon --name=sleep 'sleep 1000'
@@ -46,4 +50,3 @@ L<Ubic::Daemon>
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
 =cut
-

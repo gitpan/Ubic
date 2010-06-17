@@ -1,4 +1,7 @@
 package Ubic::Service::Skeleton;
+BEGIN {
+  $Ubic::Service::Skeleton::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Service::Skeleton - skeleton of any service with common start/stop logic
+
+=head1 VERSION
+
+version 1.06
 
 =cut
 
@@ -222,4 +229,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

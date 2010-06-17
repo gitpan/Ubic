@@ -1,4 +1,7 @@
 package Ubic::Multiservice::Simple;
+BEGIN {
+  $Ubic::Multiservice::Simple::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Multiservice::Simple - simplest multiservice, configured in constructor
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -77,4 +84,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

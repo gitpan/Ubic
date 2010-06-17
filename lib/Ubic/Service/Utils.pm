@@ -1,4 +1,7 @@
 package Ubic::Service::Utils;
+BEGIN {
+  $Ubic::Service::Utils::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Service::Utils - helpers for custom service authors
+
+=head1 VERSION
+
+version 1.06
 
 =head1 FUNCTIONS
 
@@ -91,4 +98,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

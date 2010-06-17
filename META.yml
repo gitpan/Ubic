@@ -1,78 +1,43 @@
 ---
-abstract: 'frontend to all ubic services'
+abstract: 'Toolkit for describing services on Linux in perl'
 author:
   - 'Vyacheslav Matjukhin <mmcleric@yandex-team.ru>'
 build_requires:
+  Config: 0
+  Cwd: 0
+  File::Find: 0
+  LWP::UserAgent: 0
   Test::Exception: 0
   Test::More: 0
 configure_requires:
-  Module::Build: 0.36
-generated_by: 'Module::Build version 0.3607'
+  ExtUtils::MakeMaker: 6.31
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.101612, CPAN::Meta::Converter version 2.101591'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Ubic
-provides:
-  Ubic:
-    file: lib/Ubic.pm
-    version: 1.05
-  Ubic::AccessGuard:
-    file: lib/Ubic/AccessGuard.pm
-  Ubic::Catalog:
-    file: lib/Ubic/Catalog.pm
-  Ubic::Catalog::Dir:
-    file: lib/Ubic/Catalog/Dir.pm
-  Ubic::Cmd:
-    file: lib/Ubic/Cmd.pm
-  Ubic::Cmd::Results:
-    file: lib/Ubic/Cmd/Results.pm
-  Ubic::Daemon:
-    file: lib/Ubic/Daemon.pm
-  Ubic::Lockf:
-    file: lib/Ubic/Lockf.pm
-  Ubic::Lockf::Alarm:
-    file: lib/Ubic/Lockf.pm
-  Ubic::Logger:
-    file: lib/Ubic/Logger.pm
-  Ubic::Multiservice:
-    file: lib/Ubic/Multiservice.pm
-  Ubic::Multiservice::Dir:
-    file: lib/Ubic/Multiservice/Dir.pm
-  Ubic::Multiservice::Simple:
-    file: lib/Ubic/Multiservice/Simple.pm
-  Ubic::Persistent:
-    file: lib/Ubic/Persistent.pm
-  Ubic::Ping:
-    file: lib/Ubic/Ping.pm
-  Ubic::PortMap:
-    file: lib/Ubic/PortMap.pm
-  Ubic::Result:
-    file: lib/Ubic/Result.pm
-  Ubic::Result::Class:
-    file: lib/Ubic/Result/Class.pm
-  Ubic::Run:
-    file: lib/Ubic/Run.pm
-  Ubic::Service:
-    file: lib/Ubic/Service.pm
-  Ubic::Service::Common:
-    file: lib/Ubic/Service/Common.pm
-  Ubic::Service::SimpleDaemon:
-    file: lib/Ubic/Service/SimpleDaemon.pm
-  Ubic::Service::Skeleton:
-    file: lib/Ubic/Service/Skeleton.pm
-  Ubic::Service::Utils:
-    file: lib/Ubic/Service/Utils.pm
-  Ubic::ServiceLock:
-    file: lib/Ubic.pm
 requires:
-  Class::Accessor: 0
-  HTTP::Server::Simple: 0
-  LWP::UserAgent: 0
+  Carp: 0
+  Class::Accessor::Fast: 0
+  Data::Dumper: 0
+  Exporter: 0
+  Fcntl: 0
+  File::Basename: 0
+  Getopt::Long: 2.33
+  HTTP::Server::Simple::CGI: 0
+  IO::Handle: 0
   List::MoreUtils: 0
+  List::Util: 0
+  POSIX: 0
   Params::Validate: 0
   Perl6::Slurp: 0
+  Pod::Usage: 0
+  Scalar::Util: 0
+  Storable: 0
+  Term::ANSIColor: 0
+  Time::HiRes: 0
   Try::Tiny: 0
-resources:
-  license: http://dev.perl.org/licenses/
-version: 1.05
+  overload: 0
+version: 1.06

@@ -2,6 +2,9 @@
 # Copyright (c) 2009-2010 Yandex.ru
 
 package Ubic::Ping;
+BEGIN {
+  $Ubic::Ping::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -9,6 +12,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Ping - http server which returns service status by it's name or port
+
+=head1 VERSION
+
+version 1.06
 
 =cut
 

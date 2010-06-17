@@ -1,4 +1,7 @@
 package Ubic::Run;
+BEGIN {
+  $Ubic::Run::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Run - really simple way to write init scripts
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -48,4 +55,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

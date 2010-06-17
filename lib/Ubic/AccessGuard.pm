@@ -1,4 +1,7 @@
 package Ubic::AccessGuard;
+BEGIN {
+  $Ubic::AccessGuard::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::AccessGuard - class which guards all service operations
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -106,4 +113,3 @@ Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 =cut
 
 1;
-

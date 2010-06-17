@@ -1,4 +1,7 @@
 package Ubic::Persistent;
+BEGIN {
+  $Ubic::Persistent::VERSION = '1.06';
+}
 
 use strict;
 use warnings;
@@ -6,6 +9,10 @@ use warnings;
 =head1 NAME
 
 Ubic::Persistent - simple hash-to-file persistence object
+
+=head1 VERSION
+
+version 1.06
 
 =head1 SYNOPSIS
 
@@ -90,4 +97,3 @@ sub DESTROY {
 }
 
 1;
-
