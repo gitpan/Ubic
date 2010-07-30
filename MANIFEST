@@ -59,6 +59,7 @@ t/release-pod-syntax.t
 t/result.t
 t/run.t
 t/service.t
+t/service/broken
 t/service/fake-http-service
 t/service/fake-http-service2
 t/service/multi-impl

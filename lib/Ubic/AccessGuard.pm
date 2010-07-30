@@ -1,6 +1,6 @@
 package Ubic::AccessGuard;
 BEGIN {
-  $Ubic::AccessGuard::VERSION = '1.06';
+  $Ubic::AccessGuard::VERSION = '1.07';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::AccessGuard - class which guards all service operations
 
 =head1 VERSION
 
-version 1.06
+version 1.07
 
 =head1 SYNOPSIS
 
@@ -95,6 +95,7 @@ sub new {
 
 sub DESTROY {
     my $self = shift;
+    local $@;
 
     if ($> != $self->{old_euid}) {
         $> = $self->{old_euid}; # return euid back to normal

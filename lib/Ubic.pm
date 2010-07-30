@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.06';
+  $Ubic::VERSION = '1.07';
 }
 
 use strict;
@@ -14,7 +14,7 @@ Ubic - frontend to all ubic services
 
 =head1 VERSION
 
-version 1.06
+version 1.07
 
 =head1 SYNOPSIS
 
@@ -584,7 +584,7 @@ sub lock($$) {
 {
     package Ubic::ServiceLock;
 BEGIN {
-  $Ubic::ServiceLock::VERSION = '1.06';
+  $Ubic::ServiceLock::VERSION = '1.07';
 }
     use strict;
     use warnings;
@@ -604,6 +604,7 @@ BEGIN {
     }
     sub DESTROY {
         my $self = shift;
+        local $@;
         my $ubic = ${$self->{ubic_ref}};
         if (defined $ubic) {
             $ubic->_free_lock($self->{name});

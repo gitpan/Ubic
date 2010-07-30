@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.06';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.07';
 }
 
 use strict;
@@ -12,16 +12,15 @@ Ubic::Service::SimpleDaemon - variant of service when your service is simple dae
 
 =head1 VERSION
 
-version 1.06
+version 1.07
 
 =head1 SYNOPSIS
 
     use Ubic::Service::SimpleDaemon;
-    $service = Ubic::Service::SimpleDaemon->new({
+    my $service = Ubic::Service::SimpleDaemon->new({
         name => "sleep",
         bin => "sleep 1000",
     });
-    $service->start;
 
 =head1 DESCRIPTION
 

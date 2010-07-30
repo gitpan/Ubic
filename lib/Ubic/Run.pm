@@ -1,6 +1,6 @@
 package Ubic::Run;
 BEGIN {
-  $Ubic::Run::VERSION = '1.06';
+  $Ubic::Run::VERSION = '1.07';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Run - really simple way to write init scripts
 
 =head1 VERSION
 
-version 1.06
+version 1.07
 
 =head1 SYNOPSIS
 

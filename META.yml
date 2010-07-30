@@ -40,4 +40,4 @@ requires:
   Time::HiRes: 0
   Try::Tiny: 0
   overload: 0
-version: 1.06
+version: 1.07
