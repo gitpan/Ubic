@@ -16,8 +16,10 @@ my %WriteMakefileArgs = (
     'Cwd' => '0',
     'File::Find' => '0',
     'LWP::UserAgent' => '0',
+    'Test::Class' => '0',
     'Test::Exception' => '0',
-    'Test::More' => '0'
+    'Test::More' => '0',
+    'parent' => '0'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.31'
@@ -54,7 +56,7 @@ my %WriteMakefileArgs = (
     'Try::Tiny' => '0',
     'overload' => '0'
   },
-  'VERSION' => '1.07',
+  'VERSION' => '1.08',
   'test' => {
     'TESTS' => 't/*.t'
   }

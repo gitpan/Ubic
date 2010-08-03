@@ -1,0 +1,6 @@
+var/lib/ubic/ubic-daemon
+var/lib/ubic/status
+var/lib/ubic/simple-daemon/pid
+var/lib/ubic/lock
+var/lib/ubic/tmp
+var/log/ubic

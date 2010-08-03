@@ -1,6 +1,6 @@
 package Ubic::Multiservice;
 BEGIN {
-  $Ubic::Multiservice::VERSION = '1.07';
+  $Ubic::Multiservice::VERSION = '1.08';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.07
+version 1.08
 
 =head1 SYNOPSIS
 
@@ -112,9 +112,11 @@ sub has_service($$) {
         return $self->has_simple_service($name);
     }
     # complex service
+    return undef unless $self->has_service($parts[0]);
     my $top_level = $self->service($parts[0]);
     unless ($top_level->isa('Ubic::Multiservice')) {
-        croak "top-level service '$parts[0]' is not a multiservice";
+        # strange, top-level service is not a multiservice
+        return undef;
     }
     return $top_level->has_service(join '.', @parts[1..$#parts]);
 }

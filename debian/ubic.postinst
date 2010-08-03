@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "configure" ]; then
+
+    if [ -n "$2" ]; then
+        true
+    else
+        # first installation
+        for dir in /var/lib/ubic/status /var/lib/ubic/simple-daemon/pid /var/lib/ubic/lock /var/lib/ubic/ubic-daemon /var/lib/ubic/tmp; do
+            chmod 777 $dir
+            chmod +t $dir
+        done
+        update-rc.d ubic-ping defaults >/dev/null
+    fi
+    invoke-rc.d ubic-ping start || exit $?
+fi
+
+#DEBHELPER#
+

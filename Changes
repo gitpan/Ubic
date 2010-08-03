@@ -1,5 +1,9 @@
 Revision history for Ubic
 
+1.08    Tue Aug 03, 2010
+        * bugfix: has_service for nested unexistent services
+        * debian/ dir in distribution too
+
 1.07    Fri Jul 30, 2010
         * localize $@ in destructors
         * Ubic::Cmd refactoring, more consistent console results printing
