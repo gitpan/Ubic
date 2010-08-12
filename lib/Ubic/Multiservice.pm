@@ -1,6 +1,6 @@
 package Ubic::Multiservice;
 BEGIN {
-  $Ubic::Multiservice::VERSION = '1.08';
+  $Ubic::Multiservice::VERSION = '1.09';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.08
+version 1.09
 
 =head1 SYNOPSIS
 

@@ -1,5 +1,9 @@
 Revision history for Ubic
 
+1.09    Thu Aug 12, 2010
+        * bugfix: custom commands print 'ok' using green color and exit with zero
+        code when there are not errors
+
 1.08    Tue Aug 03, 2010
         * bugfix: has_service for nested unexistent services
         * debian/ dir in distribution too

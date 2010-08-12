@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 BEGIN {
-  $Ubic::Cmd::VERSION = '1.08';
+  $Ubic::Cmd::VERSION = '1.09';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.08
+version 1.09
 
 =head1 SYNOPSIS
 
@@ -219,7 +219,7 @@ sub do_custom_command {
             print "Running $command for $name... ";
             try {
                 Ubic->do_custom_command($name, $command);
-                $results->print(result('unknown', 'ok'));
+                $results->print_good("ok\n");
             } catch {
                 $results->print(result('unknown', "failed: $_"), 'bad');
             };
