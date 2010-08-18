@@ -30,6 +30,7 @@ requires:
   Getopt::Long: 2.33
   HTTP::Server::Simple::CGI: 0
   IO::Handle: 0
+  JSON: 0
   List::MoreUtils: 0
   List::Util: 0
   POSIX: 0
@@ -42,4 +43,4 @@ requires:
   Time::HiRes: 0
   Try::Tiny: 0
   overload: 0
-version: 1.09
+version: 1.10

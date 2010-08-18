@@ -1,6 +1,6 @@
 package Ubic::Daemon;
 BEGIN {
-  $Ubic::Daemon::VERSION = '1.09';
+  $Ubic::Daemon::VERSION = '1.10';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Daemon - toolkit for creating daemonized process
 
 =head1 VERSION
 
-version 1.09
+version 1.10
 
 =head1 SYNOPSIS
 

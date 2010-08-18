@@ -1,6 +1,6 @@
 package Ubic::Catalog;
 BEGIN {
-  $Ubic::Catalog::VERSION = '1.09';
+  $Ubic::Catalog::VERSION = '1.10';
 }
 
 use strict;
@@ -14,7 +14,7 @@ Ubic::Catalog - deprecated alternate name of Ubic::Multiservice
 
 =head1 VERSION
 
-version 1.09
+version 1.10
 
 =cut
 

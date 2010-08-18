@@ -1,6 +1,6 @@
 package Ubic::Persistent;
 BEGIN {
-  $Ubic::Persistent::VERSION = '1.09';
+  $Ubic::Persistent::VERSION = '1.10';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Persistent - simple hash-to-file persistence object
 
 =head1 VERSION
 
-version 1.09
+version 1.10
 
 =head1 SYNOPSIS
 
@@ -29,8 +29,18 @@ version 1.09
 
 =cut
 
-use Data::Dumper;
+use JSON;
 use Ubic::Lockf;
+
+{
+    # JSON.pm v2 incompatibility with v1 is really, really annoying.
+    # Any JSON::Any don't help much too.
+    # So this code is here to stay, at least until Ubuntu Hardy support period will be over.
+    no strict;
+    no warnings;
+    sub jsonToObj; *jsonToObj = (*{JSON::from_json}{CODE}) ? \&JSON::from_json : \&JSON::jsonToObj;
+    sub objToJson; *objToJson = (*{JSON::to_json}{CODE}) ? \&JSON::to_json : \&JSON::objToJson;
+}
 
 my $meta = {};
 
@@ -41,7 +51,16 @@ sub _load {
     my $data;
     local $/;
     my $str = <$fh>;
-    eval $str;
+    if ($str =~ /^\$data/) {
+        # old Data::Dumper format, parsing with regexes
+        my ($status) = $str =~ m{'status' => '(\w+)'};
+        my ($enabled) = $str =~ m{'enabled' => (\d+)};
+        $data = { status => $status, enabled => $enabled };
+    }
+    else {
+        $data = jsonToObj($str);
+    }
+
     return $data;
 }
 
@@ -84,9 +103,7 @@ sub commit {
     my $fname = $meta->{$self}{fname};
     open my $tmp_fh, '>', "$fname.new" or die "Can't write '$fname.new': $!";
 
-    my $dumper = Data::Dumper->new([ {%$self} ], [ qw(data) ]);
-    $dumper->Terse(0); # somebody could enable terse mode globally
-    print {$tmp_fh} $dumper->Dump;
+    print {$tmp_fh} objToJson({ %$self });
     close $tmp_fh or die "Can't write to '$fname.new': $!";
     rename "$fname.new" => $fname or die "Can't rename '$fname.new' to '$fname': $!";
 }

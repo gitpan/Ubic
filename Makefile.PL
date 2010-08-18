@@ -43,6 +43,7 @@ my %WriteMakefileArgs = (
     'Getopt::Long' => '2.33',
     'HTTP::Server::Simple::CGI' => '0',
     'IO::Handle' => '0',
+    'JSON' => '0',
     'List::MoreUtils' => '0',
     'List::Util' => '0',
     'POSIX' => '0',
@@ -56,7 +57,7 @@ my %WriteMakefileArgs = (
     'Try::Tiny' => '0',
     'overload' => '0'
   },
-  'VERSION' => '1.09',
+  'VERSION' => '1.10',
   'test' => {
     'TESTS' => 't/*.t'
   }
