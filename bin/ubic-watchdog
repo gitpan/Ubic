@@ -9,7 +9,7 @@ ubic-watchdog - watchdog which checks all ubic services.
 
 =head1 VERSION
 
-version 1.10
+version 1.11
 
 =head1 SYNOPSIS
 

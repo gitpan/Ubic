@@ -1,6 +1,6 @@
 package Ubic::Logger;
 BEGIN {
-  $Ubic::Logger::VERSION = '1.10';
+  $Ubic::Logger::VERSION = '1.11';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Logger - very simple logging functions
 
 =head1 VERSION
 
-version 1.10
+version 1.11
 
 =head1 SYNOPSIS
 
@@ -50,15 +50,12 @@ Message will be red if writing to terminal, and will be duplicated into both std
 
 =cut
 sub ERROR {
-    if (-t STDERR) {
-        print STDERR RED('[', scalar(localtime), "]\t", @_, "\n");
-        unless (-t STDOUT) {
-            print STDOUT '[', scalar(localtime), "]\t", @_, "\n";
-        }
+    my @message = ('[', scalar(localtime), "]\t", @_, "\n");
+    if (-t STDOUT) {
+        print RED(@message);
     }
     else {
-        print STDOUT '[', scalar(localtime), "]\t", @_, "\n";
-        print STDERR '[', scalar(localtime), "]\t", @_, "\n";
+        print @message;
     }
 }
 
