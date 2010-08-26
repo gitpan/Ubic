@@ -1,6 +1,6 @@
 package Ubic::Service::Skeleton;
 BEGIN {
-  $Ubic::Service::Skeleton::VERSION = '1.11';
+  $Ubic::Service::Skeleton::VERSION = '1.12';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Service::Skeleton - skeleton of any service with common start/stop logic
 
 =head1 VERSION
 
-version 1.11
+version 1.12
 
 =cut
 

@@ -1,6 +1,6 @@
 package Ubic::Logger;
 BEGIN {
-  $Ubic::Logger::VERSION = '1.11';
+  $Ubic::Logger::VERSION = '1.12';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Logger - very simple logging functions
 
 =head1 VERSION
 
-version 1.11
+version 1.12
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,7 @@ sub INFO {
 
 Log some error.
 
-Message will be red if writing to terminal, and will be duplicated into both stdout and stderr otherwise.
+Message will be red if writing to terminal.
 
 =cut
 sub ERROR {

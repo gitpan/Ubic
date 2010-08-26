@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.11';
+  $Ubic::VERSION = '1.12';
 }
 
 use strict;
@@ -14,7 +14,7 @@ Ubic - frontend to all ubic services
 
 =head1 VERSION
 
-version 1.11
+version 1.12
 
 =head1 SYNOPSIS
 
@@ -584,7 +584,7 @@ sub lock($$) {
 {
     package Ubic::ServiceLock;
 BEGIN {
-  $Ubic::ServiceLock::VERSION = '1.11';
+  $Ubic::ServiceLock::VERSION = '1.12';
 }
     use strict;
     use warnings;
