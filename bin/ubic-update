@@ -9,7 +9,7 @@ ubic-update - update ubic metadata
 
 =head1 VERSION
 
-version 1.12
+version 1.13
 
 =head1 SYNOPSIS
 
@@ -34,3 +34,11 @@ pod2usage(2) if @ARGV;
 use Ubic::PortMap;
 
 Ubic::PortMap::update();
+
+=head1 FUTURE DIRECTIONS
+
+This script can (and possibly will) be reimplemented as ubic service.
+
+=head1 SEE ALSO
+
+There is an entry about ubic-update in L<Ubic::Manual::FAQ>.

@@ -1,6 +1,6 @@
 package Ubic::Service;
 BEGIN {
-  $Ubic::Service::VERSION = '1.12';
+  $Ubic::Service::VERSION = '1.13';
 }
 
 use strict;
@@ -12,7 +12,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.12
+version 1.13
 
 =head1 SYNOPSIS
 
@@ -171,6 +171,21 @@ Should return user from which the service can be controlled and will be running.
 sub user {
     my $self = shift;
     return 'root';
+}
+
+=item B<group>
+
+Should return list of groups from which the service can be controlled and will be running.
+
+Default is main group of the user returned by C<user()> method.
+
+Supplementary groups are not supported by this default implementation (yet).
+
+=cut
+sub group {
+    my $self = shift;
+    my $group = getgrgid((getpwnam $self->user)[3]);
+    return ($group);
 }
 
 =item B<check_period>

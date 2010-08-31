@@ -1,9 +1,9 @@
 
 
 This archive contains the distribution Ubic,
-version 1.12:
+version 1.13:
 
-  Toolkit for describing services on Linux in perl
+  flexible perl-based service manager
 
 This software is copyright (c) 2010 by Yandex LLC.
 

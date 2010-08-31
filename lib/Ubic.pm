@@ -1,12 +1,12 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.12';
+  $Ubic::VERSION = '1.13';
 }
 
 use strict;
 use warnings;
 
-# ABSTRACT: Toolkit for describing services on Linux in perl
+# ABSTRACT: flexible perl-based service manager
 
 =head1 NAME
 
@@ -14,7 +14,7 @@ Ubic - frontend to all ubic services
 
 =head1 VERSION
 
-version 1.12
+version 1.13
 
 =head1 SYNOPSIS
 
@@ -26,15 +26,17 @@ version 1.12
 
 =head1 DESCRIPTION
 
-Ubic allows you to implement safe services which will be monitored and checked automatically.
+Ubic is a flexible perl-based service manager.
 
 This module is a main frontend to ubic services.
 
 Further directions:
 
+if you are looking for general introduction to Ubic, follow this link: L<http://blogs.perl.org/mt/mt-search.fcgi?blog_id=310&tag=tutorial&limit=20>;
+
 if you want to manage ubic services from perl scripts, read this POD;
 
-if you want to use ubic from command line, see L<ubic(1)> and L<Ubic::Cmd>.
+if you want to use ubic from command line, see L<ubic(1)> and L<Ubic::Cmd>;
 
 if you want to write your own service, see L<Ubic::Service> and other C<Ubic::Service::*> modules. Check out L<Ubic::Run> for integration with SysV init script system too.
 
@@ -584,7 +586,7 @@ sub lock($$) {
 {
     package Ubic::ServiceLock;
 BEGIN {
-  $Ubic::ServiceLock::VERSION = '1.12';
+  $Ubic::ServiceLock::VERSION = '1.13';
 }
     use strict;
     use warnings;
@@ -642,22 +644,28 @@ sub do_cmd($$$) {
     my ($self, $name, $cmd) = @_;
     $self->do_sub(sub {
         my $service = $self->service($name);
+
         my $user = $service->user;
+        my $group = $service->group;
         my $service_uid = getpwnam($user);
+        my $service_gid = getgrnam($group);
         unless (defined $service_uid) {
             die "user $user not found";
         }
-        if ($service_uid == $> and $service_uid == $<) {
-            $service->$cmd();
+        unless (defined $service_gid) {
+            die "group $group not found";
         }
-        else {
-            # locking all service operations inside fork with correct real and effective uids
-            # setting just effective uid is not enough, and tainted mode requires too careful coding
-            $self->forked_call(sub {
-                POSIX::setuid($service_uid);
-                $service->$cmd();
-            });
+
+        if ($service_uid == $> and $service_uid == $< and $service_gid == $) and $service_gid == $() {
+            return $service->$cmd();
         }
+        # locking all service operations inside fork with correct real and effective uids
+        # setting just effective uid is not enough, and tainted mode requires too careful coding from service authors
+        $self->forked_call(sub {
+            POSIX::setgid($service_gid);
+            POSIX::setuid($service_uid);
+            return $service->$cmd();
+        });
     });
 }
 
@@ -717,6 +725,16 @@ sub forked_call {
 }
 
 =back
+
+=head1 SEE ALSO
+
+Most Ubic-related links are collected on github wiki: L<http://github.com/berekuk/Ubic/wiki>.
+
+=head1 SUPPORT
+
+Our mailing list is ubic-perl@googlegroups.com. Send an empty message to ubic-perl+subscribe@googlegroups.com to subscribe.
+
+These is also an IRC channel: irc://irc.perl.org#ubic.
 
 =head1 AUTHOR
 

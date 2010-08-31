@@ -39,6 +39,7 @@ lib/Ubic/Cmd/Results.pm
 lib/Ubic/Daemon.pm
 lib/Ubic/Lockf.pm
 lib/Ubic/Logger.pm
+lib/Ubic/Manual/FAQ.pod
 lib/Ubic/Multiservice.pm
 lib/Ubic/Multiservice/Dir.pm
 lib/Ubic/Multiservice/Simple.pm
@@ -53,6 +54,12 @@ lib/Ubic/Service/Common.pm
 lib/Ubic/Service/SimpleDaemon.pm
 lib/Ubic/Service/Skeleton.pm
 lib/Ubic/Service/Utils.pm
+root_t/Daemon.pm
+root_t/README
+root_t/root.t
+root_t/service/daemongroup-daemon
+root_t/service/nobody-daemon
+root_t/service/root-daemon
 t/00_compile.t
 t/Utils.pm
 t/bin/locking-daemon

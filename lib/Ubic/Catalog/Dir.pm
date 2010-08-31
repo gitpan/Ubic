@@ -1,6 +1,6 @@
 package Ubic::Catalog::Dir;
 BEGIN {
-  $Ubic::Catalog::Dir::VERSION = '1.12';
+  $Ubic::Catalog::Dir::VERSION = '1.13';
 }
 
 use base qw(Ubic::Multiservice::Dir);
@@ -11,7 +11,7 @@ Ubic::Catalog::Dir - deprecated alternate name of Ubic::Multiservice::Dir
 
 =head1 VERSION
 
-version 1.12
+version 1.13
 
 =cut
 

@@ -9,7 +9,7 @@ use ExtUtils::MakeMaker 6.31;
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'Toolkit for describing services on Linux in perl',
+  'ABSTRACT' => 'flexible perl-based service manager',
   'AUTHOR' => 'Vyacheslav Matjukhin <mmcleric@yandex-team.ru>',
   'BUILD_REQUIRES' => {
     'Config' => '0',
@@ -26,10 +26,10 @@ my %WriteMakefileArgs = (
   },
   'DISTNAME' => 'Ubic',
   'EXE_FILES' => [
-    'bin/ubic-daemon',
-    'bin/ubic-update',
     'bin/ubic',
-    'bin/ubic-watchdog'
+    'bin/ubic-watchdog',
+    'bin/ubic-update',
+    'bin/ubic-daemon'
   ],
   'LICENSE' => 'perl',
   'NAME' => 'Ubic',
@@ -48,7 +48,6 @@ my %WriteMakefileArgs = (
     'List::Util' => '0',
     'POSIX' => '0',
     'Params::Validate' => '0',
-    'Perl6::Slurp' => '0',
     'Pod::Usage' => '0',
     'Scalar::Util' => '0',
     'Storable' => '0',
@@ -57,7 +56,7 @@ my %WriteMakefileArgs = (
     'Try::Tiny' => '0',
     'overload' => '0'
   },
-  'VERSION' => '1.12',
+  'VERSION' => '1.13',
   'test' => {
     'TESTS' => 't/*.t'
   }
