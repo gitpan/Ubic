@@ -1,39 +1,13 @@
 package Ubic::AccessGuard;
 BEGIN {
-  $Ubic::AccessGuard::VERSION = '1.13';
+  $Ubic::AccessGuard::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: class which guards simple service operations
 
-Ubic::AccessGuard - class which guards simple service operations
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    use Ubic::AccessGuard;
-
-    $guard = Ubic::AccessGuard->new($service); # take lock under $service->user
-    undef $guard; # free lock
-
-=head1 DESCRIPTION
-
-Ubic::AccessGuard sets effective uid to specified service's user id if neccesary, and restore it back on destruction.
-
-It's usage is limited, because when effective uid is not equal to real uid, perl automatically turns on tainted mode.
-Because of this, only tainted-safe code should be called when AccessGuard is active.
-L<Ubic> doesn't start services under this guard, but uses it when acquiring locks and writing service status files.
-
-=head1 METHODS
-
-=over
-
-=cut
 
 use Params::Validate;
 use Ubic::Result qw(result);
@@ -44,13 +18,6 @@ use Scalar::Util qw(weaken);
 # So we keep weakref to any created AccessGuard.
 my $ag_ref;
 
-=item C<< new($service) >>
-
-Construct new access guard object.
-
-User will be changed into user apporpriate for running C<$service>. It will be changed back on guard's desctruction.
-
-=cut
 sub new {
     my $class = shift;
     my ($service) = validate_pos(@_, { isa => 'Ubic::Service' });
@@ -86,6 +53,8 @@ sub new {
         unless (defined $new_gid) {
             die "group $group not found";
         }
+
+        # AccessGuard don't need to handle supplementary groups correctly, so this is ok
         $) = "$new_gid 0";
         my ($current_gid) = $) =~ /^(\d+)/;
         if ($current_gid != $new_gid) {
@@ -96,7 +65,7 @@ sub new {
     if ($user ne $current_user) {
         $self->{old_euid} = $>;
         if ($current_user ne 'root') {
-            die result('unknown', "You are $current_user, and service ".$service->name." should be started from $user");
+            die result('unknown', "You are $current_user, and service ".$service->name." should be operated from $user");
         }
         my $new_uid = getpwnam($user);
         unless (defined $new_uid) {
@@ -132,12 +101,58 @@ sub DESTROY {
     }
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::AccessGuard - class which guards simple service operations
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    use Ubic::AccessGuard;
+
+    $guard = Ubic::AccessGuard->new($service); # take lock under $service->user
+    undef $guard; # free lock
+
+=head1 DESCRIPTION
+
+Ubic::AccessGuard sets effective uid to specified service's user id if neccesary, and restore it back on destruction.
+
+It's usage is limited, because when effective uid is not equal to real uid, perl automatically turns on tainted mode.
+Because of this, only tainted-safe code should be called when AccessGuard is active.
+L<Ubic> doesn't start services under this guard, but uses it when acquiring locks and writing service status files.
+
+=head1 METHODS
+
+=over
+
+=item C<< new($service) >>
+
+Construct new access guard object.
+
+User will be changed into user apporpriate for running C<$service>. It will be changed back on guard's desctruction.
+
 =back
 
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

@@ -1,10 +1,85 @@
 package Ubic::Result::Class;
 BEGIN {
-  $Ubic::Result::Class::VERSION = '1.13';
+  $Ubic::Result::Class::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
+
+# ABSTRACT: ubic result object
+
+
+use overload '""' => sub {
+    my $self = shift;
+    return $self->as_string;
+}, 'eq' => sub {
+    return ("$_[0]" eq "$_[1]")
+}, 'ne' => sub {
+    return ("$_[0]" ne "$_[1]")
+};
+
+use Params::Validate qw(:all);
+use Carp;
+use parent qw(Class::Accessor::Fast);
+
+__PACKAGE__->mk_accessors(qw/ type msg /);
+
+sub new {
+    my $class = shift;
+    my $self = validate(@_, {
+        type => { type => SCALAR, optional => 1 },
+        msg => { optional => 1 },
+    });
+    $self->{type} ||= 'unknown';
+    return bless $self => $class;
+}
+
+sub status {
+    my $self = shift;
+    croak 'status() is read-only method' if @_;
+    if (grep { $_ eq $self->{type} } ('running', 'already running', 'started', 'already started', 'restarted', 'reloaded', 'stopping')) {
+        return 'running';
+    }
+    elsif (grep { $_ eq $self->{type} } ('not running', 'stopped', 'down', 'starting')) {
+        return 'not running';
+    }
+    elsif (grep { $_ eq $self->{type} } ('down')) {
+        return 'down';
+    }
+    else {
+        return 'broken';
+    }
+}
+
+sub action {
+    my $self = shift;
+    croak 'action() is read-only method' if @_;
+    if (grep { $_ eq $self->{type} } ('started', 'stopped', 'reloaded')) {
+        return $self->{type};
+    }
+    return 'none';
+}
+
+sub as_string {
+    my $self = shift;
+    if (defined $self->{msg}) {
+        if ($self->{type} eq 'unknown') {
+            return "$self->{msg}\n";
+        }
+        else {
+            return "$self->{type} ($self->{msg})";
+        }
+    }
+    else {
+        return $self->type;
+    }
+}
+
+
+1;
+
+__END__
+=pod
 
 =head1 NAME
 
@@ -12,7 +87,7 @@ Ubic::Result::Class - ubic result object
 
 =head1 VERSION
 
-version 1.13
+version 1.14
 
 =head1 SYNOPSIS
 
@@ -66,93 +141,21 @@ Possible actions:
 
 =over
 
-=cut
-
-use overload '""' => sub {
-    my $self = shift;
-    return $self->as_string;
-}, 'eq' => sub {
-    return ("$_[0]" eq "$_[1]")
-}, 'ne' => sub {
-    return ("$_[0]" ne "$_[1]")
-};
-
-use Params::Validate qw(:all);
-use Carp;
-use base qw(Class::Accessor::Fast);
-
-__PACKAGE__->mk_accessors(qw/ type msg /);
-
 =item B<< new({ type => $type, msg => $msg }) >>
 
 Constructor.
-
-=cut
-sub new {
-    my $class = shift;
-    my $self = validate(@_, {
-        type => { type => SCALAR, optional => 1 },
-        msg => { optional => 1 },
-    });
-    $self->{type} ||= 'unknown';
-    return bless $self => $class;
-}
 
 =item B<< status() >>
 
 Get status, see above for possible values.
 
-=cut
-sub status {
-    my $self = shift;
-    croak 'status() is read-only method' if @_;
-    if (grep { $_ eq $self->{type} } ('running', 'already running', 'started', 'already started', 'restarted', 'reloaded', 'stopping')) {
-        return 'running';
-    }
-    elsif (grep { $_ eq $self->{type} } ('not running', 'stopped', 'down', 'starting')) {
-        return 'not running';
-    }
-    elsif (grep { $_ eq $self->{type} } ('down')) {
-        return 'down';
-    }
-    else {
-        return 'broken';
-    }
-}
-
 =item B<< action() >>
 
 Get action.
 
-=cut
-sub action {
-    my $self = shift;
-    croak 'action() is read-only method' if @_;
-    if (grep { $_ eq $self->{type} } ('started', 'stopped', 'reloaded')) {
-        return $self->{type};
-    }
-    return 'none';
-}
-
 =item B<< as_string() >>
 
 Get string representation.
-
-=cut
-sub as_string {
-    my $self = shift;
-    if (defined $self->{msg}) {
-        if ($self->{type} eq 'unknown') {
-            return "$self->{msg}\n";
-        }
-        else {
-            return "$self->{type} ($self->{msg})";
-        }
-    }
-    else {
-        return $self->type;
-    }
-}
 
 =back
 
@@ -164,6 +167,12 @@ L<Ubic::Result> - service action's result.
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

@@ -1,33 +1,13 @@
 package Ubic::Persistent;
 BEGIN {
-  $Ubic::Persistent::VERSION = '1.13';
+  $Ubic::Persistent::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: simple hash-to-file persistence object
 
-Ubic::Persistent - simple hash-to-file persistence object
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    use Ubic::Persistent;
-    $obj = Ubic::Persistent->new($file); # create object and lock it
-    $obj->{x} = 'y';
-    $obj->commit; # atomically save file
-
-    $data = Ubic::Persistent->load($file); # { x => 'y' }
-
-=head1 METHODS
-
-=over
-
-=cut
 
 use JSON;
 use Ubic::Lockf;
@@ -64,23 +44,11 @@ sub _load {
     return $data;
 }
 
-=item B<< Ubic::Persistent->load($file) >>
-
-Class method. Load data from file without obtaining lock.
-
-=cut
 sub load {
     my ($class, $fname) = @_;
     return _load($fname);
 }
 
-=item B<< Ubic::Persistent->new($file) >>
-
-Construct new persistent object. It will contain all data from file.
-
-Data will be locked all the time this object exists.
-
-=cut
 sub new {
     my ($class, $fname) = @_;
     my $lock = lockf("$fname.lock", { blocking => 1 });
@@ -93,11 +61,6 @@ sub new {
     return $self;
 }
 
-=item B<< $obj->commit() >>
-
-Write data back on disk.
-
-=cut
 sub commit {
     my $self = shift;
     my $fname = $meta->{$self}{fname};
@@ -114,4 +77,59 @@ sub DESTROY {
     delete $meta->{$self};
 }
 
+
 1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Persistent - simple hash-to-file persistence object
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    use Ubic::Persistent;
+    $obj = Ubic::Persistent->new($file); # create object and lock it
+    $obj->{x} = 'y';
+    $obj->commit; # atomically save file
+
+    $data = Ubic::Persistent->load($file); # { x => 'y' }
+
+=head1 METHODS
+
+=over
+
+=item B<< Ubic::Persistent->load($file) >>
+
+Class method. Load data from file without obtaining lock.
+
+=item B<< Ubic::Persistent->new($file) >>
+
+Construct new persistent object. It will contain all data from file.
+
+Data will be locked all the time this object exists.
+
+=item B<< $obj->commit() >>
+
+Write data back on disk.
+
+=back
+
+=head1 AUTHOR
+
+Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+

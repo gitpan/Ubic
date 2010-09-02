@@ -1,34 +1,15 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.13';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: variant of service when your service is simple daemonized binary
 
-Ubic::Service::SimpleDaemon - variant of service when your service is simple daemonized binary
 
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    use Ubic::Service::SimpleDaemon;
-    my $service = Ubic::Service::SimpleDaemon->new({
-        name => "sleep",
-        bin => "sleep 1000",
-    });
-
-=head1 DESCRIPTION
-
-Unlike L<Ubic::Service::Common>, this class allows you to specify only name and binary of your service.
-
-=cut
-
-use base qw(Ubic::Service::Skeleton);
+use parent qw(Ubic::Service::Skeleton);
 
 use Ubic::Daemon qw(start_daemon stop_daemon check_daemon);
 use Ubic::Result qw(result);
@@ -37,47 +18,12 @@ use Params::Validate qw(:all);
 
 our $PID_DIR = $ENV{UBIC_DAEMON_PID_DIR} || "/var/lib/ubic/simple-daemon/pid";
 
-=head1 METHODS
-
-=over
-
-=item B<< new($params) >>
-
-Constructor.
-
-Parameters:
-
-=over
-
-=item I<bin>
-
-Daemon binary.
-
-=item I<name>
-
-Service's name. Optional, will usually be set by upper-level multiservice.
-
-=item I<user>
-
-User under which daemon will be started. Optional, default is C<root>.
-
-=item I<stdout>
-
-File into which daemon's stdout will be redirected. Default is C</dev/null>.
-
-=item I<stderr>
-
-File into which daemon's stderr will be redirected. Default is C</dev/null>.
-
-=back
-
-=cut
 sub new {
     my $class = shift;
     my $params = validate(@_, {
         bin => { type => SCALAR | ARRAYREF },
         user => { type => SCALAR, optional => 1 },
-        group => { type => SCALAR, optional => 1 },
+        group => { type => SCALAR | ARRAYREF, optional => 1 },
         name => { type => SCALAR, optional => 1 },
         stdout => { type => SCALAR, optional => 1 },
         stderr => { type => SCALAR, optional => 1 },
@@ -87,11 +33,6 @@ sub new {
     return bless {%$params} => $class;
 }
 
-=item B<< pidfile() >>
-
-Get pid filename. It will be concatenated from simple-daemon pid dir and service's name.
-
-=cut
 sub pidfile {
     my ($self) = @_;
     my $name = $self->full_name or die "Can't start nameless SimpleDaemon";
@@ -121,8 +62,10 @@ sub user {
 
 sub group {
     my $self = shift;
-    return $self->{group} if defined $self->{group};
-    return $self->SUPER::group();
+    my $groups = $self->{group};
+    return $self->SUPER::group() if not defined $groups;
+    return @$groups if ref $groups eq 'ARRAY';
+    return $groups;
 }
 
 sub stop_impl {
@@ -140,6 +83,79 @@ sub status_impl {
     }
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Service::SimpleDaemon - variant of service when your service is simple daemonized binary
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    use Ubic::Service::SimpleDaemon;
+    my $service = Ubic::Service::SimpleDaemon->new({
+        name => "sleep",
+        bin => "sleep 1000",
+    });
+
+=head1 DESCRIPTION
+
+Unlike L<Ubic::Service::Common>, this class allows you to specify only name and binary of your service.
+
+=head1 METHODS
+
+=over
+
+=item B<< new($params) >>
+
+Constructor.
+
+Parameters:
+
+=over
+
+=item I<bin>
+
+Daemon binary.
+
+=item I<name>
+
+Service's name.
+
+Optional, will usually be set by upper-level multiservice. Don't set it unless you know what you're doing.
+
+=item I<user>
+
+User under which daemon will be started. Optional, default is C<root>.
+
+=item I<group>
+
+Group under which daemon will be started. Optional, default is all user groups.
+
+Value can be scalar or arrayref.
+
+=item I<stdout>
+
+File into which daemon's stdout will be redirected. Default is C</dev/null>.
+
+=item I<stderr>
+
+File into which daemon's stderr will be redirected. Default is C</dev/null>.
+
+=back
+
+=item B<< pidfile() >>
+
+Get pid filename. It will be concatenated from simple-daemon pid dir and service's name.
+
 =back
 
 =head1 SEE ALSO
@@ -150,6 +166,12 @@ L<Ubic::Daemon> - module to daemonize any binary
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

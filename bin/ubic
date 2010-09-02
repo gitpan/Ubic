@@ -1,33 +1,14 @@
 #!/usr/bin/perl
-# Copyright (c) 2009-2010 Yandex.ru
+package bin::ubic;
+BEGIN {
+  $bin::ubic::VERSION = '1.14';
+}
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: simple viewer of ubic services
 
-ubic - simple viewer of ubic services
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
- ubic [-f] COMMAND [SERVICE]...
-
- Supported commands:
-    status
-    start
-    stop
-    restart
-    reload
-    force-reload
-    cached-status
-    try-restart
-    ...and any service-specific commands
-
-=cut
 
 use Getopt::Long 2.33;
 use Pod::Usage;
@@ -62,8 +43,43 @@ else {
     });
 }
 
+
+__END__
+=pod
+
+=head1 NAME
+
+bin::ubic - simple viewer of ubic services
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+ ubic [-f] COMMAND [SERVICE]...
+
+ Supported commands:
+    status
+    start
+    stop
+    restart
+    reload
+    force-reload
+    cached-status
+    try-restart
+    ...and any service-specific commands
+
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
+

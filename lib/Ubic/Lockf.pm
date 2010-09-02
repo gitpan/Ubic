@@ -1,6 +1,6 @@
 package Ubic::Lockf::Alarm;
 BEGIN {
-  $Ubic::Lockf::Alarm::VERSION = '1.13';
+  $Ubic::Lockf::Alarm::VERSION = '1.14';
 }
 
 # we can't use alarm from Time::HiRes, it don't return current alarm value on perl 5.8.8
@@ -25,7 +25,7 @@ sub DESTROY ($) {
 
 package Ubic::Lockf;
 BEGIN {
-  $Ubic::Lockf::VERSION = '1.13';
+  $Ubic::Lockf::VERSION = '1.14';
 }
 use strict;
 use Fcntl qw(:flock);
@@ -34,7 +34,7 @@ use Params::Validate;
 use POSIX qw(:errno_h);
 use Carp;
 
-use base qw(Exporter);
+use parent qw(Exporter);
 
 our @EXPORT = qw(lockf);
 
@@ -130,13 +130,19 @@ sub name($)
 
 1;
 
+# ABSTRACT: file locker with an automatic out-of-scope unlocking mechanism
+
+
+__END__
+=pod
+
 =head1 NAME
 
-Ubic::Lockf - file locker with an automatic out-of-scope unlocking mechanism
+Ubic::Lockf::Alarm - file locker with an automatic out-of-scope unlocking mechanism
 
 =head1 VERSION
 
-version 1.13
+version 1.14
 
 =head1 SYNOPSIS
 
@@ -192,4 +198,16 @@ Gives the name of the file, as it was when the lock was taken.
 
 =back
 
+=head1 AUTHOR
+
+Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
+

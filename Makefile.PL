@@ -18,8 +18,7 @@ my %WriteMakefileArgs = (
     'LWP::UserAgent' => '0',
     'Test::Class' => '0',
     'Test::Exception' => '0',
-    'Test::More' => '0',
-    'parent' => '0'
+    'Test::More' => '0'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.31'
@@ -54,9 +53,10 @@ my %WriteMakefileArgs = (
     'Term::ANSIColor' => '0',
     'Time::HiRes' => '0',
     'Try::Tiny' => '0',
-    'overload' => '0'
+    'overload' => '0',
+    'parent' => '0'
   },
-  'VERSION' => '1.13',
+  'VERSION' => '1.14',
   'test' => {
     'TESTS' => 't/*.t'
   }

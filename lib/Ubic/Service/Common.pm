@@ -1,89 +1,20 @@
 package Ubic::Service::Common;
 BEGIN {
-  $Ubic::Service::Common::VERSION = '1.13';
+  $Ubic::Service::Common::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: common way to construct new service by specifying several callbacks
 
-Ubic::Service::Common - common way to construct new service by specifying several callbacks
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    $service = Ubic::Service::Common->new({
-        start => sub {
-            # implementation-specific
-        },
-        stop => sub {
-            # implementation-specific
-        },
-        status => sub {
-            # implementation-specific
-        },
-        name => "yandex-ppb-something",
-        port => 1234,
-    });
-    $service->start;
-
-=head1 DESCRIPTION
-
-Each service should provide safe C<start()>, C<stop()> and C<status()> methods.
-
-=cut
 
 use Params::Validate qw(:all);
 
-use base qw(Ubic::Service::Skeleton);
+use parent qw(Ubic::Service::Skeleton);
 
 use Carp;
 
-=head1 CONSTRUCTOR
-
-=over
-
-=item B<< Ubic::Service::Common->new($params) >>
-
-Construct service object.
-
-Possible parameters:
-
-=over
-
-=item I<start>
-
-Mandatory sub reference providing service start mechanism.
-
-=item I<stop>
-
-The same for stop.
-
-=item I<status>
-
-Mandatory sub reference checking if service is alive.
-
-It should return one of C<running>, C<not running>, C<broken> values.
-
-This code will be used as safety check against double start and as a watchdog.
-
-=item I<name>
-
-Service's name.
-
-=item I<port>
-
-Service's port.
-
-=back
-
-=back
-
-=cut
 sub new {
     my $class = shift;
     my $params = validate(@_, {
@@ -94,7 +25,7 @@ sub new {
         port        => { type => SCALAR, regex => qr/^\d+$/, optional => 1 },
         custom_commands => { type => HASHREF, default => {} },
         user        => { type => SCALAR, optional => 1 },
-        group       => { type => SCALAR, optional => 1 },
+        group       => { type => SCALAR | ARRAYREF, optional => 1 },
         timeout_options => { type => HASHREF, default => {} },
     });
     if ($params->{custom_commands}) {
@@ -142,10 +73,13 @@ sub user {
     return $self->SUPER::user();
 }
 
+# copypasted from Ubic::Service::SimpleDaemon... maybe we need moose after all
 sub group {
     my $self = shift;
-    return $self->{group} if defined $self->{group};
-    return $self->SUPER::group();
+    my $groups = $self->{group};
+    return $self->SUPER::group() if not defined $groups;
+    return @$groups if ref $groups eq 'ARRAY';
+    return $groups;
 }
 
 sub do_custom_command {
@@ -156,10 +90,102 @@ sub do_custom_command {
     $self->{custom_commands}{$command}->();
 }
 
+1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Service::Common - common way to construct new service by specifying several callbacks
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    $service = Ubic::Service::Common->new({
+        start => sub {
+            # implementation-specific
+        },
+        stop => sub {
+            # implementation-specific
+        },
+        status => sub {
+            # implementation-specific
+        },
+        name => "yandex-ppb-something",
+        port => 1234,
+    });
+    $service->start;
+
+=head1 DESCRIPTION
+
+Each service should provide safe C<start()>, C<stop()> and C<status()> methods.
+
+=head1 CONSTRUCTOR
+
+=over
+
+=item B<< Ubic::Service::Common->new($params) >>
+
+Construct service object.
+
+Possible parameters:
+
+=over
+
+=item I<start>
+
+Mandatory sub reference providing service start mechanism.
+
+=item I<stop>
+
+The same for stop.
+
+=item I<status>
+
+Mandatory sub reference checking if service is alive.
+
+It should return one of C<running>, C<not running>, C<broken> values.
+
+This code will be used as safety check against double start and in watchdog checks.
+
+=item I<name>
+
+Service's name.
+
+Optional, will usually be set by upper-level multiservice. Don't set it unless you know what you're doing.
+
+=item I<user>
+
+User under which daemon will be started. Optional, default is C<root>.
+
+=item I<group>
+
+Group under which daemon will be started. Optional, default is all user groups.
+
+Value can be scalar or arrayref.
+
+=item I<port>
+
+Service's port.
+
+=back
+
+=back
+
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.13';
+  $Ubic::VERSION = '1.14';
 }
 
 use strict;
@@ -8,39 +8,6 @@ use warnings;
 
 # ABSTRACT: flexible perl-based service manager
 
-=head1 NAME
-
-Ubic - frontend to all ubic services
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    Ubic->start("yandex-something");
-
-    Ubic->stop("yandex-something");
-
-    $status = Ubic->status("yandex-something");
-
-=head1 DESCRIPTION
-
-Ubic is a flexible perl-based service manager.
-
-This module is a main frontend to ubic services.
-
-Further directions:
-
-if you are looking for general introduction to Ubic, follow this link: L<http://blogs.perl.org/mt/mt-search.fcgi?blog_id=310&tag=tutorial&limit=20>;
-
-if you want to manage ubic services from perl scripts, read this POD;
-
-if you want to use ubic from command line, see L<ubic(1)> and L<Ubic::Cmd>;
-
-if you want to write your own service, see L<Ubic::Service> and other C<Ubic::Service::*> modules. Check out L<Ubic::Run> for integration with SysV init script system too.
-
-=cut
 
 use POSIX qw();
 use Ubic::Result qw(result);
@@ -54,6 +21,7 @@ use Try::Tiny;
 use Ubic::Persistent;
 use Ubic::Lockf;
 use Scalar::Util qw(blessed);
+use List::MoreUtils qw(uniq);
 
 our $SINGLETON;
 
@@ -71,33 +39,6 @@ sub _obj {
     die "Unknown argument '$param'";
 }
 
-=head1 CONSTRUCTOR
-
-=over
-
-=item B<< Ubic->new({ ... }) >>
-
-All methods in this package can be invoked as class methods, but sometimes you may need to override some status dirs. In this case you should construct your own instance.
-
-Constructor options (all of them are optional):
-
-=over
-
-=item I<status_dir>
-
-Dir with persistent services' statuses.
-
-=item I<service_dir>
-
-Name of dir with service descriptions (which will be used to construct root Ubic::Multiservice::Dir object)
-
-=item I<lock_dir>
-
-Dir with services' locks.
-
-=back
-
-=cut
 sub new {
     my $class = shift;
     my $ubic_dir = $ENV{UBIC_DIR} || '/var/lib/ubic';
@@ -113,23 +54,6 @@ sub new {
     return bless $self => $class;
 }
 
-=back
-
-=head1 LSB METHODS
-
-See L<http://refspecs.freestandards.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html> for init-script method specifications.
-
-Following functions are trying to conform, except that all dashes in method names are replaced with underscores.
-
-Unlike C<Ubic::Service> methods, these methods are guaranteed to return blessed versions of result, i.e. C<Ubic::Result::Class> objects.
-
-=over
-
-=item B<start($name)>
-
-Start service.
-
-=cut
 sub start($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -141,11 +65,6 @@ sub start($$) {
     return $result;
 }
 
-=item B<stop($name)>
-
-Stop service.
-
-=cut
 sub stop($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -157,11 +76,6 @@ sub stop($$) {
     return $result;
 }
 
-=item B<restart($name)>
-
-Restart service; start it if it's not running.
-
-=cut
 sub restart($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -175,11 +89,6 @@ sub restart($$) {
     return result('restarted'); # FIXME - should return original status
 }
 
-=item B<try_restart($name)>
-
-Restart service if it is enabled.
-
-=cut
 sub try_restart($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -193,11 +102,6 @@ sub try_restart($$) {
     return result('restarted');
 }
 
-=item B<reload($name)>
-
-Reloads service if reloading is implemented; throw exception otherwise.
-
-=cut
 sub reload($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -216,13 +120,6 @@ sub reload($$) {
     return $result;
 }
 
-=item B<force_reload($name)>
-
-Reloads service if reloading is implemented, otherwise restarts it.
-
-Does nothing if service is disabled.
-
-=cut
 sub force_reload($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -238,11 +135,6 @@ sub force_reload($$) {
     $self->try_restart($name);
 }
 
-=item B<status($name)>
-
-Get service status.
-
-=cut
 sub status($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -251,19 +143,6 @@ sub status($$) {
     return $self->do_cmd($name, 'status');
 }
 
-=back
-
-=head1 OTHER METHODS
-
-=over
-
-=item B<enable($name)>
-
-Enable service.
-
-Enabled service means that service *should* be running. It will be checked by status and marked as broken if it's enabled but not running.
-
-=cut
 sub enable($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -277,11 +156,6 @@ sub enable($$) {
     return result('unknown');
 }
 
-=item B<is_enabled($name)>
-
-Returns true value if service is enabled, false otherwise.
-
-=cut
 sub is_enabled($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -296,13 +170,6 @@ sub is_enabled($$) {
     return;
 }
 
-=item B<disable($name)>
-
-Disable service.
-
-Disabled service means that service is ignored by ubic. It's state will no longer be checked by watchdog, and pings will answer that service is not running, even if it's not true.
-
-=cut
 sub disable($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -316,13 +183,6 @@ sub disable($$) {
 }
 
 
-=item B<cached_status($name)>
-
-Get cached status of enabled service.
-
-Unlike other methods, it doesn't require user to be root.
-
-=cut
 sub cached_status($$) {
     my ($self) = _obj(shift);
     my ($name) = validate_pos(@_, 1);
@@ -333,9 +193,6 @@ sub cached_status($$) {
     return result($self->status_obj_ro($name)->{status});
 }
 
-=item B<do_custom_command($name, $command)>
-
-=cut
 sub do_custom_command($$) {
     my ($self) = _obj(shift);
     my ($name, $command) = validate_pos(@_, 1, 1);
@@ -350,11 +207,6 @@ sub do_custom_command($$) {
     });
 }
 
-=item B<service($name)>
-
-Get service object by name.
-
-=cut
 sub service($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
@@ -367,11 +219,6 @@ sub service($$) {
     return $self->{service_cache}{$name};
 }
 
-=item B<< has_service($name) >>
-
-Check whether service C<$name> exists.
-
-=cut
 sub has_service($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
@@ -380,43 +227,21 @@ sub has_service($$) {
     return $self->{root}->has_service($name);
 }
 
-=item B<services()>
-
-Get list of all services.
-
-=cut
 sub services($) {
     my $self = _obj(shift);
     return $self->{root}->services();
 }
 
-=item B<service_names()>
-
-Get list of names of all services.
-
-=cut
 sub service_names($) {
     my $self = _obj(shift);
     return $self->{root}->service_names();
 }
 
-=item B<root_service()>
-
-Get root service.
-
-Root service doesn't have a name and returns all top-level services with C<services()> method. You can use it to traverse all services' tree.
-
-=cut
 sub root_service($) {
     my $self = _obj(shift);
     return $self->{root};
 }
 
-=item B<compl_services($line)>
-
-Return list of autocompletion variants for given service prefix.
-
-=cut
 sub compl_services($$) {
     my $self = _obj(shift);
     my $line = shift;
@@ -449,11 +274,6 @@ sub compl_services($$) {
         @variants;
 }
 
-=item B<set_cached_status($name, $status)>
-
-Write new status into service's status file.
-
-=cut
 sub set_cached_status($$$) {
     my $self = _obj(shift);
     my ($name, $status) = validate_pos(@_, 1, 1);
@@ -470,20 +290,6 @@ sub set_cached_status($$$) {
     $status_obj->commit;
 }
 
-=item B<< set_ubic_dir($dir) >>
-
-Create and set ubic dir.
-
-Ubic dir is a directory with service statuses and locks. By default, ubic dir is C</var/lib/ubic>, but in tests you may want to change it.
-
-These settings will be propagated into subprocesses using environment, so following code works:
-
-    Ubic->set_ubic_dir('tfiles/ubic');
-    Ubic->set_service_dir('etc/ubic/service');
-    system('ubic start some_service');
-    system('ubic stop some_service');
-
-=cut
 sub set_ubic_dir($$) {
     my $self = _obj(shift);
     my ($dir) = validate_pos(@_, 1);
@@ -505,11 +311,6 @@ sub set_ubic_dir($$) {
     $ENV{UBIC_DAEMON_PID_DIR} = "$dir/pid";
 }
 
-=item B<< set_service_dir($dir) >>
-
-Set ubic services dir.
-
-=cut
 sub set_service_dir($$) {
     my $self = _obj(shift);
     my ($dir) = validate_pos(@_, 1);
@@ -518,56 +319,24 @@ sub set_service_dir($$) {
     $self->{root} = Ubic::Multiservice::Dir->new($self->{service_dir}); # FIXME - copy-paste from constructor!
 }
 
-=back
-
-=head1 INTERNAL METHODS
-
-You don't need to call these, usually.
-
-=over
-
-=item B<status_file($name)>
-
-Get status file name by service's name.
-
-=cut
 sub status_file($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
     return "$self->{status_dir}/".$name;
 }
 
-=item B<status_obj($name)>
-
-Get status persistent object by service's name.
-
-It's a bad idea to call this from any other class than C<Ubic>, but if you'll ever want to do this, at least don't forget to create C<Ubic::AccessGuard> first.
-
-=cut
 sub status_obj($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
     return Ubic::Persistent->new($self->status_file($name));
 }
 
-=item B<status_obj_ro($name)>
-
-Get readonly, nonlocked status persistent object by service's name.
-
-=cut
 sub status_obj_ro($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, 1);
     return Ubic::Persistent->load($self->status_file($name));
 }
 
-=item B<lock($name)>
-
-Acquire lock object for given service.
-
-You can lock one object twice from the same process, but not from different processes.
-
-=cut
 sub lock($$) {
     my ($self) = _obj(shift);
     my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
@@ -586,7 +355,7 @@ sub lock($$) {
 {
     package Ubic::ServiceLock;
 BEGIN {
-  $Ubic::ServiceLock::VERSION = '1.13';
+  $Ubic::ServiceLock::VERSION = '1.14';
 }
     use strict;
     use warnings;
@@ -620,11 +389,6 @@ sub _free_lock {
     delete $self->{locks}{$name};
 }
 
-=item B<< do_sub($code) >>
-
-Run any code and wrap result into C<Ubic::Result::Class> object.
-
-=cut
 sub do_sub($$) {
     my ($self, $code) = @_;
     my $result = try {
@@ -635,47 +399,67 @@ sub do_sub($$) {
     return result($result);
 }
 
-=item B<< do_cmd($name, $cmd) >>
+sub _groups_equal {
+    my ($g1, $g2) = @_;
+    my ($main1, @other1) = split / /, $g1;
+    my ($main2, @other2) = split / /, $g2;
+    return ($main1 == $main2 and join(' ', sort { $a <=> $b } uniq($main1, @other1)) eq join(' ', sort { $a <=> $b } uniq($main2, @other2)));
+}
 
-Run C<$cmd> method from service C<$name> and wrap any result or exception into C<Ubic::Result::Class> object.
-
-=cut
 sub do_cmd($$$) {
     my ($self, $name, $cmd) = @_;
     $self->do_sub(sub {
         my $service = $self->service($name);
 
         my $user = $service->user;
-        my $group = $service->group;
         my $service_uid = getpwnam($user);
-        my $service_gid = getgrnam($group);
         unless (defined $service_uid) {
             die "user $user not found";
         }
-        unless (defined $service_gid) {
-            die "group $group not found";
-        }
 
-        if ($service_uid == $> and $service_uid == $< and $service_gid == $) and $service_gid == $() {
+        my @group = $service->group;
+
+        my @gid;
+        for my $group (@group) {
+            my $gid = getgrnam($group);
+            unless (defined $gid) {
+                die "group $group not found";
+            }
+            push @gid, $gid;
+        }
+        @gid = (@gid, @gid) if @gid == 1; # otherwise $) = "1 0"; $) = "1" leaves 0 in group list
+        my $service_gid = join ' ', @gid;
+
+        if (
+            $service_uid == $>
+            and $service_uid == $<
+            and _groups_equal($service_gid, $))
+            and _groups_equal($service_gid, $()
+        ) {
+            # current euid, ruid, egid, rgid and supplementary groups are all conform to service expectations
             return $service->$cmd();
         }
-        # locking all service operations inside fork with correct real and effective uids
-        # setting just effective uid is not enough, and tainted mode requires too careful coding from service authors
+
+        # setting just effective uid is not enough, because:
+        # - we can accidentally enter tainted mode, and service authors don't expect this
+        # - local administrator may want to allow everyone to write service, and leaving root as real uid is an obvious security breach
+        # (ubic will have to learn to compare service user with service file's owner for such policy to be save, though - this is not implemented yet)
         $self->forked_call(sub {
-            POSIX::setgid($service_gid);
-            POSIX::setuid($service_uid);
+            $) = $service_gid;
+            unless (_groups_equal($), $service_gid)) {
+                die "Failed to set effective gid to $service_gid: $!";
+            }
+            $( = $gid[0];
+            unless (_groups_equal($(, $service_gid)) {
+                die "Failed to set real gid to $service_gid: $!";
+            }
+            $> = $service_uid;
+            $< = $service_uid;
             return $service->$cmd();
         });
     });
 }
 
-=item B<< forked_call($callback) >>
-
-Run C<$callback> inside fork and return its return value.
-
-Interaction happens through temporary file in C<$ubic->{tmp_dir}> dir.
-
-=cut
 sub forked_call {
     my ($self, $callback) = @_;
     my $tmp_file = $self->{tmp_dir}."/".time.".".rand(1000000);
@@ -724,6 +508,232 @@ sub forked_call {
     }
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic - flexible perl-based service manager
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    Ubic->start("yandex-something");
+
+    Ubic->stop("yandex-something");
+
+    $status = Ubic->status("yandex-something");
+
+=head1 DESCRIPTION
+
+Ubic is a flexible perl-based service manager.
+
+This module is a main frontend to ubic services.
+
+Further directions:
+
+if you are looking for general introduction to Ubic, follow this link: L<http://blogs.perl.org/mt/mt-search.fcgi?blog_id=310&tag=tutorial&limit=20>;
+
+if you want to manage ubic services from perl scripts, read this POD;
+
+if you want to use ubic from command line, see L<ubic(1)> and L<Ubic::Cmd>;
+
+if you want to write your own service, see L<Ubic::Service> and other C<Ubic::Service::*> modules. Check out L<Ubic::Run> for integration with SysV init script system too.
+
+=head1 CONSTRUCTOR
+
+=over
+
+=item B<< Ubic->new({ ... }) >>
+
+All methods in this package can be invoked as class methods, but sometimes you may need to override some status dirs. In this case you should construct your own instance.
+
+Constructor options (all of them are optional):
+
+=over
+
+=item I<status_dir>
+
+Dir with persistent services' statuses.
+
+=item I<service_dir>
+
+Name of dir with service descriptions (which will be used to construct root Ubic::Multiservice::Dir object)
+
+=item I<lock_dir>
+
+Dir with services' locks.
+
+=back
+
+=back
+
+=head1 LSB METHODS
+
+See L<http://refspecs.freestandards.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html> for init-script method specifications.
+
+Following functions are trying to conform, except that all dashes in method names are replaced with underscores.
+
+Unlike C<Ubic::Service> methods, these methods are guaranteed to return blessed versions of result, i.e. C<Ubic::Result::Class> objects.
+
+=over
+
+=item B<start($name)>
+
+Start service.
+
+=item B<stop($name)>
+
+Stop service.
+
+=item B<restart($name)>
+
+Restart service; start it if it's not running.
+
+=item B<try_restart($name)>
+
+Restart service if it is enabled.
+
+=item B<reload($name)>
+
+Reloads service if reloading is implemented; throw exception otherwise.
+
+=item B<force_reload($name)>
+
+Reloads service if reloading is implemented, otherwise restarts it.
+
+Does nothing if service is disabled.
+
+=item B<status($name)>
+
+Get service status.
+
+=back
+
+=head1 OTHER METHODS
+
+=over
+
+=item B<enable($name)>
+
+Enable service.
+
+Enabled service means that service *should* be running. It will be checked by status and marked as broken if it's enabled but not running.
+
+=item B<is_enabled($name)>
+
+Returns true value if service is enabled, false otherwise.
+
+=item B<disable($name)>
+
+Disable service.
+
+Disabled service means that service is ignored by ubic. It's state will no longer be checked by watchdog, and pings will answer that service is not running, even if it's not true.
+
+=item B<cached_status($name)>
+
+Get cached status of enabled service.
+
+Unlike other methods, it doesn't require user to be root.
+
+=item B<do_custom_command($name, $command)>
+
+=item B<service($name)>
+
+Get service object by name.
+
+=item B<< has_service($name) >>
+
+Check whether service C<$name> exists.
+
+=item B<services()>
+
+Get list of all services.
+
+=item B<service_names()>
+
+Get list of names of all services.
+
+=item B<root_service()>
+
+Get root service.
+
+Root service doesn't have a name and returns all top-level services with C<services()> method. You can use it to traverse all services' tree.
+
+=item B<compl_services($line)>
+
+Return list of autocompletion variants for given service prefix.
+
+=item B<set_cached_status($name, $status)>
+
+Write new status into service's status file.
+
+=item B<< set_ubic_dir($dir) >>
+
+Create and set ubic dir.
+
+Ubic dir is a directory with service statuses and locks. By default, ubic dir is C</var/lib/ubic>, but in tests you may want to change it.
+
+These settings will be propagated into subprocesses using environment, so following code works:
+
+    Ubic->set_ubic_dir('tfiles/ubic');
+    Ubic->set_service_dir('etc/ubic/service');
+    system('ubic start some_service');
+    system('ubic stop some_service');
+
+=item B<< set_service_dir($dir) >>
+
+Set ubic services dir.
+
+=back
+
+=head1 INTERNAL METHODS
+
+You don't need to call these, usually.
+
+=over
+
+=item B<status_file($name)>
+
+Get status file name by service's name.
+
+=item B<status_obj($name)>
+
+Get status persistent object by service's name.
+
+It's a bad idea to call this from any other class than C<Ubic>, but if you'll ever want to do this, at least don't forget to create C<Ubic::AccessGuard> first.
+
+=item B<status_obj_ro($name)>
+
+Get readonly, nonlocked status persistent object by service's name.
+
+=item B<lock($name)>
+
+Acquire lock object for given service.
+
+You can lock one object twice from the same process, but not from different processes.
+
+=item B<< do_sub($code) >>
+
+Run any code and wrap result into C<Ubic::Result::Class> object.
+
+=item B<< do_cmd($name, $cmd) >>
+
+Run C<$cmd> method from service C<$name> and wrap any result or exception into C<Ubic::Result::Class> object.
+
+=item B<< forked_call($callback) >>
+
+Run C<$callback> inside fork and return its return value.
+
+Interaction happens through temporary file in C<$ubic->{tmp_dir}> dir.
+
 =back
 
 =head1 SEE ALSO
@@ -740,6 +750,12 @@ These is also an IRC channel: irc://irc.perl.org#ubic.
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

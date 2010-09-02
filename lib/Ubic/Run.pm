@@ -1,25 +1,13 @@
 package Ubic::Run;
 BEGIN {
-  $Ubic::Run::VERSION = '1.13';
+  $Ubic::Run::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: really simple way to write init scripts
 
-Ubic::Run - really simple way to write init scripts
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    # /etc/init.d/something:
-    use Ubic::Run; # that's all!
-
-=cut
 
 use Ubic::Cmd;
 use Getopt::Long;
@@ -47,11 +35,34 @@ sub import {
     });
 }
 
+1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Run - really simple way to write init scripts
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    # /etc/init.d/something:
+    use Ubic::Run; # that's all!
 
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

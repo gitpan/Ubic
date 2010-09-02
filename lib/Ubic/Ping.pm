@@ -1,30 +1,20 @@
 #!/usr/bin/perl
-# Copyright (c) 2009-2010 Yandex.ru
-
 package Ubic::Ping;
 BEGIN {
-  $Ubic::Ping::VERSION = '1.13';
+  $Ubic::Ping::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
-
-Ubic::Ping - http server which returns service status by it's name or port
-
-=head1 VERSION
-
-version 1.13
-
-=cut
+# ABSTRACT: http server which returns service status by it's name or port
 
 use Ubic;
 use Ubic::PortMap;
 use Params::Validate qw(:all);
 use Try::Tiny;
 
-use base qw(HTTP::Server::Simple::CGI);
+use parent qw(HTTP::Server::Simple::CGI);
 
 sub _print_status($;$) {
     my ($name, $options) = validate_pos(@_, 1, { type => HASHREF, default => {} });
@@ -117,8 +107,27 @@ sub handle_request {
 
 1;
 
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Ping - http server which returns service status by it's name or port
+
+=head1 VERSION
+
+version 1.14
+
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
+

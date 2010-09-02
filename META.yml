@@ -10,7 +10,6 @@ build_requires:
   Test::Class: 0
   Test::Exception: 0
   Test::More: 0
-  parent: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.31
 dynamic_config: 0
@@ -42,4 +41,9 @@ requires:
   Time::HiRes: 0
   Try::Tiny: 0
   overload: 0
-version: 1.13
+  parent: 0
+resources:
+  bugtracker: http://github.com/berekuk/Ubic/issues
+  homepage: http://github.com/berekuk/Ubic/wiki
+  repository: git://github.com/berekuk/Ubic.git
+version: 1.14

@@ -1,10 +1,110 @@
 package Ubic::Service;
 BEGIN {
-  $Ubic::Service::VERSION = '1.13';
+  $Ubic::Service::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
+
+# ABSTRACT: interface and base class for any ubic service
+
+
+use Ubic::Result qw(result);
+
+
+sub name($;$) {
+    my ($self, $name) = @_;
+    if (defined $name) {
+        $self->{name} = $name;
+    }
+    else {
+        return $self->{name};
+    }
+}
+
+sub full_name($) {
+    my ($self) = @_;
+    my $parent_name = $self->parent_name;
+    if (defined $parent_name) {
+        return $parent_name.".".$self->name;
+    }
+    else {
+        return $self->name;
+    }
+}
+
+sub parent_name($;$) {
+    my ($self, $name) = @_;
+    if (defined $name) {
+        $self->{parent_name} = $name;
+    }
+    else {
+        return $self->{parent_name};
+    }
+}
+
+sub start {
+    die "not implemented";
+}
+
+sub stop {
+    die "not implemented";
+}
+
+sub status {
+    my ($self) = @_;
+    die "not implemented";
+}
+
+sub reload {
+    my ($self) = @_;
+    return result('unknown', 'not implemented');
+}
+
+sub port {
+    my ($self) = @_;
+    return; # by default, service has no port
+    # TODO - what will this method return when complex services which runs several daemons at once will be implemented?
+}
+
+sub user {
+    my $self = shift;
+    return 'root';
+}
+
+sub group {
+    my $self = shift;
+    my $user = $self->user;
+    my $main_group = getgrgid((getpwnam $user)[3]);
+    setgrent();
+    my @groups;
+    while (my @grent = getgrent()) {
+        my @users = split / /, $grent[3];
+        push @groups, $grent[0] if grep { $_ eq $user } @users;
+    }
+    endgrent();
+    return ($main_group, @groups);
+}
+
+sub check_period {
+    my ($self) = @_;
+    return 60;
+}
+
+sub custom_commands {
+    return ();
+}
+
+sub do_custom_command {
+    die "No such command";
+}
+
+
+1;
+
+
+__END__
+=pod
 
 =head1 NAME
 
@@ -12,7 +112,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.13
+version 1.14
 
 =head1 SYNOPSIS
 
@@ -21,10 +121,6 @@ version 1.13
     $service->stop;
     $service->restart;
     $status = $service->status;
-
-=cut
-
-use Ubic::Result qw(result);
 
 =head1 DESCRIPTION
 
@@ -40,8 +136,6 @@ See L</"SEE ALSO"> for references to more specific (and useful) versions of serv
 
 =over
 
-=cut
-
 =item B<name()>
 
 =item B<name($new_name)>
@@ -51,17 +145,6 @@ Name of service.
 Each service with the same parent should have an unique name.
 
 In case of subservices, name should be the most lower-level name; use C<full_name> method to get fully-qualified service name.
-
-=cut
-sub name($;$) {
-    my ($self, $name) = @_;
-    if (defined $name) {
-        $self->{name} = $name;
-    }
-    else {
-        return $self->{name};
-    }
-}
 
 =item B<full_name>
 
@@ -75,18 +158,6 @@ Service's parent is responsible for setting it (to concatenation of it's own nam
 
 In case of subservices, initial name should be the most lower-level name; it will be concatenated with names of it's parents by it's parents. (See L<Ubic::Multiservice>'s code for more details).
 
-=cut
-sub full_name($) {
-    my ($self) = @_;
-    my $parent_name = $self->parent_name;
-    if (defined $parent_name) {
-        return $parent_name.".".$self->name;
-    }
-    else {
-        return $self->name;
-    }
-}
-
 =item B<parent_name()>
 
 =item B<parent_name($new_parent_name)>
@@ -95,27 +166,11 @@ Get/set name of service's parent.
 
 Service's parent is responsible for calling it immediately after service's construction as C<< $service->parent_name($self->full_name) >>.
 
-=cut
-sub parent_name($;$) {
-    my ($self, $name) = @_;
-    if (defined $name) {
-        $self->{parent_name} = $name;
-    }
-    else {
-        return $self->{parent_name};
-    }
-}
-
 =item B<start>
 
 Start service. Should throw exception on failure and string with operation result otherwise.
 
 Starting already running service should do nothing and return "already running".
-
-=cut
-sub start {
-    die "not implemented";
-}
 
 =item B<stop>
 
@@ -125,68 +180,31 @@ Stopping already stopped service should do nothing and return "not running".
 
 Successful stop of a service B<must> disable this service.
 
-=cut
-sub stop {
-    die "not implemented";
-}
-
 =item B<status>
 
 Check real status of service.
 
 It should check that service is running correctly and return "running" if it is so.
 
-=cut
-sub status {
-    my ($self) = @_;
-    die "not implemented";
-}
-
 =item B<reload>
 
 Reload service, if possible.
-
-=cut
-sub reload {
-    my ($self) = @_;
-    return result('unknown', 'not implemented');
-}
 
 =item B<port>
 
 Should return port number if service provides a server which uses TCP protocol.
 
-=cut
-sub port {
-    my ($self) = @_;
-    return; # by default, service has no port
-    # TODO - what will this method return when complex services which runs several daemons at once will be implemented?
-}
-
 =item B<user>
 
 Should return user from which the service can be controlled and will be running. Default is C<root>.
-
-=cut
-sub user {
-    my $self = shift;
-    return 'root';
-}
 
 =item B<group>
 
 Should return list of groups from which the service can be controlled and will be running.
 
-Default is main group of the user returned by C<user()> method.
+First group from list will be used as real and effective gid, other groups will be set as supplementary groups.
 
-Supplementary groups are not supported by this default implementation (yet).
-
-=cut
-sub group {
-    my $self = shift;
-    my $group = getgrgid((getpwnam $self->user)[3]);
-    return ($group);
-}
+Default is list of all groups of user as returned by C<user()> method.
 
 =item B<check_period>
 
@@ -194,29 +212,13 @@ Should return period of checking a service by watchdog in seconds.
 
 Default is 60 seconds and it is unused by ubic-watchdog currently, so don't bother to override it by now :)
 
-=cut
-sub check_period {
-    my ($self) = @_;
-    return 60;
-}
-
 =item B<custom_commands()>
 
 Can return list of service's custom commands, if such are exist.
 
-=cut
-sub custom_commands {
-    return ();
-}
-
 =item B<do_custom_command($command)>
 
 Should execute specified command, if it is supported.
-
-=cut
-sub do_custom_command {
-    die "No such command";
-}
 
 =back
 
@@ -232,6 +234,12 @@ L<Ubic::Service::SimpleDaemon> - just give it any binary and it will make servic
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

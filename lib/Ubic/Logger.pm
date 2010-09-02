@@ -1,10 +1,40 @@
 package Ubic::Logger;
 BEGIN {
-  $Ubic::Logger::VERSION = '1.13';
+  $Ubic::Logger::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
+
+# ABSTRACT: very simple logging functions
+
+
+use Term::ANSIColor qw(:constants);
+$Term::ANSIColor::AUTORESET = 1;
+
+use parent qw(Exporter);
+our @EXPORT = qw( INFO ERROR );
+
+sub INFO {
+    print '[', scalar(localtime), "]\t", @_, "\n";
+}
+
+sub ERROR {
+    my @message = ('[', scalar(localtime), "]\t", @_, "\n");
+    if (-t STDOUT) {
+        print RED(@message);
+    }
+    else {
+        print @message;
+    }
+}
+
+
+1;
+
+
+__END__
+=pod
 
 =head1 NAME
 
@@ -12,7 +42,7 @@ Ubic::Logger - very simple logging functions
 
 =head1 VERSION
 
-version 1.13
+version 1.14
 
 =head1 SYNOPSIS
 
@@ -24,23 +54,9 @@ version 1.13
 
 =over
 
-=cut
-
-use Term::ANSIColor qw(:constants);
-$Term::ANSIColor::AUTORESET = 1;
-
-use base qw(Exporter);
-
-our @EXPORT = qw( INFO ERROR );
-
 =item B<INFO(@data)>
 
 Log something.
-
-=cut
-sub INFO {
-    print '[', scalar(localtime), "]\t", @_, "\n";
-}
 
 =item B<ERROR(@data)>
 
@@ -48,19 +64,18 @@ Log some error.
 
 Message will be red if writing to terminal.
 
-=cut
-sub ERROR {
-    my @message = ('[', scalar(localtime), "]\t", @_, "\n");
-    if (-t STDOUT) {
-        print RED(@message);
-    }
-    else {
-        print @message;
-    }
-}
-
 =back
 
+=head1 AUTHOR
+
+Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

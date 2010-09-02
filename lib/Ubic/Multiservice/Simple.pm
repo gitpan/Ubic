@@ -1,45 +1,18 @@
 package Ubic::Multiservice::Simple;
 BEGIN {
-  $Ubic::Multiservice::Simple::VERSION = '1.13';
+  $Ubic::Multiservice::Simple::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: simplest multiservice, configured in constructor
 
-Ubic::Multiservice::Simple - simplest multiservice, configured in constructor
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-use Ubic::Multiservice::Simple;
-
-$ms = Ubic::Multiservice::Simple->new({
-    service1 => $s1,
-    service2 => $s2,
-});
-
-=cut
 
 use Params::Validate qw(:all);
 use Scalar::Util qw(blessed);
-use base qw(Ubic::Multiservice);
+use parent qw(Ubic::Multiservice);
 
-=head1 METHODS
-
-=over
-
-=item C<< new($params) >>
-
-Construct new C<Ubic::Multiservice::Simple> object.
-
-C<$params> must be hashref with service names as keys and services as values.
-
-=cut
 sub new {
     my $class = shift;
     my ($params) = validate_pos(@_, {
@@ -75,12 +48,52 @@ sub multiop {
     return 'allowed'; # simple multiservices are usually simple enough to allow multiservice-wide actions by default
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Multiservice::Simple - simplest multiservice, configured in constructor
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+use Ubic::Multiservice::Simple;
+
+$ms = Ubic::Multiservice::Simple->new({
+    service1 => $s1,
+    service2 => $s2,
+});
+
+=head1 METHODS
+
+=over
+
+=item C<< new($params) >>
+
+Construct new C<Ubic::Multiservice::Simple> object.
+
+C<$params> must be hashref with service names as keys and services as values.
+
 =back
 
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

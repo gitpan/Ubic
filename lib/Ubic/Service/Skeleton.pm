@@ -1,39 +1,20 @@
 package Ubic::Service::Skeleton;
 BEGIN {
-  $Ubic::Service::Skeleton::VERSION = '1.13';
+  $Ubic::Service::Skeleton::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
-
-Ubic::Service::Skeleton - skeleton of any service with common start/stop logic
-
-=head1 VERSION
-
-version 1.13
-
-=cut
+# ABSTRACT: skeleton of any service with common start/stop logic
 
 use Ubic::Result qw(result);
 use Scalar::Util qw(blessed);
 use Time::HiRes qw(sleep);
 use Ubic::Service::Utils qw(wait_for_status);
 
-use base qw(Ubic::Service);
+use parent qw(Ubic::Service);
 
-=head1 ACTIONS
-
-=over
-
-=item B<< status() >>
-
-Get status of service.
-
-Possible values: C<running>, C<not running>, C<unknown>, C<broken>.
-
-=cut
 sub status {
     my ($self) = @_;
     my $result = $self->status_impl;
@@ -42,13 +23,6 @@ sub status {
     return $result;
 }
 
-=item B<< start() >>
-
-Start service.
-
-Throws exception on failure.
-
-=cut
 sub start {
     my ($self) = @_;
 
@@ -69,15 +43,6 @@ sub start {
     }
 }
 
-=item B<< stop() >>
-
-Stop service.
-
-Return values: C<stopped>, C<not running>.
-
-Throws exception on failure.
-
-=cut
 sub stop {
     my ($self) = @_;
 
@@ -89,73 +54,22 @@ sub stop {
     return $self->_do_stop;
 }
 
-=back
-
-=head1 OVERLOADABLE METHODS
-
-Subclass must overload following methods with simple status, start and stop implementations.
-
-=over
-
-=item B<status_impl>
-
-Status implentation. Should return result object or plain string which coerces to result object.
-
-=cut
 sub status_impl {
     die 'not implemented';
 }
 
-=item B<start_impl>
-
-Start implementation.
-
-It can check for status itself and return proper C<Ubic::Result> value, or it can allow skeleton class to recheck status after that, in several attempts.
-
-To choose second option, it should return non-result value or C<result("starting")>. See C<timeout_options()> method for details about recheck policy.
-
-=cut
 sub start_impl {
     die 'not implemented';
 }
 
-=item B<stop_impl>
-
-Stop implementation.
-
-It can check for status itself and return proper C<Ubic::Result> value, or it can allow skeleton class to recheck status after that, in several attempts.
-
-To choose second option, it should return non-result value or C<result("stopping")>. See C<timeout_options()> method for details about recheck policy.
-
-=cut
 sub stop_impl {
     die 'not implemented';
 }
 
-=item B<timeout_options>
-
-Return hashref with timeout options.
-
-Possible options:
-
-=over
-
-=item I<start>
-
-Params to be used when checking for status of started service.
-
-Should contain hashref with I<step> and I<trials> options for C<wait_for_status> function from C<Ubic::Service::Utils>.
-
-=back
-
-=cut
 sub timeout_options {
     return {};
 }
 
-=back
-
-=cut
 
 ##### internal methods ######
 
@@ -222,10 +136,100 @@ sub _do_stop {
     }
 }
 
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Service::Skeleton - skeleton of any service with common start/stop logic
+
+=head1 VERSION
+
+version 1.14
+
+=head1 ACTIONS
+
+=over
+
+=item B<< status() >>
+
+Get status of service.
+
+Possible values: C<running>, C<not running>, C<unknown>, C<broken>.
+
+=item B<< start() >>
+
+Start service.
+
+Throws exception on failure.
+
+=item B<< stop() >>
+
+Stop service.
+
+Return values: C<stopped>, C<not running>.
+
+Throws exception on failure.
+
+=back
+
+=head1 OVERLOADABLE METHODS
+
+Subclass must overload following methods with simple status, start and stop implementations.
+
+=over
+
+=item B<status_impl>
+
+Status implentation. Should return result object or plain string which coerces to result object.
+
+=item B<start_impl>
+
+Start implementation.
+
+It can check for status itself and return proper C<Ubic::Result> value, or it can allow skeleton class to recheck status after that, in several attempts.
+
+To choose second option, it should return non-result value or C<result("starting")>. See C<timeout_options()> method for details about recheck policy.
+
+=item B<stop_impl>
+
+Stop implementation.
+
+It can check for status itself and return proper C<Ubic::Result> value, or it can allow skeleton class to recheck status after that, in several attempts.
+
+To choose second option, it should return non-result value or C<result("stopping")>. See C<timeout_options()> method for details about recheck policy.
+
+=item B<timeout_options>
+
+Return hashref with timeout options.
+
+Possible options:
+
+=over
+
+=item I<start>
+
+Params to be used when checking for status of started service.
+
+Should contain hashref with I<step> and I<trials> options for C<wait_for_status> function from C<Ubic::Service::Utils>.
+
+=back
+
+=back
+
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

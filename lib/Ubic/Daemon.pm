@@ -1,38 +1,13 @@
 package Ubic::Daemon;
 BEGIN {
-  $Ubic::Daemon::VERSION = '1.13';
+  $Ubic::Daemon::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: toolkit for creating daemonized process
 
-Ubic::Daemon - toolkit for creating daemonized process
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    use Ubic::Daemon qw(start_daemon stop_daemon check_daemon);
-    start_daemon({bin => '/bin/sleep', pidfile => "/var/lib/something/pid"});
-    stop_daemon("/var/lib/something/pid");
-    check_daemon("/var/lib/something/pid");
-
-=head1 DESCRIPTION
-
-This module tries to safely start and daemonize any binary or any perl function.
-
-Main source of knowledge if daemon is still running is pidfile, which is locked all the time after daemon was created.
-
-Pidfile format is unreliable and can change in future releases.
-If you really need to get daemon's pid, save it from daemon or ask me for public pidfile-reading API in this module.
-
-=over
-
-=cut
 
 use IO::Handle;
 use POSIX qw(setsid);
@@ -41,8 +16,7 @@ use Time::HiRes qw(sleep);
 
 use Carp;
 
-use Exporter;
-use base qw(Exporter);
+use parent qw(Exporter);
 our @EXPORT_OK = qw(start_daemon stop_daemon check_daemon);
 our %EXPORT_TAGS = (
     all => \@EXPORT_OK,
@@ -170,27 +144,6 @@ sub _log {
     print {$fh} '[', scalar(localtime), "]\t$$\t", @_, "\n";
 }
 
-=item B<stop_daemon($pidfile)>
-
-=item B<stop_daemon($pidfile, $options)>
-
-Stop daemon which was started with C<$pidfile>.
-
-It sends I<SIGTERM> to process with pid specified in C<$pidfile> until it will stop to exist (according to C<check_daemon()> method). If it fails to stop process after several seconds, exception will be raised.
-
-Options:
-
-=over
-
-=item I<timeout>
-
-Number of seconds to wait before raising exception that daemon can't be stopped.
-
-=back
-
-Return value: C<not running> if daemon is already not running; C<stopped> if daemon is stopped by I<SIGTERM>.
-
-=cut
 sub stop_daemon($;@) {
     my ($pidfile, @tail) = validate_pos(@_, { type => SCALAR }, 0);
     my $options = validate(@tail, {
@@ -232,59 +185,6 @@ sub stop_daemon($;@) {
     die "failed to stop daemon with pidfile '$pidfile' (pid $pid, timeout $timeout, trials $trial)";
 }
 
-=item B<start_daemon($params)>
-
-Start daemon. Params:
-
-=over
-
-=item I<bin>
-
-Binary which will be daemonized.
-
-Can be string or arrayref with arguments. Arrayref-style values are recommended in complex cases, because otherwise C<exec()> can invoke sh shell which will immediately exit on sigterm.
-
-=item I<function>
-
-Function which will be daemonized. One and only one of I<function> and I<bin> must be specified.
-
-Function daemonization is a dangerous feature and will probably be deprecated and removed in future.
-
-=item I<name>
-
-Name of guardian process. Guardian will be named "ubic-guardian $name".
-
-If not specified, I<bin>'s value will be assumed, or C<anonymous> when daemonizing perl code.
-
-=item I<pidfile>
-
-Pidfile. It will be locked for a whole time of service's work. It will contain pid of daemon.
-
-=item I<stdout>
-
-Write all daemon's output to given file. If not specified, all output will be redirected to C</dev/null>.
-
-=item I<stderr>
-
-Write all daemon's error output to given file. If not specified, all stderr will be redirected to C</dev/null>.
-
-=item I<ubic_log>
-
-Filename of ubic log. It will contain some technical information about running daemon.
-
-If not specified, C</dev/null> will be assumed.
-
-=item I<term_timeout>
-
-Can contain integer number of seconds to wait between sending I<SIGTERM> and I<SIGKILL> to daemon.
-
-Zero value means that guardian will send sigkill to daemon immediately.
-
-Default is 10 seconds.
-
-=back
-
-=cut
 sub start_daemon($) {
     my %options = validate(@_, {
         bin => { type => SCALAR | ARRAYREF, optional => 1 },
@@ -496,13 +396,6 @@ sub start_daemon($) {
     die "Failed to create daemon: '$out'";
 }
 
-=item B<check_daemon($pidfile)>
-
-Check whether daemon is running.
-
-Returns true if it is so.
-
-=cut
 sub check_daemon {
     my ($pidfile) = @_;
     if (not -d $pidfile and not -s $pidfile) {
@@ -563,6 +456,117 @@ sub check_daemon {
     return 0;
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Daemon - toolkit for creating daemonized process
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    use Ubic::Daemon qw(start_daemon stop_daemon check_daemon);
+    start_daemon({bin => '/bin/sleep', pidfile => "/var/lib/something/pid"});
+    stop_daemon("/var/lib/something/pid");
+    check_daemon("/var/lib/something/pid");
+
+=head1 DESCRIPTION
+
+This module tries to safely start and daemonize any binary or any perl function.
+
+Main source of knowledge if daemon is still running is pidfile, which is locked all the time after daemon was created.
+
+Pidfile format is unreliable and can change in future releases.
+If you really need to get daemon's pid, save it from daemon or ask me for public pidfile-reading API in this module.
+
+=over
+
+=item B<stop_daemon($pidfile)>
+
+=item B<stop_daemon($pidfile, $options)>
+
+Stop daemon which was started with C<$pidfile>.
+
+It sends I<SIGTERM> to process with pid specified in C<$pidfile> until it will stop to exist (according to C<check_daemon()> method). If it fails to stop process after several seconds, exception will be raised.
+
+Options:
+
+=over
+
+=item I<timeout>
+
+Number of seconds to wait before raising exception that daemon can't be stopped.
+
+=back
+
+Return value: C<not running> if daemon is already not running; C<stopped> if daemon is stopped by I<SIGTERM>.
+
+=item B<start_daemon($params)>
+
+Start daemon. Params:
+
+=over
+
+=item I<bin>
+
+Binary which will be daemonized.
+
+Can be string or arrayref with arguments. Arrayref-style values are recommended in complex cases, because otherwise C<exec()> can invoke sh shell which will immediately exit on sigterm.
+
+=item I<function>
+
+Function which will be daemonized. One and only one of I<function> and I<bin> must be specified.
+
+Function daemonization is a dangerous feature and will probably be deprecated and removed in future.
+
+=item I<name>
+
+Name of guardian process. Guardian will be named "ubic-guardian $name".
+
+If not specified, I<bin>'s value will be assumed, or C<anonymous> when daemonizing perl code.
+
+=item I<pidfile>
+
+Pidfile. It will be locked for a whole time of service's work. It will contain pid of daemon.
+
+=item I<stdout>
+
+Write all daemon's output to given file. If not specified, all output will be redirected to C</dev/null>.
+
+=item I<stderr>
+
+Write all daemon's error output to given file. If not specified, all stderr will be redirected to C</dev/null>.
+
+=item I<ubic_log>
+
+Filename of ubic log. It will contain some technical information about running daemon.
+
+If not specified, C</dev/null> will be assumed.
+
+=item I<term_timeout>
+
+Can contain integer number of seconds to wait between sending I<SIGTERM> and I<SIGKILL> to daemon.
+
+Zero value means that guardian will send sigkill to daemon immediately.
+
+Default is 10 seconds.
+
+=back
+
+=item B<check_daemon($pidfile)>
+
+Check whether daemon is running.
+
+Returns true if it is so.
+
 =back
 
 =head1 BUGS
@@ -577,6 +581,12 @@ L<Ubic::Service::SimpleDaemon>
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

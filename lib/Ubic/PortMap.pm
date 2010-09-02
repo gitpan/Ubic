@@ -1,31 +1,13 @@
 package Ubic::PortMap;
 BEGIN {
-  $Ubic::PortMap::VERSION = '1.13';
+  $Ubic::PortMap::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: update and read mapping of ports to service names.
 
-Ubic::PortMap - update and read mapping of ports to service names.
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    use Ubic::PortMap;
-
-    Ubic::PortMap::update();
-    print Ubic::PortMap::port2name(12345); # ubic-ping
-
-=head1 METHODS
-
-=over
-
-=cut
 
 use Ubic::Logger;
 use Ubic::Persistent;
@@ -40,11 +22,6 @@ sub _portmap_file {
     return $PORTMAP_FILE;
 }
 
-=item B<< update() >>
-
-Update portmap file.
-
-=cut
 sub update {
     validate_pos(@_);
 
@@ -85,13 +62,6 @@ sub update {
     return;
 }
 
-=item B<< port2name($port) >>
-
-Get service by port.
-
-If there are several services with one port, it will try to find enabled service among them.
-
-=cut
 sub port2name($) {
     my ($port) = validate_pos(@_, { regex => qr/^\d+$/ });
     my $portmap = Ubic::Persistent->load(_portmap_file());
@@ -103,12 +73,54 @@ sub port2name($) {
     }
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::PortMap - update and read mapping of ports to service names.
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+    use Ubic::PortMap;
+
+    Ubic::PortMap::update();
+    print Ubic::PortMap::port2name(12345); # ubic-ping
+
+=head1 METHODS
+
+=over
+
+=item B<< update() >>
+
+Update portmap file.
+
+=item B<< port2name($port) >>
+
+Get service by port.
+
+If there are several services with one port, it will try to find enabled service among them.
+
 =back
 
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

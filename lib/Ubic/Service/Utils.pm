@@ -1,62 +1,21 @@
 package Ubic::Service::Utils;
 BEGIN {
-  $Ubic::Service::Utils::VERSION = '1.13';
+  $Ubic::Service::Utils::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: helpers for custom service authors
 
-Ubic::Service::Utils - helpers for custom service authors
-
-=head1 VERSION
-
-version 1.13
-
-=head1 FUNCTIONS
-
-=over
-
-=cut
 
 use Params::Validate qw(:all);
 use Time::HiRes qw(sleep);
 use Ubic::Result qw(result);
-use base qw(Exporter);
+
+use parent qw(Exporter);
 our @EXPORT_OK = qw(wait_for_status);
 
-=item B<wait_for_status($params)>
-
-Wait until status will become equal to one of specified values.
-
-Supports customizable retries.
-
-Parameters:
-
-=over
-
-=item I<service>
-
-Service object.
-
-=item I<expect_status>
-
-List of expected statuses. Retries will be stopped when service will return one of given statuses.
-
-=item I<trials>
-
-Number of retries to do.
-
-=item I<step>
-
-Amount of seconds to sleep after first trial. Will be multiplied on trial number, i.e. for C< trials = 4, step = 2>, status will be checked like this: C<check; sleep 2; check; sleep 4; check; sleep 6; check>.
-
-Value is allowed to be float.
-
-=back
-
-=cut
 sub wait_for_status {
     my $params = validate(@_, {
         service => { isa => 'Ubic::Service' },
@@ -89,12 +48,67 @@ sub wait_for_status {
     return $status;
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Service::Utils - helpers for custom service authors
+
+=head1 VERSION
+
+version 1.14
+
+=head1 FUNCTIONS
+
+=over
+
+=item B<wait_for_status($params)>
+
+Wait until status will become equal to one of specified values.
+
+Supports customizable retries.
+
+Parameters:
+
+=over
+
+=item I<service>
+
+Service object.
+
+=item I<expect_status>
+
+List of expected statuses. Retries will be stopped when service will return one of given statuses.
+
+=item I<trials>
+
+Number of retries to do.
+
+=item I<step>
+
+Amount of seconds to sleep after first trial. Will be multiplied on trial number, i.e. for C< trials = 4, step = 2>, status will be checked like this: C<check; sleep 2; check; sleep 4; check; sleep 6; check>.
+
+Value is allowed to be float.
+
+=back
+
 =back
 
 =head1 AUTHOR
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

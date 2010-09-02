@@ -1,33 +1,13 @@
 package Ubic::Cmd;
 BEGIN {
-  $Ubic::Cmd::VERSION = '1.13';
+  $Ubic::Cmd::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: ubic methods with pretty printing.
 
-Ubic::Cmd - ubic methods with pretty printing.
-
-=head1 VERSION
-
-version 1.13
-
-=head1 SYNOPSIS
-
-    use Ubic::Cmd;
-    Ubic::Cmd->start("aaa.bbb");
-
-=head1 SYNOPSIS
-
-When using ubic from simple scripts, you want to print some output about what happened when starting/stopping service.
-
-This package mostly conforms to C<Ubic> module API (i.e. to LSB init-script API).
-
-It also greatly simplifies writing /etc/init.d/ scripts (see synopsis).
-
-=cut
 
 use Params::Validate qw(:all);
 use Scalar::Util qw(blessed);
@@ -38,24 +18,12 @@ use Ubic;
 use Ubic::Result qw(result);
 use Ubic::Cmd::Results;
 
-=head1 CONSTRUCTOR
-
-=over
-
-=item B<< new($params) >>
-
-All methods of this class can be invoked as class methods, but you can construct your own instance if neccesary (although constructor doesn't have any options by now, so it is useless).
-
-=cut
 sub new {
     my $class = shift;
     my $self = validate(@_, {});
     return bless $self => $class;
 }
 
-=back
-
-=cut
 
 our $SINGLETON;
 sub _obj {
@@ -71,13 +39,6 @@ sub _obj {
     die "Unknown argument '$param'";
 }
 
-=head1 LSB METHODS
-
-All following methods do the same things as methods in C<Ubic>, but they also print messages about their actions.
-
-=over
-
-=cut
 
 sub _any_method {
     my $self = shift;
@@ -107,9 +68,6 @@ sub _any_method {
     return $results;
 }
 
-=item B<< start($service) >>
-
-=cut
 sub start {
     my $self = _obj(shift);
     return $self->_any_method({
@@ -121,9 +79,6 @@ sub start {
 }
 
 
-=item B<< stop($service) >>
-
-=cut
 sub stop {
     my $self = _obj(shift);
     return $self->_any_method({
@@ -134,9 +89,6 @@ sub stop {
     });
 }
 
-=item B<< restart($service) >>
-
-=cut
 sub restart {
     my $self = _obj(shift);
     return $self->_any_method({
@@ -147,9 +99,6 @@ sub restart {
     });
 }
 
-=item B<< try_restart($service) >>
-
-=cut
 sub try_restart {
     my $self = _obj(shift);
     return $self->_any_method({
@@ -161,9 +110,6 @@ sub try_restart {
     });
 }
 
-=item B<< reload($service) >>
-
-=cut
 sub reload {
     my $self = _obj(shift);
     return $self->_any_method({
@@ -175,9 +121,6 @@ sub reload {
     });
 }
 
-=item B<< force_reload($name) >>
-
-=cut
 sub force_reload {
     my $self = _obj(shift);
     return $self->_any_method({
@@ -189,17 +132,6 @@ sub force_reload {
     });
 }
 
-=back
-
-=head1 OTHER METHODS
-
-=over
-
-=item B<< do_custom_command($service, $command) >>
-
-Do non-LSB command.
-
-=cut
 sub do_custom_command {
     my $self = _obj(shift);
     my $service = shift;
@@ -243,13 +175,6 @@ sub do_custom_command {
     return;
 }
 
-=item B<< usage($command) >>
-
-Print command's usage.
-
-WARNING: exits on invocation!
-
-=cut
 sub usage {
     my $self = _obj(shift);
     my $command = shift;
@@ -258,11 +183,6 @@ sub usage {
 }
 
 
-=item B<< traverse($name, $callback) >>
-
-Process each subservice of C<$name> with C<$callback>, printing correct indentations.
-
-=cut
 sub traverse($$$) {
     my $self = _obj(shift);
     my ($service, $callback, $indent) = @_;
@@ -291,13 +211,6 @@ sub traverse($$$) {
     }
 }
 
-=item B<< print_status($name, $cached_flag) >>
-
-=item B<< print_status($service, $cached_flag) >>
-
-Print status of given service identified by name or by object. If C<$cached_flag> is true, prints status cached in watchdog file.
-
-=cut
 sub print_status($$;$$) {
     my $self = _obj(shift);
     my $service = shift;
@@ -340,29 +253,6 @@ sub print_status($$;$$) {
     return $results;
 }
 
-=item B<< run($params_hashref) >>
-
-Run given command for given service and exit with LSB-compatible exit code.
-
-Parameters:
-
-=over
-
-=item I<name>
-
-Service's name or arrayref with names.
-
-=item I<command>
-
-Command to execute.
-
-=item I<force>
-
-Force command on protected multiservice.
-
-=back
-
-=cut
 sub run {
     my $self = _obj(shift);
     my $params = validate(@_, {
@@ -483,6 +373,110 @@ sub _run_impl {
     return;
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Cmd - ubic methods with pretty printing.
+
+=head1 VERSION
+
+version 1.14
+
+=head1 SYNOPSIS
+
+When using ubic from simple scripts, you want to print some output about what happened when starting/stopping service.
+
+This package mostly conforms to C<Ubic> module API (i.e. to LSB init-script API).
+
+It also greatly simplifies writing /etc/init.d/ scripts (see synopsis).
+
+=head1 SYNOPSIS
+
+    use Ubic::Cmd;
+    Ubic::Cmd->start("aaa.bbb");
+
+=head1 CONSTRUCTOR
+
+=over
+
+=item B<< new($params) >>
+
+All methods of this class can be invoked as class methods, but you can construct your own instance if neccesary (although constructor doesn't have any options by now, so it is useless).
+
+=back
+
+=head1 LSB METHODS
+
+All following methods do the same things as methods in C<Ubic>, but they also print messages about their actions.
+
+=over
+
+=item B<< start($service) >>
+
+=item B<< stop($service) >>
+
+=item B<< restart($service) >>
+
+=item B<< try_restart($service) >>
+
+=item B<< reload($service) >>
+
+=item B<< force_reload($name) >>
+
+=back
+
+=head1 OTHER METHODS
+
+=over
+
+=item B<< do_custom_command($service, $command) >>
+
+Do non-LSB command.
+
+=item B<< usage($command) >>
+
+Print command's usage.
+
+WARNING: exits on invocation!
+
+=item B<< traverse($name, $callback) >>
+
+Process each subservice of C<$name> with C<$callback>, printing correct indentations.
+
+=item B<< print_status($name, $cached_flag) >>
+
+=item B<< print_status($service, $cached_flag) >>
+
+Print status of given service identified by name or by object. If C<$cached_flag> is true, prints status cached in watchdog file.
+
+=item B<< run($params_hashref) >>
+
+Run given command for given service and exit with LSB-compatible exit code.
+
+Parameters:
+
+=over
+
+=item I<name>
+
+Service's name or arrayref with names.
+
+=item I<command>
+
+Command to execute.
+
+=item I<force>
+
+Force command on protected multiservice.
+
+=back
+
 =back
 
 =head1 BUGS AND CAVEATS
@@ -495,6 +489,12 @@ When in doubt, consider L<Ubic> or system("ubic COMMAND SERVICE") instead.
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

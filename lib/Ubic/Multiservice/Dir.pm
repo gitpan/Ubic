@@ -1,49 +1,25 @@
 package Ubic::Multiservice::Dir;
 BEGIN {
-  $Ubic::Multiservice::Dir::VERSION = '1.13';
+  $Ubic::Multiservice::Dir::VERSION = '1.14';
 }
 
 use strict;
 use warnings;
 
-=head1 NAME
+# ABSTRACT: multiservice which uses directory with configs to instantiate services
 
-Ubic::Multiservice::Dir - multiservice which uses directory with configs to instantiate services
-
-=head1 VERSION
-
-version 1.13
-
-=cut
-
-use base qw(Ubic::Multiservice);
+use parent qw(Ubic::Multiservice);
 use Params::Validate qw(:all);
 use Carp;
 use File::Basename;
 use Scalar::Util qw(blessed);
 
-=head1 METHODS
-
-=over
-
-=item B<< new($dir) >>
-
-Constructor.
-
-=cut
 sub new($$) {
     my $class = shift;
     my ($dir) = validate_pos(@_, 1);
     return bless { service_dir => $dir } => $class;
 }
 
-=item B<< set_service_dir($dir) >>
-
-Set service dir in runtime.
-
-This class can be mixin to another service, in this case constructor will never be invoked.
-
-=cut
 sub set_service_dir {
     my $self = shift;
     my $dir = shift;
@@ -109,6 +85,35 @@ sub service_names($) {
     return @names;
 }
 
+
+1;
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Ubic::Multiservice::Dir - multiservice which uses directory with configs to instantiate services
+
+=head1 VERSION
+
+version 1.14
+
+=head1 METHODS
+
+=over
+
+=item B<< new($dir) >>
+
+Constructor.
+
+=item B<< set_service_dir($dir) >>
+
+Set service dir in runtime.
+
+This class can be mixin to another service, in this case constructor will never be invoked.
+
 =back
 
 =head1 SEE ALSO
@@ -121,6 +126,12 @@ L<Ubic> - main ubic module uses this class as root namespace of services.
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;

@@ -1,6 +1,6 @@
 package Ubic::Cmd::Results;
 BEGIN {
-  $Ubic::Cmd::Results::VERSION = '1.13';
+  $Ubic::Cmd::Results::VERSION = '1.14';
 }
 
 use strict;
@@ -11,13 +11,100 @@ $Term::ANSIColor::AUTORESET = 1;
 
 use Params::Validate qw(:all);
 
+# ABSTRACT: console results set
+
+sub new {
+    return bless { data => [] } => shift;
+}
+
+sub print_bad {
+    my $self = shift;
+    if (-t STDOUT) {
+        print RED @_;
+    }
+    else {
+        print @_;
+    }
+}
+
+sub print_good {
+    my $self = shift;
+    if (-t STDOUT) {
+        print GREEN @_;
+    }
+    else {
+        print @_;
+    }
+}
+
+sub print($$;$) {
+    my $self = shift;
+    my ($result, $color) = validate_pos(@_, { isa => 'Ubic::Result::Class' }, { optional => 1, regex => qr/^good|bad$/ });
+
+    $color ||= '';
+    if ($result->status eq 'broken' or $color eq 'bad') {
+        my $str = "$result";
+        chomp $str;
+        $self->print_bad("$str\n");
+        $self->add($result, 'bad');
+    }
+    else {
+        $self->print_good("$result\n");
+        $self->add($result, 'good');
+    }
+
+}
+
+sub add {
+    my ($self, $result, $type) = @_;
+    $type ||= 'good'; # is this too optimistic?
+    push @{$self->{data}}, [$result => $type];
+}
+
+sub results {
+    my $self = shift;
+    return map { $_->[0] } @{ $self->{data} };
+}
+
+sub exit_code {
+    my ($self, $new_code) = validate_pos(@_, 1, 0);
+    if (defined $new_code) {
+        $self->{exit_code} = $new_code;
+        return;
+    }
+    if ($self->{exit_code}) {
+        return $self->{exit_code};
+    }
+    my $data = $self->{data};
+    my $bad = grep { $_->[1] eq 'bad' } @$data;
+    return ($bad ? 1 : 0);
+}
+
+
+sub finish($$) {
+    my $self = shift;
+    my $data = $self->{data};
+    my $bad = grep { $_->[1] eq 'bad' } @$data;
+    if (@$data > 1) {
+        $self->print_bad("Failed: $bad service(s)\n");
+    }
+    return $self->exit_code;
+}
+
+
+1;
+
+
+__END__
+=pod
+
 =head1 NAME
 
 Ubic::Cmd::Results - console results set
 
 =head1 VERSION
 
-version 1.13
+version 1.14
 
 =head1 SYNOPSIS
 
@@ -43,40 +130,13 @@ This class controls output of service actions.
 
 Constructor.
 
-=cut
-sub new {
-    return bless { data => [] } => shift;
-}
-
 =item B<< print_bad(@strings) >>
 
 Print given strings in red color if stdout is terminal, and in plain text otherwise.
 
-=cut
-sub print_bad {
-    my $self = shift;
-    if (-t STDOUT) {
-        print RED @_;
-    }
-    else {
-        print @_;
-    }
-}
-
 =item B<< print_good(@strings) >>
 
 Print given strings in green color if stdout is terminal, and in plain text otherwise.
-
-=cut
-sub print_good {
-    my $self = shift;
-    if (-t STDOUT) {
-        print GREEN @_;
-    }
-    else {
-        print @_;
-    }
-}
 
 =item B<< print($result) >>
 
@@ -88,45 +148,13 @@ C<$type> can be "good" or "bad".
 
 If C<$type> is specified, it is taken into consideration, otherwise result is considered good unless it is "broken".
 
-=cut
-sub print($$;$) {
-    my $self = shift;
-    my ($result, $color) = validate_pos(@_, { isa => 'Ubic::Result::Class' }, { optional => 1, regex => qr/^good|bad$/ });
-
-    $color ||= '';
-    if ($result->status eq 'broken' or $color eq 'bad') {
-        my $str = "$result";
-        chomp $str;
-        $self->print_bad("$str\n");
-        $self->add($result, 'bad');
-    }
-    else {
-        $self->print_good("$result\n");
-        $self->add($result, 'good');
-    }
-
-}
-
 =item B<< add($result) >>
 
 Add result without printing.
 
-=cut
-sub add {
-    my ($self, $result, $type) = @_;
-    $type ||= 'good'; # is this too optimistic?
-    push @{$self->{data}}, [$result => $type];
-}
-
 =item B<< results() >>
 
 Get all results.
-
-=cut
-sub results {
-    my $self = shift;
-    return map { $_->[0] } @{ $self->{data} };
-}
 
 =item B<< exit_code() >>
 
@@ -138,36 +166,9 @@ It can be detected dynamically based on results content, or set explicitly from 
 
 Set exit code explicitly.
 
-=cut
-sub exit_code {
-    my ($self, $new_code) = validate_pos(@_, 1, 0);
-    if (defined $new_code) {
-        $self->{exit_code} = $new_code;
-        return;
-    }
-    if ($self->{exit_code}) {
-        return $self->{exit_code};
-    }
-    my $data = $self->{data};
-    my $bad = grep { $_->[1] eq 'bad' } @$data;
-    return ($bad ? 1 : 0);
-}
-
-
 =item B<< finish(\@results) >>
 
 Print error if some of results are bad, and return exit code.
-
-=cut
-sub finish($$) {
-    my $self = shift;
-    my $data = $self->{data};
-    my $bad = grep { $_->[1] eq 'bad' } @$data;
-    if (@$data > 1) {
-        $self->print_bad("Failed: $bad service(s)\n");
-    }
-    return $self->exit_code;
-}
 
 =back
 
@@ -175,6 +176,12 @@ sub finish($$) {
 
 Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
 
-1;
