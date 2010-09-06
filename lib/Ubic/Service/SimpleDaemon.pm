@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.14';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.15';
 }
 
 use strict;
@@ -96,7 +96,7 @@ Ubic::Service::SimpleDaemon - variant of service when your service is simple dae
 
 =head1 VERSION
 
-version 1.14
+version 1.15
 
 =head1 SYNOPSIS
 

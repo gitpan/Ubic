@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 BEGIN {
-  $Ubic::Multiservice::Dir::VERSION = '1.14';
+  $Ubic::Multiservice::Dir::VERSION = '1.15';
 }
 
 use strict;
@@ -98,7 +98,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.14
+version 1.15
 
 =head1 METHODS
 

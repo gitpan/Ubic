@@ -1,6 +1,6 @@
 package Ubic::Lockf::Alarm;
 BEGIN {
-  $Ubic::Lockf::Alarm::VERSION = '1.14';
+  $Ubic::Lockf::Alarm::VERSION = '1.15';
 }
 
 # we can't use alarm from Time::HiRes, it don't return current alarm value on perl 5.8.8
@@ -25,7 +25,7 @@ sub DESTROY ($) {
 
 package Ubic::Lockf;
 BEGIN {
-  $Ubic::Lockf::VERSION = '1.14';
+  $Ubic::Lockf::VERSION = '1.15';
 }
 use strict;
 use Fcntl qw(:flock);
@@ -142,7 +142,7 @@ Ubic::Lockf::Alarm - file locker with an automatic out-of-scope unlocking mechan
 
 =head1 VERSION
 
-version 1.14
+version 1.15
 
 =head1 SYNOPSIS
 
