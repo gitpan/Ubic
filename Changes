@@ -1,5 +1,16 @@
 Revision history for Ubic
 
+1.16    Tue Sep 07, 2010
+        * Ubic::Daemon:
+         - check_daemon() now returns proper Ubic::Daemon::Status object
+         - don't log warning if daemon exited by sigterm
+         - minor logging cleanup
+        * Ubic::Service::SimpleDaemon returns daemon pid in status msg
+        * test improvements:
+         - using Test::TCP when testing ubic-ping
+         - watchdog.t skips all tests if 'fakeroot' is not present
+        * Ubic::Cmd: print 'running' result as good when it contains extended message
+
 1.15    Mon Sep 06, 2010
         * tests fixed to work under root user (http://github.com/berekuk/Ubic/issues#issue/4)
 

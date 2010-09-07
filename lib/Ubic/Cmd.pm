@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 BEGIN {
-  $Ubic::Cmd::VERSION = '1.15';
+  $Ubic::Cmd::VERSION = '1.16';
 }
 
 use strict;
@@ -238,7 +238,7 @@ sub print_status($$;$$) {
                 $status = result($@);
             }
         }
-        if ($status eq 'running') {
+        if ($status->status eq 'running') {
             $results->print($status);
         }
         else {
@@ -386,7 +386,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.15
+version 1.16
 
 =head1 SYNOPSIS
 

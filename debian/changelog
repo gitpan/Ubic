@@ -1,3 +1,23 @@
+ubic (1.16) unstable; urgency=low
+
+  * Ubic::Daemon:
+   - check_daemon() now returns proper Ubic::Daemon::Status object
+   - don't log warning if daemon exited by sigterm
+   - minor logging cleanup
+  * Ubic::Service::SimpleDaemon returns daemon pid in status msg
+  * test improvements:
+   - using Test::TCP when testing ubic-ping
+   - watchdog.t skips all tests if 'fakeroot' is not present
+  * Ubic::Cmd: print 'running' result as good when it contains extended message
+
+ -- Vyacheslav Matjukhin (No comments) <mmcleric@yandex-team.ru>  Tue, 07 Sep 2010 17:50:23 +0400
+
+ubic (1.15.1) unstable; urgency=low
+
+  * libparent-perl in dependencies
+
+ -- Vyacheslav Matjukhin (No comments) <mmcleric@yandex-team.ru>  Mon, 06 Sep 2010 20:44:33 +0400
+
 ubic (1.15) unstable; urgency=low
 
   * tests fixed to work under root user (http://github.com/berekuk/Ubic/issues#issue/4)

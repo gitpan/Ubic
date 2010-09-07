@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package bin::ubic_update;
 BEGIN {
-  $bin::ubic_update::VERSION = '1.15';
+  $bin::ubic_update::VERSION = '1.16';
 }
 
 use strict;
@@ -32,7 +32,7 @@ bin::ubic_update - update ubic metadata
 
 =head1 VERSION
 
-version 1.15
+version 1.16
 
 =head1 SYNOPSIS
 

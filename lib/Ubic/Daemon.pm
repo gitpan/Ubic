@@ -1,6 +1,6 @@
 package Ubic::Daemon;
 BEGIN {
-  $Ubic::Daemon::VERSION = '1.15';
+  $Ubic::Daemon::VERSION = '1.16';
 }
 
 use strict;
@@ -12,6 +12,7 @@ use warnings;
 use IO::Handle;
 use POSIX qw(setsid);
 use Ubic::Lockf;
+use Ubic::Daemon::Status;
 use Time::HiRes qw(sleep);
 
 use Carp;
@@ -193,7 +194,7 @@ sub start_daemon($) {
         pidfile => { type => SCALAR },
         stdout => { type => SCALAR, default => '/dev/null' },
         stderr => { type => SCALAR, default => '/dev/null' },
-        ubic_log => { type => SCALAR, default => '/dev/null' },
+        ubic_log => { type => SCALAR, optional => 1 },
         user => { type => SCALAR, optional => 1 },
         term_timeout => { type => SCALAR, default => 10, regex => qr/^\d+$/ },
     });
@@ -237,12 +238,12 @@ sub start_daemon($) {
         my $ubic_fh;
         my $lock;
         my $instant_exit = sub {
-            my $status = shift;
+            my $status = shift; # nobody cares for this status, anyway...
             close($ubic_fh) if $ubic_fh;
             STDOUT->flush;
             STDERR->flush;
             undef $lock;
-            POSIX::_exit($status); # don't allow to lock to be released - this process was forked from unknown environment, don't want to run unknown destructors
+            POSIX::_exit($status); # don't allow any cleanup to happen - this process was forked from unknown environment, don't want to run unknown destructors
         };
 
         eval {
@@ -269,14 +270,16 @@ sub start_daemon($) {
             open STDOUT, ">>", $stdout or die "Can't write to '$stdout': $!";
             open STDERR, ">>", $stderr or die "Can't write to '$stderr': $!";
             open STDIN, "<", $stdin or die "Can't read from '$stdin': $!";
-            open $ubic_fh, ">>", $ubic_log or die "Can't write to '$ubic_log': $!";
-            $ubic_fh->autoflush(1);
+            if (defined $ubic_log) {
+                open $ubic_fh, ">>", $ubic_log or die "Can't write to '$ubic_log': $!";
+                $ubic_fh->autoflush(1);
+            }
             $SIG{HUP} = 'ignore';
             $0 = "ubic-guardian $name";
             setsid; # ubic-daemon gets it's own session
-            _log($ubic_fh, "self name: $0");
+            _log($ubic_fh, "guardian name: $0");
 
-            _log($ubic_fh, "[$$] getting lock...");
+            _log($ubic_fh, "getting lock...");
 
             # We're passing 'timeout' option to lockf call to get rid of races.
             # There should be no races when Ubic::Daemon is used in context of
@@ -285,7 +288,7 @@ sub start_daemon($) {
             $lock = _lock_pidfile($pidfile, 5) or die "Can't lock $pidfile";
 
             _remove_pidfile($pidfile);
-            _log($ubic_fh, "[$$] got lock");
+            _log($ubic_fh, "got lock");
 
             if (defined $user) {
                 my $id = getpwnam($user);
@@ -316,12 +319,14 @@ sub start_daemon($) {
                     $instant_exit->(0);
                 };
 
+                my $sigterm_sent;
                 $SIG{TERM} = sub {
                     if ($term_timeout > 0) {
                         $SIG{ALRM} = $kill_sub;
                         alarm($term_timeout);
                         _log($ubic_fh, "sending SIGTERM to $child");
                         kill -15 => $child;
+                        $sigterm_sent = 1;
                     }
                     else {
                         $kill_sub->();
@@ -334,13 +339,19 @@ sub start_daemon($) {
                 waitpid($child, 0);
                 if ($? > 0) {
                     my $msg;
-                    if ($? & 127) {
-                        $msg = "Daemon $child failed with signal ".($? & 127);
+                    my $signal = $? & 127;
+                    if ($signal) {
+                        if ($sigterm_sent && $signal == &POSIX::SIGTERM) {
+                            # it's ok, we probably sent this signal ourselves
+                            _log($ubic_fh, "daemon exited by sigterm");
+                            _remove_pidfile($pidfile);
+                            $instant_exit->(0);
+                        }
+                        $msg = "Daemon $child failed with signal $signal";
                     }
                     else {
                         $msg = "Daemon failed: $?";
                     }
-                    warn $msg;
                     _log($ubic_fh, $msg);
                     _remove_pidfile($pidfile);
                     $instant_exit->(1);
@@ -399,21 +410,21 @@ sub start_daemon($) {
 sub check_daemon {
     my ($pidfile) = @_;
     if (not -d $pidfile and not -s $pidfile) {
-        return 0; # empty, old-style pidfile
+        return undef; # empty, old-style pidfile
     }
     if (-d $pidfile and not -e "$pidfile/pid") {
-        return 0;
+        return undef;
     }
 
     my $lock = _lock_pidfile($pidfile);
+    my $piddata = _read_pidfile($pidfile);
     unless ($lock) {
         # locked => daemon is alive
-        return 1;
+        return Ubic::Daemon::Status->new({ pid => $piddata->{daemon} });
     }
 
-    my $piddata = _read_pidfile($pidfile);
     unless ($piddata) {
-        return 0;
+        return undef;
     }
 
     # acquired lock when pidfile exists
@@ -428,7 +439,7 @@ sub check_daemon {
     unless (-d "/proc/$piddata->{daemon}") {
         _remove_pidfile($pidfile);
         print "pidfile $pidfile removed - daemon with cached pid $piddata->{daemon} not found\n";
-        return 0;
+        return undef;
     }
     open my $daemon_cmd_fh, '<', "/proc/$piddata->{daemon}/cmdline" or die "Can't open daemon's cmdline: $!";
     my $daemon_cmd = <$daemon_cmd_fh>;
@@ -440,20 +451,20 @@ sub check_daemon {
     my $guid = _pid2guid($piddata->{daemon});
     unless ($guid) {
         print "daemon '$daemon_cmd' from $pidfile just disappeared\n";
-        return 0;
+        return undef;
     }
     if ($guid eq $piddata->{guid}) {
         warn "killing unguarded daemon '$daemon_cmd' with pid $piddata->{daemon} from $pidfile\n";
         kill -9 => $piddata->{daemon};
         _remove_pidfile($pidfile);
         print "pidfile $pidfile removed\n";
-        return 0;
+        return undef;
     }
     print "daemon pid $piddata->{daemon} cached in pidfile $pidfile, ubic-guardian not found\n";
     print "current process '$daemon_cmd' with that pid looks too fresh and will not be killed\n";
     print "pidfile $pidfile removed\n";
     _remove_pidfile($pidfile);
-    return 0;
+    return undef;
 }
 
 
@@ -469,23 +480,25 @@ Ubic::Daemon - toolkit for creating daemonized process
 
 =head1 VERSION
 
-version 1.15
+version 1.16
 
 =head1 SYNOPSIS
 
     use Ubic::Daemon qw(start_daemon stop_daemon check_daemon);
+
     start_daemon({bin => '/bin/sleep', pidfile => "/var/lib/something/pid"});
     stop_daemon("/var/lib/something/pid");
-    check_daemon("/var/lib/something/pid");
+
+    $daemon_status = check_daemon("/var/lib/something/pid");
 
 =head1 DESCRIPTION
 
-This module tries to safely start and daemonize any binary or any perl function.
+This module can safely start and daemonize any binary or any perl coderef.
 
 Main source of knowledge if daemon is still running is pidfile, which is locked all the time after daemon was created.
 
-Pidfile format is unreliable and can change in future releases.
-If you really need to get daemon's pid, save it from daemon or ask me for public pidfile-reading API in this module.
+Pidfile format is unreliable and can change in future releases (it's actually even not a file, it's a dir with several files inside it),
+so if you need to get daemon's pid, use check_daemon() result.
 
 =over
 
@@ -495,7 +508,9 @@ If you really need to get daemon's pid, save it from daemon or ask me for public
 
 Stop daemon which was started with C<$pidfile>.
 
-It sends I<SIGTERM> to process with pid specified in C<$pidfile> until it will stop to exist (according to C<check_daemon()> method). If it fails to stop process after several seconds, exception will be raised.
+It sends I<SIGTERM> to process with pid specified in C<$pidfile> until it will stop to exist (according to C<check_daemon()> method).
+
+If it fails to stop process after several seconds, exception will be raised (this should never happen, assuming you have enough grants).
 
 Options:
 
@@ -511,7 +526,13 @@ Return value: C<not running> if daemon is already not running; C<stopped> if dae
 
 =item B<start_daemon($params)>
 
-Start daemon. Params:
+Start daemon.
+
+Throws exception if anything fails.
+
+Successful completion doesn't mean much, though, since daemon can fail any moment later, and we have no idea when its initialization stage finishes.
+
+Parameters:
 
 =over
 
@@ -531,11 +552,13 @@ Function daemonization is a dangerous feature and will probably be deprecated an
 
 Name of guardian process. Guardian will be named "ubic-guardian $name".
 
-If not specified, I<bin>'s value will be assumed, or C<anonymous> when daemonizing perl code.
+If not specified, I<bin>'s value will be used, or C<anonymous> when daemonizing perl code.
 
 =item I<pidfile>
 
-Pidfile. It will be locked for a whole time of service's work. It will contain pid of daemon.
+Pidfile is a dir in local filesystem which will be used as a storage of daemon's info.
+
+It will be created if necessary, assuming that its parent dir exists.
 
 =item I<stdout>
 
@@ -547,9 +570,9 @@ Write all daemon's error output to given file. If not specified, all stderr will
 
 =item I<ubic_log>
 
-Filename of ubic log. It will contain some technical information about running daemon.
+Optional filename of ubic log. It will contain some technical information about running daemon.
 
-If not specified, C</dev/null> will be assumed.
+If not specified, this logging facility will be disabled.
 
 =item I<term_timeout>
 
@@ -565,17 +588,25 @@ Default is 10 seconds.
 
 Check whether daemon is running.
 
-Returns true if it is so.
+Returns instance of L<Ubic::Daemon::Status> class if daemon is alive, and false otherwise.
 
 =back
 
-=head1 BUGS
+=head1 BUGS AND CAVEATS
 
-Probably lots of them.
+Probably. But it's definitely is ready for production usage.
+
+This module currently is Linux-specific, because it uses C</proc> some magic. Patches are very welcome to fix this.
+
+If you can't figure out why there are C<ubic-guardian> processes in your C<ps> output, see L<Ubic::Manual::FAQ>, answer is there.
 
 =head1 SEE ALSO
 
-L<Ubic::Service::SimpleDaemon>
+L<Ubic::Service::SimpleDaemon> - simplest ubic service which uses Ubic::Daemon
+
+There are also a plenty of other daemonizers on CPAN:
+
+L<MooseX::Daemonize>, L<Proc::Daemon>, L<Daemon::Generic>, L<Net::ServeR::Daemonize>.
 
 =head1 AUTHOR
 

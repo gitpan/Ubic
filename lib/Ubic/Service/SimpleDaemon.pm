@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.15';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.16';
 }
 
 use strict;
@@ -75,8 +75,8 @@ sub stop_impl {
 
 sub status_impl {
     my ($self) = @_;
-    if (check_daemon($self->pidfile)) {
-        return result('running');
+    if (my $daemon = check_daemon($self->pidfile)) {
+        return result('running', "pid ".$daemon->pid);
     }
     else {
         return result('not running');
@@ -96,7 +96,7 @@ Ubic::Service::SimpleDaemon - variant of service when your service is simple dae
 
 =head1 VERSION
 
-version 1.15
+version 1.16
 
 =head1 SYNOPSIS
 

@@ -36,6 +36,7 @@ lib/Ubic/Catalog.pm
 lib/Ubic/Cmd.pm
 lib/Ubic/Cmd/Results.pm
 lib/Ubic/Daemon.pm
+lib/Ubic/Daemon/Status.pm
 lib/Ubic/Lockf.pm
 lib/Ubic/Logger.pm
 lib/Ubic/Manual/FAQ.pod
