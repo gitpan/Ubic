@@ -64,9 +64,9 @@ root_t/service/nobody-daemon
 root_t/service/root-daemon
 t/00_compile.t
 t/Utils.pm
+t/bin/any-init
 t/bin/locking-daemon
 t/bin/multi-init
-t/bin/sleeping-init
 t/cmd.t
 t/daemon.t
 t/lock.t

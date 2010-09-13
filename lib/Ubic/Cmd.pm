@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 BEGIN {
-  $Ubic::Cmd::VERSION = '1.16';
+  $Ubic::Cmd::VERSION = '1.17';
 }
 
 use strict;
@@ -386,15 +386,13 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.16
+version 1.17
 
 =head1 SYNOPSIS
 
 When using ubic from simple scripts, you want to print some output about what happened when starting/stopping service.
 
 This package mostly conforms to C<Ubic> module API (i.e. to LSB init-script API).
-
-It also greatly simplifies writing /etc/init.d/ scripts (see synopsis).
 
 =head1 SYNOPSIS
 
