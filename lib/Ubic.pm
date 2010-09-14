@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.18';
+  $Ubic::VERSION = '1.19';
 }
 
 use strict;
@@ -355,7 +355,7 @@ sub lock($$) {
 {
     package Ubic::ServiceLock;
 BEGIN {
-  $Ubic::ServiceLock::VERSION = '1.18';
+  $Ubic::ServiceLock::VERSION = '1.19';
 }
     use strict;
     use warnings;
@@ -521,7 +521,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.18
+version 1.19
 
 =head1 SYNOPSIS
 

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package bin::ubic;
 BEGIN {
-  $bin::ubic::VERSION = '1.18';
+  $bin::ubic::VERSION = '1.19';
 }
 
 use strict;
@@ -53,7 +53,7 @@ bin::ubic - simple viewer of ubic services
 
 =head1 VERSION
 
-version 1.18
+version 1.19
 
 =head1 SYNOPSIS
 
