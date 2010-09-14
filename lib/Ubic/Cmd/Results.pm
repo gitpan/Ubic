@@ -1,6 +1,6 @@
 package Ubic::Cmd::Results;
 BEGIN {
-  $Ubic::Cmd::Results::VERSION = '1.17';
+  $Ubic::Cmd::Results::VERSION = '1.18';
 }
 
 use strict;
@@ -104,7 +104,7 @@ Ubic::Cmd::Results - console results set
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -174,7 +174,7 @@ Print error if some of results are bad, and return exit code.
 
 =head1 AUTHOR
 
-Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 

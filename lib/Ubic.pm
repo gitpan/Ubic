@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.17';
+  $Ubic::VERSION = '1.18';
 }
 
 use strict;
@@ -355,7 +355,7 @@ sub lock($$) {
 {
     package Ubic::ServiceLock;
 BEGIN {
-  $Ubic::ServiceLock::VERSION = '1.17';
+  $Ubic::ServiceLock::VERSION = '1.18';
 }
     use strict;
     use warnings;
@@ -521,7 +521,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -748,7 +748,7 @@ These is also an IRC channel: irc://irc.perl.org#ubic.
 
 =head1 AUTHOR
 
-Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 

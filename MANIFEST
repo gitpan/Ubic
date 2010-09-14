@@ -38,6 +38,7 @@ lib/Ubic/Cmd/Results.pm
 lib/Ubic/Daemon.pm
 lib/Ubic/Daemon/Status.pm
 lib/Ubic/Lockf.pm
+lib/Ubic/Lockf/Alarm.pm
 lib/Ubic/Logger.pm
 lib/Ubic/Manual/FAQ.pod
 lib/Ubic/Multiservice.pm

@@ -11,7 +11,7 @@ Ubic::Manual::FAQ - frequently asked questions about Ubic
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 QUESTIONS
 
@@ -44,7 +44,7 @@ In other words, if you don't use ubic-ping, you can both disable ubic-update and
 
 =head1 AUTHOR
 
-Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 

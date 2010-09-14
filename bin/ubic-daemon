@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package bin::ubic_daemon;
 BEGIN {
-  $bin::ubic_daemon::VERSION = '1.17';
+  $bin::ubic_daemon::VERSION = '1.18';
 }
 
 # ABSTRACT: daemonize any binary
@@ -43,7 +43,7 @@ bin::ubic_daemon - daemonize any binary
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -55,7 +55,7 @@ L<Ubic::Daemon>
 
 =head1 AUTHOR
 
-Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 

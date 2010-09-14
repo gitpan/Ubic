@@ -1,6 +1,6 @@
 package Ubic::Multiservice;
 BEGIN {
-  $Ubic::Multiservice::VERSION = '1.17';
+  $Ubic::Multiservice::VERSION = '1.18';
 }
 # ABSTRACT: interface of multiservice representing several named services
 
@@ -112,7 +112,7 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -193,7 +193,7 @@ L<Ubic::Multiservice::Dir> - multiservice which loads service configs from files
 
 =head1 AUTHOR
 
-Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 

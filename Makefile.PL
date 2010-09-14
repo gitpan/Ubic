@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker 6.31;
 
 my %WriteMakefileArgs = (
   'ABSTRACT' => 'flexible perl-based service manager',
-  'AUTHOR' => 'Vyacheslav Matjukhin <mmcleric@yandex-team.ru>',
+  'AUTHOR' => 'Vyacheslav Matyukhin <mmcleric@yandex-team.ru>',
   'BUILD_REQUIRES' => {
     'Config' => '0',
     'Cwd' => '0',
@@ -57,7 +57,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.17',
+  'VERSION' => '1.18',
   'test' => {
     'TESTS' => 't/*.t'
   }

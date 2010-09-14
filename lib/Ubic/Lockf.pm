@@ -1,38 +1,20 @@
-package Ubic::Lockf::Alarm;
-BEGIN {
-  $Ubic::Lockf::Alarm::VERSION = '1.17';
-}
-
-# we can't use alarm from Time::HiRes, it don't return current alarm value on perl 5.8.8
-
-sub new ($$) {
-    my ($class, $timeout) = @_;
-    bless { 'alarm' => alarm($timeout), 'time' => time };
-}
-
-sub DESTROY ($) {
-    my $self = shift;
-    local $@;
-    my $alarm;
-    if ($self->{alarm}) {
-        $alarm = $self->{alarm} + $self->{time} - time;
-        $alarm = 1 if $alarm <= 0;
-    } else {
-        $alarm = 0;
-    }
-    alarm($alarm);
-}
-
 package Ubic::Lockf;
 BEGIN {
-  $Ubic::Lockf::VERSION = '1.17';
+  $Ubic::Lockf::VERSION = '1.18';
 }
+
 use strict;
+
+# ABSTRACT: file locker with an automatic out-of-scope unlocking mechanism
+
+
 use Fcntl qw(:flock);
 
 use Params::Validate;
 use POSIX qw(:errno_h);
 use Carp;
+
+use Ubic::Lockf::Alarm;
 
 use parent qw(Exporter);
 
@@ -130,19 +112,17 @@ sub name($)
 
 1;
 
-# ABSTRACT: file locker with an automatic out-of-scope unlocking mechanism
-
 
 __END__
 =pod
 
 =head1 NAME
 
-Ubic::Lockf::Alarm - file locker with an automatic out-of-scope unlocking mechanism
+Ubic::Lockf - file locker with an automatic out-of-scope unlocking mechanism
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -200,7 +180,7 @@ Gives the name of the file, as it was when the lock was taken.
 
 =head1 AUTHOR
 
-Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 

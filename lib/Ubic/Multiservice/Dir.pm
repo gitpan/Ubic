@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 BEGIN {
-  $Ubic::Multiservice::Dir::VERSION = '1.17';
+  $Ubic::Multiservice::Dir::VERSION = '1.18';
 }
 
 use strict;
@@ -98,7 +98,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 METHODS
 
@@ -124,7 +124,7 @@ L<Ubic> - main ubic module uses this class as root namespace of services.
 
 =head1 AUTHOR
 
-Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 

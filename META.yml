@@ -1,7 +1,7 @@
 ---
 abstract: 'flexible perl-based service manager'
 author:
-  - 'Vyacheslav Matjukhin <mmcleric@yandex-team.ru>'
+  - 'Vyacheslav Matyukhin <mmcleric@yandex-team.ru>'
 build_requires:
   Config: 0
   Cwd: 0
@@ -47,4 +47,4 @@ resources:
   bugtracker: http://github.com/berekuk/Ubic/issues
   homepage: http://github.com/berekuk/Ubic/wiki
   repository: git://github.com/berekuk/Ubic.git
-version: 1.17
+version: 1.18
