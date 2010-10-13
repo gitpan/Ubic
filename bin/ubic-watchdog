@@ -1,7 +1,7 @@
 #!/usr/bin/perl
-package bin::ubic_watchdog;
+package ubic_watchdog;
 BEGIN {
-  $bin::ubic_watchdog::VERSION = '1.19';
+  $ubic_watchdog::VERSION = '1.20';
 }
 
 use strict;
@@ -88,15 +88,27 @@ __END__
 
 =head1 NAME
 
-bin::ubic_watchdog - watchdog which checks all ubic services.
+ubic_watchdog - watchdog which checks all ubic services.
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
     ubic-watchdog [-v]
+
+=head1 DESCRIPTION
+
+This is a generic watchdog for all ubic services.
+
+It checks every enabled service by asking for its status and tries to start it if service is down or broken.
+
+Every service is checked in parallel fashion, each one in separate forked process.
+
+=head1 DEPLOYMENT
+
+This script should be invoked every minute (or as often as you like), usually as cron job.
 
 =head1 AUTHOR
 

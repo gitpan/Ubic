@@ -1,6 +1,6 @@
 package Ubic::Multiservice;
 BEGIN {
-  $Ubic::Multiservice::VERSION = '1.19';
+  $Ubic::Multiservice::VERSION = '1.20';
 }
 # ABSTRACT: interface of multiservice representing several named services
 
@@ -112,11 +112,11 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
-    $service = $multiservice->service("yandex.yandex-ppb-people-pt.meta-all");
+    $service = $multiservice->service("multiservice-x.multiservice-y.service-z");
     @services = $multiservice->services();
 
 =head1 DESCRIPTION

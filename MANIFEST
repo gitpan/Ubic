@@ -1,6 +1,4 @@
 Changes
-Documentation/flow
-Documentation/goal
 LICENSE
 MANIFEST
 MANIFEST.SKIP
@@ -8,7 +6,6 @@ META.yml
 Makefile.PL
 README
 README.md
-TODO
 bin/ubic
 bin/ubic-daemon
 bin/ubic-update

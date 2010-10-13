@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 BEGIN {
-  $Ubic::Cmd::VERSION = '1.19';
+  $Ubic::Cmd::VERSION = '1.20';
 }
 
 use strict;
@@ -350,7 +350,7 @@ sub _run_impl {
         return;
     }
 
-    $command = "force_reload" if $command eq "logrotate"; #FIXME: non LSB command? fix logrotate configs! (yandex-ppb-static-pt, etc...)
+    $command = "force_reload" if $command eq "logrotate"; #FIXME: non LSB command!
 
     my $method = $command;
     $method =~ s/-/_/g;
@@ -386,7 +386,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 

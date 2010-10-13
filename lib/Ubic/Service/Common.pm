@@ -1,6 +1,6 @@
 package Ubic::Service::Common;
 BEGIN {
-  $Ubic::Service::Common::VERSION = '1.19';
+  $Ubic::Service::Common::VERSION = '1.20';
 }
 
 use strict;
@@ -101,7 +101,7 @@ Ubic::Service::Common - common way to construct new service by specifying severa
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
@@ -115,7 +115,7 @@ version 1.19
         status => sub {
             # implementation-specific
         },
-        name => "yandex-ppb-something",
+        name => "my-service",
         port => 1234,
     });
     $service->start;

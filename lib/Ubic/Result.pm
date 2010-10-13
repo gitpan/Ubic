@@ -1,6 +1,6 @@
 package Ubic::Result;
 BEGIN {
-  $Ubic::Result::VERSION = '1.19';
+  $Ubic::Result::VERSION = '1.20';
 }
 
 use strict;
@@ -41,7 +41,7 @@ Ubic::Result - common return value for many ubic interfaces
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
@@ -50,10 +50,12 @@ version 1.19
     sub start {
         ...
         return result('broken', 'permission denied');
-        ...
+
+        # or:
         return result('running');
-        ...
-        return 'already running';
+
+        # or:
+        return 'already running'; # will be automagically wrapped into result object by Ubic.pm
     }
 
 =head1 FUNCTIONS
@@ -63,6 +65,42 @@ version 1.19
 =item C<result($type, $optional_message)>
 
 Construct C<Ubic::Result::Class> instance.
+
+=back
+
+=head1 POSSIBLE RESULT TYPES
+
+This is a full list of results which can be recognized by L<Ubic::Result::Class>.
+
+Any other result will be interpreted as I<unknown>.
+
+=over
+
+=item I<running>
+
+=item I<not running>
+
+=item I<already running>
+
+=item I<started>
+
+=item I<already started>
+
+=item I<restarted>
+
+=item I<reloaded>
+
+=item I<stopping>
+
+=item I<not running>
+
+=item I<stopped>
+
+=item I<down>
+
+=item I<starting>
+
+=item I<broken>
 
 =back
 

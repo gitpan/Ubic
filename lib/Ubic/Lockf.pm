@@ -1,6 +1,6 @@
 package Ubic::Lockf;
 BEGIN {
-  $Ubic::Lockf::VERSION = '1.19';
+  $Ubic::Lockf::VERSION = '1.20';
 }
 
 use strict;
@@ -122,7 +122,7 @@ Ubic::Lockf - file locker with an automatic out-of-scope unlocking mechanism
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
@@ -135,8 +135,6 @@ version 1.19
 
 C<lockf> is a perlfunc C<flock> wrapper. The lock is autotamically released as soon as the assotiated object is
 no longer referenced.
-
-C<lockf_multi> makes non-blocking C<lockf> calls for multiple files and throws and exception if all are locked.
 
 =head1 METHODS
 

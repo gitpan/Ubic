@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 BEGIN {
-  $Ubic::Multiservice::Dir::VERSION = '1.19';
+  $Ubic::Multiservice::Dir::VERSION = '1.20';
 }
 
 use strict;
@@ -79,7 +79,10 @@ sub service_names($) {
     for my $file (glob("$self->{service_dir}/*")) {
         next unless -f $file or -d $file;
         $file = basename($file);
-        next if $file !~ /^[\w-]+$/; # skip files with dots, for example old debian configs like yandex.dpkg-old
+
+        # we skip files with dots, for example old debian configs like my-service.dpkg-old
+        next if $file !~ /^[\w-]+$/;
+
         push @names, $file;
     }
     return @names;
@@ -98,7 +101,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 METHODS
 

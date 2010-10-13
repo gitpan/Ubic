@@ -1,7 +1,7 @@
 #!/usr/bin/perl
-package bin::ubic_daemon;
+package ubic_daemon;
 BEGIN {
-  $bin::ubic_daemon::VERSION = '1.19';
+  $ubic_daemon::VERSION = '1.20';
 }
 
 # ABSTRACT: daemonize any binary
@@ -16,7 +16,7 @@ use Pod::Usage;
 use Ubic::Daemon qw(start_daemon);
 
 my $name;
-my $pid_dir = '/var/lib/ubic/ubic-daemon/pid';
+my $pid_dir = '/var/lib/ubic/ubic-daemon';
 
 return 1 if caller();
 
@@ -39,19 +39,25 @@ __END__
 
 =head1 NAME
 
-bin::ubic_daemon - daemonize any binary
+ubic_daemon - daemonize any binary
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
     ubic-daemon --name=sleep 'sleep 1000'
 
+=head1 DECSRIPTION
+
+This program can be used to easily daemonize any binary.
+
 =head1 SEE ALSO
 
 L<Ubic::Daemon>
+
+There is a similar program named C<start-stop-daemon> in Debian.and some other Linux distributions which does daemonization and have some other powerful features.
 
 =head1 AUTHOR
 

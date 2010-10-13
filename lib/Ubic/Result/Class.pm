@@ -1,6 +1,6 @@
 package Ubic::Result::Class;
 BEGIN {
-  $Ubic::Result::Class::VERSION = '1.19';
+  $Ubic::Result::Class::VERSION = '1.20';
 }
 
 use strict;
@@ -87,7 +87,7 @@ Ubic::Result::Class - ubic result object
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
@@ -99,9 +99,15 @@ version 1.19
 
 =head1 DESCRIPTION
 
-Many service actions can *do* something and *result* in something.
+Ubic::Result::Class instances represent service operation results.
 
-This class encapsulates both in one handy object.
+Many service actions can *do* something and *result* in something.
+So, this class dissects service operation into C<action()> and C<status()>.
+For example, "already running" result means that current service status is "running" and action is "none".
+
+Also, it carry custom comment and serialize result into common stringified form.
+
+Ubic::Result::Class instances are usually created via C<result()> function from L<Ubic::Result> package.
 
 =head1 STATUSES
 
