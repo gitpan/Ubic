@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package ubic_watchdog;
 BEGIN {
-  $ubic_watchdog::VERSION = '1.20';
+  $ubic_watchdog::VERSION = '1.21';
 }
 
 use strict;
@@ -16,6 +16,8 @@ use Pod::Usage;
 use Ubic::Logger;
 use Ubic;
 use Try::Tiny;
+use List::MoreUtils qw(any);
+use POSIX;
 
 return 1 if caller();
 
@@ -24,16 +26,49 @@ GetOptions(
     'v|verbose' => \$verbose,
 ) or pod2usage(2);
 
+my @filter;
+{
+    for my $arg (@ARGV) {
+        $arg =~ /^[*\w.-]+$/ or die "Invalid argument '$arg', expected service name or shell-style glob";
+        $arg =~ s/\./\\./g;
+        $arg =~ s/\*/.*/g;
+        push @filter, qr/^$arg$/;
+    }
+}
+
 sub check($);
+
+sub match($$) {
+    my ($name, $filter) = @_;
+    do {
+        return 1 if $name =~ $filter;
+    } while ($name =~ s/\.[^.]+$//);
+    return;
+}
 
 sub check_all {
     my @services = @_;
     for my $service (@services) {
+        my $name = $service->full_name;
+        if ($service->isa('Ubic::Multiservice')) {
+            INFO("$name is multiservice, checking subservices") if $verbose;
+            check_all($service->services);
+            next;
+        }
+        if (@filter) {
+            next unless any { match($name, $_) } @filter;
+        }
+
+        # trying to get logs a little bit more ordered
+        STDOUT->flush;
+        STDERR->flush;
+
         my $child = fork;
         unless (defined $child) {
             die "fork failed";
         }
         unless ($child) {
+            POSIX::setsid; # so we could kill this watchdog and its children safely later
             check($service);
             exit;
         }
@@ -50,17 +85,32 @@ sub check($) {
     }
 
     try {
-        my $lock = Ubic->lock($name);
-        if ($service->isa('Ubic::Multiservice')) {
-            INFO("$name is multiservice, checking subservices") if $verbose;
-            check_all($service->services);
+        my $watchdog_lock = do {
+            my $guard = Ubic->access_guard($name);
+            Ubic::SingletonLock->new(Ubic->get_data_dir()."/watchdog/lock/".$name, { blocking => 0 });
+        };
+        unless ($watchdog_lock) {
+            if ($verbose) {
+                INFO "$name is locked by another watchdog process";
+            }
             return;
         }
+
+        my $lock = Ubic->lock($name);
         unless (Ubic->is_enabled($name)) {
             INFO("$name disabled") if $verbose;
             return;
         }
-        # TODO - alarm?
+
+        alarm($service->check_timeout);
+        $SIG{ALRM} = sub {
+            ERROR("$name check_timeout exceeded");
+            STDOUT->flush;
+            STDERR->flush;
+            kill -9 => $$; # suicide
+            ERROR "kill sent, still alive"; # should never happen, we called setsid earlier
+        };
+
         my $status = Ubic->status($name);
         unless ($status->status eq 'running') {
             Ubic->set_cached_status($name, $status->status); # following start can throw exception
@@ -68,6 +118,8 @@ sub check($) {
             Ubic->start($name);
         }
         $status = Ubic->status($name);
+        alarm(0);
+
         if ($status->status ne 'running') {
             INFO("$name started, but status is still '$status'");
         }
@@ -92,11 +144,13 @@ ubic_watchdog - watchdog which checks all ubic services.
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
     ubic-watchdog [-v]
+
+    ubic-watchdog SERVICE SERVICE2 SERVICE_GLOB ...
 
 =head1 DESCRIPTION
 
@@ -104,11 +158,19 @@ This is a generic watchdog for all ubic services.
 
 It checks every enabled service by asking for its status and tries to start it if service is down or broken.
 
-Every service is checked in parallel fashion, each one in separate forked process.
+Services are checked in parallel fashion, each one in separate forked process.
+
+=head1 PARAMETERS
+
+B<-v> or B<--verbose> flag can be used to enable detailed logging.
+
+All other arguments are interpreted as service names. Arguments can contain C<*> symbol, which will be expanded in Unix shell fashion.
+
+If service names are omitted, all services will be checked.
 
 =head1 DEPLOYMENT
 
-This script should be invoked every minute (or as often as you like), usually as cron job.
+This script should be invoked every minute (or as often as you like), usually as a cron job.
 
 =head1 AUTHOR
 

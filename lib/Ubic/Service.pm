@@ -1,6 +1,6 @@
 package Ubic::Service;
 BEGIN {
-  $Ubic::Service::VERSION = '1.20';
+  $Ubic::Service::VERSION = '1.21';
 }
 
 use strict;
@@ -58,6 +58,10 @@ sub check_period {
     return 60;
 }
 
+sub check_timeout {
+    return 600;
+}
+
 sub custom_commands {
     return ();
 }
@@ -110,7 +114,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
@@ -191,6 +195,16 @@ Default is list of all groups of user as returned by C<user()> method.
 Period of checking a service by watchdog in seconds.
 
 Default is 60 seconds and it is unused by ubic-watchdog currently, so don't bother to override it by now :)
+
+=item B<check_timeout()>
+
+Timeout after which watchdog will give up on checking a service and kill itself.
+
+This parameter exists as a precaution against incorrectly implemented C<status()> or C<start()> methods. If C<status()> method hangs, without this timeout, watchdog would stay in memory forever and never get a chance to restart a service.
+
+This parameter is *not* a timeout for querying your service by HTTP or whatever your status check is. Service-specific timeouts should be configured by other means.
+
+Default value is 600 seconds. It should not be changed unless you have a very good reason to do so (i.e., your service is so horribly slow that it can't start in 10 minutes).
 
 =back
 

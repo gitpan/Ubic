@@ -1,6 +1,6 @@
 package Ubic::AccessGuard;
 BEGIN {
-  $Ubic::AccessGuard::VERSION = '1.20';
+  $Ubic::AccessGuard::VERSION = '1.21';
 }
 
 use strict;
@@ -114,14 +114,14 @@ Ubic::AccessGuard - class which guards simple service operations
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
     use Ubic::AccessGuard;
 
-    $guard = Ubic::AccessGuard->new($service); # take lock under $service->user
-    undef $guard; # free lock
+    $guard = Ubic::AccessGuard->new($service); # change effective uid and effective gid to $service->user and $service->group
+    undef $guard; # change them back
 
 =head1 DESCRIPTION
 

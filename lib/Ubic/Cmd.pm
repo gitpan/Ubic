@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 BEGIN {
-  $Ubic::Cmd::VERSION = '1.20';
+  $Ubic::Cmd::VERSION = '1.21';
 }
 
 use strict;
@@ -386,7 +386,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
@@ -443,9 +443,9 @@ Print command's usage.
 
 WARNING: exits on invocation!
 
-=item B<< traverse($name, $callback) >>
+=item B<< traverse($name_or_service, $callback) >>
 
-Process each subservice of C<$name> with C<$callback>, printing correct indentations.
+Process each subservice of C<$name_or_service> with C<$callback>, printing correct indentations.
 
 =item B<< print_status($name, $cached_flag) >>
 

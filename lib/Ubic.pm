@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.20';
+  $Ubic::VERSION = '1.21';
 }
 
 use strict;
@@ -19,11 +19,14 @@ use IO::Handle;
 use Storable qw(freeze thaw);
 use Try::Tiny;
 use Ubic::Persistent;
-use Ubic::Lockf;
+use Ubic::SingletonLock;
 use Scalar::Util qw(blessed);
 use List::MoreUtils qw(uniq);
 
 our $SINGLETON;
+
+my $service_name_re = qr{^[\w-]+(?:\.[\w-]+)*$};
+my $validate_service = { type => SCALAR, regex => $service_name_re };
 
 # singleton constructor
 sub _obj {
@@ -41,14 +44,46 @@ sub _obj {
 
 sub new {
     my $class = shift;
-    my $ubic_dir = $ENV{UBIC_DIR} || '/var/lib/ubic';
     my $self = validate(@_, {
         service_dir =>  { type => SCALAR, default => $ENV{UBIC_SERVICE_DIR} || "/etc/ubic/service" },
-        status_dir => { type => SCALAR, default => $ENV{UBIC_WATCHDOG_DIR} || "$ubic_dir/status" },
-        lock_dir =>  { type => SCALAR, default => $ENV{UBIC_LOCK_DIR} || "$ubic_dir/lock" },
-        tmp_dir =>  { type => SCALAR, default => $ENV{UBIC_TMP_DIR} || "$ubic_dir/tmp" },
+        data_dir => { type => SCALAR, default => $ENV{UBIC_DIR} || '/var/lib/ubic' },
+        status_dir =>  { type => SCALAR, optional => 1 },
+        lock_dir =>  { type => SCALAR, optional => 1 },
+        tmp_dir =>  { type => SCALAR, optional => 1 },
     });
-    $self->{locks} = {};
+    if ($self->{status_dir}) {
+        warn "'status_dir' option is deprecated; use 'data_dir' instead";
+    }
+    elsif ($ENV{UBIC_WATCHDOG_DIR}) {
+        warn "'UBIC_WATCHDOG_DIR' env variable is deprecated; use 'UBIC_DIR' instead";
+        $self->{status_dir} = $ENV{UBIC_WATCHDOG_DIR};
+    }
+    else {
+        $self->{status_dir} = "$self->{data_dir}/status";
+    }
+
+    if ($self->{lock_dir}) {
+        warn "'lock_dir' option is deprecated; use 'data_dir' instead";
+    }
+    elsif ($ENV{UBIC_LOCK_DIR}) {
+        warn "'UBIC_LOCK_DIR' env variable is deprecated; use 'UBIC_DIR' instead";
+        $self->{lock_dir} = $ENV{UBIC_LOCK_DIR};
+    }
+    else {
+        $self->{lock_dir} = "$self->{data_dir}/lock";
+    }
+
+    if ($self->{tmp_dir}) {
+        warn "'tmp_dir' option is deprecated; use 'data_dir' instead";
+    }
+    elsif ($ENV{UBIC_TMP_DIR}) {
+        warn "'UBIC_TMP_DIR' env variable is deprecated; use 'UBIC_DIR' instead";
+        $self->{tmp_dir} = $ENV{UBIC_TMP_DIR};
+    }
+    else {
+        $self->{tmp_dir} = "$self->{data_dir}/tmp";
+    }
+
     $self->{root} = Ubic::Multiservice::Dir->new($self->{service_dir});
     $self->{service_cache} = {};
     return bless $self => $class;
@@ -56,7 +91,7 @@ sub new {
 
 sub start($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
 
     $self->enable($name);
@@ -67,7 +102,7 @@ sub start($$) {
 
 sub stop($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
 
     $self->disable($name);
@@ -78,7 +113,7 @@ sub stop($$) {
 
 sub restart($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
 
     $self->enable($name);
@@ -91,7 +126,7 @@ sub restart($$) {
 
 sub try_restart($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
 
     unless ($self->is_enabled($name)) {
@@ -104,7 +139,7 @@ sub try_restart($$) {
 
 sub reload($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
 
     unless ($self->is_enabled($name)) {
@@ -122,7 +157,7 @@ sub reload($$) {
 
 sub force_reload($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
 
     unless ($self->is_enabled($name)) {
@@ -137,7 +172,7 @@ sub force_reload($$) {
 
 sub status($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
 
     return $self->do_cmd($name, 'status');
@@ -145,9 +180,9 @@ sub status($$) {
 
 sub enable($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
-    my $guard = Ubic::AccessGuard->new($self->service($name));
+    my $guard = $self->access_guard($name);
 
     my $status_obj = $self->status_obj($name);
     $status_obj->{status} = 'unknown';
@@ -158,7 +193,7 @@ sub enable($$) {
 
 sub is_enabled($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
 
     die "Service '$name' not found" unless $self->{root}->has_service($name);
     return unless -e $self->status_file($name);
@@ -172,9 +207,9 @@ sub is_enabled($$) {
 
 sub disable($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     my $lock = $self->lock($name);
-    my $guard = Ubic::AccessGuard->new($self->service($name));
+    my $guard = $self->access_guard($name);
 
     my $status_obj = $self->status_obj($name);
     delete $status_obj->{status};
@@ -185,7 +220,7 @@ sub disable($$) {
 
 sub cached_status($$) {
     my ($self) = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
 
     unless ($self->is_enabled($name)) {
         return result('disabled');
@@ -195,7 +230,7 @@ sub cached_status($$) {
 
 sub do_custom_command($$) {
     my ($self) = _obj(shift);
-    my ($name, $command) = validate_pos(@_, 1, 1);
+    my ($name, $command) = validate_pos(@_, $validate_service, 1);
 
     # TODO - do all custom commands require locks?
     # they can be distinguished in future by some custom_commands_ext method which will provide hash { command => properties }, i think...
@@ -209,7 +244,7 @@ sub do_custom_command($$) {
 
 sub service($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
+    my ($name) = validate_pos(@_, $validate_service);
     # this guarantees that : will be unambiguous separator in status filename (what??)
     unless ($self->{service_cache}{$name}) {
         # Service construction is a memory-leaking operation (because of package name randomization in Ubic::Multiservice::Dir),
@@ -221,7 +256,7 @@ sub service($$) {
 
 sub has_service($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
+    my ($name) = validate_pos(@_, $validate_service);
     # TODO - it would be safer to do this check without actual service construction
     # but it would require cron-based script which maintains list of all services
     return $self->{root}->has_service($name);
@@ -276,8 +311,8 @@ sub compl_services($$) {
 
 sub set_cached_status($$$) {
     my $self = _obj(shift);
-    my ($name, $status) = validate_pos(@_, 1, 1);
-    my $guard = Ubic::AccessGuard->new($self->service($name));
+    my ($name, $status) = validate_pos(@_, $validate_service, 1);
+    my $guard = $self->access_guard($name);
 
     if (blessed $status) {
         croak "Wrong status param '$status'" unless $status->isa('Ubic::Result::Class');
@@ -290,25 +325,44 @@ sub set_cached_status($$$) {
     $status_obj->commit;
 }
 
-sub set_ubic_dir($$) {
+sub get_data_dir($) {
+    my $self = _obj(shift);
+    validate_pos(@_);
+    return $self->{data_dir};
+}
+
+sub set_data_dir($$) {
     my $self = _obj(shift);
     my ($dir) = validate_pos(@_, 1);
-    unless (-d $dir) {
-        mkdir $dir or die "mkdir $dir failed: $!";
-    }
+
+    my $md = sub {
+        my $new_dir = shift;
+        mkdir $new_dir or die "mkdir $new_dir failed: $!" unless -d $new_dir;
+    };
 
     # TODO - chmod 777, chmod +t?
-    # TODO - call this method from postinst too?
-    mkdir "$dir/lock" or die "mkdir $dir/lock failed: $!" unless -d "$dir/lock";
-    mkdir "$dir/status" or die "mkdir $dir/status failed: $!" unless -d "$dir/status";
-    mkdir "$dir/tmp" or die "mkdir $dir/tmp failed: $!" unless -d "$dir/tmp";
-    mkdir "$dir/pid" or die "mkdir $dir/pid failed: $!" unless -d "$dir/pid"; # Ubic don't use /pid/, but Ubic::Daemon does
+    # TODO - call set_data_dir method from postinst too?
+    $md->($dir);
+    for my $subdir (qw(lock status tmp pid watchdog)) {
+        $md->("$dir/$subdir");
+    }
+    $md->("$dir/watchdog/lock");
 
     $self->{lock_dir} = "$dir/lock";
     $self->{status_dir} = "$dir/status";
     $self->{tmp_dir} = "$dir/tmp";
+    $self->{data_dir} = $dir;
     $ENV{UBIC_DIR} = $dir;
     $ENV{UBIC_DAEMON_PID_DIR} = "$dir/pid";
+}
+
+sub set_ubic_dir($$);
+*set_ubic_dir = \&set_data_dir;
+
+sub get_service_dir($) {
+    my $self = _obj(shift);
+    validate_pos(@_, 0);
+    return $self->{service_dir};
 }
 
 sub set_service_dir($$) {
@@ -321,72 +375,37 @@ sub set_service_dir($$) {
 
 sub status_file($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
+    my ($name) = validate_pos(@_, $validate_service);
     return "$self->{status_dir}/".$name;
 }
 
 sub status_obj($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     return Ubic::Persistent->new($self->status_file($name));
 }
 
 sub status_obj_ro($$) {
     my $self = _obj(shift);
-    my ($name) = validate_pos(@_, 1);
+    my ($name) = validate_pos(@_, $validate_service);
     return Ubic::Persistent->load($self->status_file($name));
+}
+
+sub access_guard($$) {
+    my $self = _obj(shift);
+    my ($name) = validate_pos(@_, $validate_service);
+    return Ubic::AccessGuard->new($self->service($name));
 }
 
 sub lock($$) {
     my ($self) = _obj(shift);
-    my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
+    my ($name) = validate_pos(@_, $validate_service);
 
-    if ($self->{locks}{$name}) {
-        return $self->{locks}{$name};
-    }
-
-    my $lock = Ubic::ServiceLock->new($name, $self);
-    use Scalar::Util qw(weaken);
-    $self->{locks}{$name} = $lock;
-    weaken $self->{locks}{$name};
+    my $lock = do {
+        my $guard = $self->access_guard($name);
+        Ubic::SingletonLock->new($self->{lock_dir}."/".$name);
+    };
     return $lock;
-}
-
-{
-    package Ubic::ServiceLock;
-BEGIN {
-  $Ubic::ServiceLock::VERSION = '1.20';
-}
-    use strict;
-    use warnings;
-    use Ubic::Lockf;
-    use Carp qw(longmess);
-    sub new {
-        my ($class, $name, $ubic) = @_;
-
-        my $lock = do {
-            my $guard = Ubic::AccessGuard->new($ubic->service($name));
-            lockf($ubic->{lock_dir}."/".$name);
-        };
-
-        my $ubic_ref = \$ubic;
-        my $self = bless { name => $name, ubic_ref => $ubic_ref, lock => $lock } => $class;
-        return $self;
-    }
-    sub DESTROY {
-        my $self = shift;
-        local $@;
-        my $ubic = ${$self->{ubic_ref}};
-        if (defined $ubic) {
-            $ubic->_free_lock($self->{name});
-        }
-    }
-}
-
-sub _free_lock {
-    my $self = _obj(shift);
-    my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+(?:\.[\w-]+)*$} });
-    delete $self->{locks}{$name};
 }
 
 sub do_sub($$) {
@@ -462,7 +481,7 @@ sub do_cmd($$$) {
 
 sub forked_call {
     my ($self, $callback) = @_;
-    my $tmp_file = $self->{tmp_dir}."/".time.".".rand(1000000);
+    my $tmp_file = $self->{tmp_dir}."/".time.".$$.".rand(1000000);
     my $child;
     unless ($child = fork) {
         unless (defined $child) {
@@ -493,7 +512,7 @@ sub forked_call {
     }
     waitpid($child, 0);
     unless (-e $tmp_file) {
-        die "temp file not found after fork (probably failed write to $self->{tmp_dir})";
+        die "temp file $tmp_file not found after fork";
     }
     open my $fh, '<', $tmp_file or die "Can't read $tmp_file: $!";
     my $content = do { local $/; <$fh>; };
@@ -521,7 +540,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
@@ -675,18 +694,30 @@ Return list of autocompletion variants for given service prefix.
 
 Write new status into service's status file.
 
-=item B<< set_ubic_dir($dir) >>
+=item B<< get_data_dir() >>
 
-Create and set ubic dir.
+Get data dir.
 
-Ubic dir is a directory with service statuses and locks. By default, ubic dir is C</var/lib/ubic>, but in tests you may want to change it.
+=item B<< set_data_dir($dir) >>
+
+Create and set data dir.
+
+Data dir is a directory with service statuses and locks. By default, ubic dir is C</var/lib/ubic>, but in tests you may want to change it.
 
 These settings will be propagated into subprocesses using environment, so following code works:
 
-    Ubic->set_ubic_dir('tfiles/ubic');
+    Ubic->set_data_dir('tfiles/ubic');
     Ubic->set_service_dir('etc/ubic/service');
     system('ubic start some_service');
     system('ubic stop some_service');
+
+=item B<< set_ubic_dir($dir) >>
+
+Deprecated. This method got renamed to C<set_data_dir()>.
+
+=item B<< get_service_dir() >>
+
+Get ubic services dir.
 
 =item B<< set_service_dir($dir) >>
 
@@ -696,7 +727,9 @@ Set ubic services dir.
 
 =head1 INTERNAL METHODS
 
-You don't need to call these, usually.
+You don't need to call these from code which doesn't belong to core Ubic distribution
+
+These methods can be changed or removed without further notice.
 
 =over
 
@@ -713,6 +746,10 @@ It's a bad idea to call this from any other class than C<Ubic>, but if you'll ev
 =item B<status_obj_ro($name)>
 
 Get readonly, nonlocked status persistent object by service's name.
+
+=item B<access_guard($name)>
+
+Get access guard (L<Ubic::AccessGuard> object) for given service.
 
 =item B<lock($name)>
 

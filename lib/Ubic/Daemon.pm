@@ -1,6 +1,6 @@
 package Ubic::Daemon;
 BEGIN {
-  $Ubic::Daemon::VERSION = '1.20';
+  $Ubic::Daemon::VERSION = '1.21';
 }
 
 use strict;
@@ -470,7 +470,6 @@ sub check_daemon {
 
 1;
 
-
 __END__
 =pod
 
@@ -480,7 +479,7 @@ Ubic::Daemon - toolkit for creating daemonized process
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
@@ -594,7 +593,7 @@ Returns instance of L<Ubic::Daemon::Status> class if daemon is alive, and false 
 
 =head1 BUGS AND CAVEATS
 
-Probably. But it's definitely is ready for production usage.
+Probably. But it definitely is ready for production usage.
 
 This module currently is Linux-specific, because it uses C</proc> some magic. Patches are very welcome to fix this.
 

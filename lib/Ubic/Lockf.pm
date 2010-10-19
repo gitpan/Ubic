@@ -1,6 +1,6 @@
 package Ubic::Lockf;
 BEGIN {
-  $Ubic::Lockf::VERSION = '1.20';
+  $Ubic::Lockf::VERSION = '1.21';
 }
 
 use strict;
@@ -122,7 +122,7 @@ Ubic::Lockf - file locker with an automatic out-of-scope unlocking mechanism
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
@@ -157,7 +157,7 @@ OFF by default. Tells to achieve a shared lock. If not set, an exclusive lock is
 =item I<blocking>
 
 ON by default. If unset, a non-blocking mode of flock is used. If this flock fails because the lock is already held by some other process,
-C<undef> is returned. If the failure reason is somewhat different, permissions problems or the 
+C<undef> is returned. If the failure reason is somewhat different, permissions problems or the
 absence of a target file directory for example, an exception is raisen.
 
 =item I<timeout>

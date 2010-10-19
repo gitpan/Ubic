@@ -1,5 +1,21 @@
 Revision history for Ubic
 
+1.21    Tue Oct 19, 2010
+        * Ubic.pm:
+         - set_ubic_dir() renamed to set_data_dir()
+         (set_ubic_dir still remains in code for backward compatibility)
+         - get_data_dir() and get_service_dir() methods
+         - UBIC_LOCK_DIR, UBIC_TMP_DIR and UBIC_WATCHDOG_DIR env variables are deprecated;
+         UBIC_DIR variable or set_data_dir() method should be used instead
+         - bugfix in forked_call() method - it thrown "temp file not found after fork" exception occasionally in some cases
+         - more consistent params validation in many methods
+        * ubic-watchdog improvements:
+         - separate non-blocking per-service lock (http://github.com/berekuk/ubic/issues#issue/1)
+         - ubic-watchdog can now check selected set of services by name or glob
+         - ubic-watchdog kills itself after $service->check_timeout() seconds
+        * deprecated Ubic::Catalog module removed (it was renamed into Ubic::Multiservice long time ago)
+
+
 1.20    Wed Oct 13, 2010
         * documentation improvements
 

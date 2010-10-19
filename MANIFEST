@@ -29,7 +29,6 @@ etc/init.d/ubic-ping
 etc/ubic/service/ubic-ping
 lib/Ubic.pm
 lib/Ubic/AccessGuard.pm
-lib/Ubic/Catalog.pm
 lib/Ubic/Cmd.pm
 lib/Ubic/Cmd/Results.pm
 lib/Ubic/Daemon.pm
@@ -52,6 +51,7 @@ lib/Ubic/Service/Common.pm
 lib/Ubic/Service/SimpleDaemon.pm
 lib/Ubic/Service/Skeleton.pm
 lib/Ubic/Service/Utils.pm
+lib/Ubic/SingletonLock.pm
 root_t/Daemon.pm
 root_t/README
 root_t/groups.t
@@ -89,6 +89,7 @@ t/service/sleeping-common
 t/service/sleeping-daemon
 t/service/sleeping-daemon-root
 t/service/sleeping-daemon2
+t/service/slow-service
 t/service/ubic-ping
 t/simple-daemon.t
 t/ubic.t
