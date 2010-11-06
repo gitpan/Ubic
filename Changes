@@ -1,5 +1,10 @@
 Revision history for Ubic
 
+1.22    Sun Nov 07, 2010
+        * Ubic::Multiservice:
+         - default implementation of 'has_simple_service' method
+         - POD improvements
+
 1.21_01 Thu Oct 21, 2010
         * fixed races in t/daemon.t
 

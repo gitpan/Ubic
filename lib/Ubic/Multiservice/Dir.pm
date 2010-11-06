@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 BEGIN {
-  $Ubic::Multiservice::Dir::VERSION = '1.21_01';
+  $Ubic::Multiservice::Dir::VERSION = '1.22';
 }
 
 use strict;
@@ -19,13 +19,6 @@ sub new($$) {
     my ($dir) = validate_pos(@_, 1);
     return bless { service_dir => $dir } => $class;
 }
-
-sub set_service_dir {
-    my $self = shift;
-    my $dir = shift;
-    $self->{service_dir} = $dir; # TODO - check that dir exists?
-}
-
 
 sub has_simple_service($$) {
     my $self = shift;
@@ -101,7 +94,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.21_01
+version 1.22
 
 =head1 METHODS
 
@@ -110,12 +103,6 @@ version 1.21_01
 =item B<< new($dir) >>
 
 Constructor.
-
-=item B<< set_service_dir($dir) >>
-
-Set service dir in runtime.
-
-This class can be mixin to another service, in this case constructor will never be invoked.
 
 =back
 

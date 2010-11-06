@@ -1,11 +1,16 @@
 package Ubic::Multiservice;
 BEGIN {
-  $Ubic::Multiservice::VERSION = '1.21_01';
+  $Ubic::Multiservice::VERSION = '1.22';
 }
 # ABSTRACT: interface of multiservice representing several named services
 
 use strict;
 use warnings;
+
+sub simple_service($$);
+
+sub service_names($);
+
 
 
 use Carp;
@@ -57,8 +62,6 @@ sub service($$) {
     return $service;
 }
 
-sub simple_service($$);
-
 
 sub has_service($$) {
     my $self = shift;
@@ -77,8 +80,6 @@ sub has_service($$) {
     return $top_level->has_service(join '.', @parts[1..$#parts]);
 }
 
-sub has_simple_service($$);
-
 sub services($) {
     my $self = shift;
     my @services;
@@ -93,7 +94,11 @@ sub services($) {
     return @services;
 }
 
-sub service_names($);
+sub has_simple_service($$) {
+    my $self = shift;
+    my ($name) = validate_pos(@_, { type => SCALAR, regex => qr{^[\w-]+$} });
+    return grep { $_ eq $name } $self->service_names;
+}
 
 sub multiop($) {
     return 'protected';
@@ -112,7 +117,7 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.21_01
+version 1.22
 
 =head1 SYNOPSIS
 
@@ -121,13 +126,31 @@ version 1.21_01
 
 =head1 DESCRIPTION
 
-Multiservice's interface consists of two fundamental methods: C<service($name)> to get service by it's name, and C<services()> to get list of all services.
+Multiservices are objects with simple list/get API which is used to fill ubic service tree.
 
-Additionally, you can check whether multiservice contains service without instantiating it, using C<has_service($name)> method.
+This is an abstract base class for all multiservices.
 
-Remember that althouth multiservice is currently a service too, it doesn't implement start/stop/status methods. This is because user will usually want to see action's progress, and all output policy is defined in L<Ubic::Cmd> class; interaction protocol between this class and C<Ubic::Cmd> class would be too hard to code.
+Actual multiservice classes should inherit from this class and implement methods from L</"ABSTRACT METHODS"> section.
+
+=head1 ABSTRACT METHODS
+
+These methods have to be overloaded by subclasses:
+
+=over
+
+=item B<< simple_service($name) >>
+
+Should return subservice by its short name (i.e. name without dot separators in it).
+
+=item B<< service_names() >>
+
+Should return list with the names of all top-level subservices.
+
+=back
 
 =head1 METHODS
+
+These methods can be overloaded for a performance boost or some non-trivial tasks, but their default implementation should be adequate in 99% of the cases.
 
 =over
 
@@ -135,11 +158,9 @@ Remember that althouth multiservice is currently a service too, it doesn't imple
 
 Get service by name.
 
-This class provides common implementation which can delegate searching of subservices to multiservices (don't panic!), so subclasses should implement C<simple_service> instead.
+This class provides a common implementation which can delegate searching of subservices to multiservices (don't panic!), so subclasses should implement C<simple_service> instead.
 
-=item B<< simple_service() >>
-
-This method should be implemented by subclass.
+All subservices are cached forever.
 
 =item B<< has_service($name) >>
 
@@ -147,25 +168,21 @@ Check whether service with specified name exists in this multiservice.
 
 Like C<service>, subclasses should usually implement C<has_simple_service> instead.
 
-=item B<< has_simple_service($name) >>
-
-This method should be implemented by subclass.
-
 =item B<< services() >>
 
-Construct all subservices. Because they are top-level, we don't need C<simple_services()>.
+Construct all top-level subservices.
 
-By default, it uses C<service_names> to get list of services.
+By default, it uses C<service_names> to get the list of names.
 
-=item B<< service_names() >>
+=item B<< has_simple_service($name) >>
 
-Get list with names of all subservices.
+Returns true if C<$name> is a subservice of this multiservice.
 
-Subclasses should usually override this method, C<services> uses it in default implementation.
+Default implementation calls C<< $self->service_names >>, so you might want to reimplement it in subclasses for a performance reasons.
 
 =item B<< multiop() >>
 
-Get multiop operation mode of object. There are three possible values which this method can return:
+Get multiop operation mode of a multiservice. There are three possible values which this method can return:
 
 =over
 
@@ -175,7 +192,7 @@ C<start>, C<stop>, C<restart> actions for this module start/stop/restart all sub
 
 =item I<protected>
 
-I<-f> flag in L<ubic(1)> binary is required to call any action.
+I<-f> flag in L<ubic(1)> binary is required to call any action. This is a default.
 
 =item I<forbidden>
 
@@ -184,6 +201,16 @@ L<ubic(1)> binary will refuse to start/stop/restart this multiservice.
 =back
 
 =back
+
+=head1 BUGS AND CAVEATS
+
+Although multiservice class is inherited from C<Ubic::Service> class, it doesn't and shouldn't implement start/stop/status methods. This is because user will usually want to see action's progress, and all output policy is defined in L<Ubic::Cmd> class; interaction protocol between this class and C<Ubic::Cmd> class would be too complex.
+
+This may be fixed in future: either C<Ubic::Multiservice> will no longer inherit from C<Ubic::Service>, or start/stop methods will be implemented with renderer object as an argument. Until then, please don't override these methods in subclasses.
+
+C<user>, C<group> and other metadata methods are not used for multiservices too.
+
+Subservices are cached forever; this can cause troubles, but it is necessary to avoid memory leaks in C<ubic-ping>.
 
 =head1 SEE ALSO
 
