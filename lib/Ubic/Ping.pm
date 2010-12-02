@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package Ubic::Ping;
 BEGIN {
-  $Ubic::Ping::VERSION = '1.22';
+  $Ubic::Ping::VERSION = '1.23';
 }
 
 use strict;
@@ -95,7 +95,7 @@ sub handle_request {
         }
         else {
             print "HTTP/1.0 404 Not found\r\n\r\n";
-            print "Expected /status/name/NAME or /status/port/PORT query\n";
+            print "Expected /status/service/NAME or /status/port/PORT query\n";
             return;
         }
     }
@@ -116,7 +116,7 @@ Ubic::Ping - http server which returns service status by it's name or port
 
 =head1 VERSION
 
-version 1.22
+version 1.23
 
 =head1 AUTHOR
 

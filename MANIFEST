@@ -78,6 +78,7 @@ t/release-pod-coverage.t
 t/release-pod-syntax.t
 t/result.t
 t/run.t
+t/service-slow-compile/slow-compile
 t/service.t
 t/service/broken
 t/service/fake-http-service

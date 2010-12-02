@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.22';
+  $Ubic::VERSION = '1.23';
 }
 
 use strict;
@@ -540,7 +540,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.22
+version 1.23
 
 =head1 SYNOPSIS
 
