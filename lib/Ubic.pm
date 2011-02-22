@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.23';
+  $Ubic::VERSION = '1.24';
 }
 
 use strict;
@@ -473,7 +473,13 @@ sub do_cmd($$$) {
                 die "Failed to set real gid to $service_gid: $!";
             }
             $> = $service_uid;
+            unless ($> == $service_uid) {
+                die "Failed to set effective uid to $service_uid: $!";
+            }
             $< = $service_uid;
+            unless ($< == $service_uid) {
+                die "Failed to set real uid to $service_uid: $!";
+            }
             return $service->$cmd();
         });
     });
@@ -540,7 +546,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.23
+version 1.24
 
 =head1 SYNOPSIS
 
@@ -789,7 +795,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Yandex LLC.
+This software is copyright (c) 2011 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

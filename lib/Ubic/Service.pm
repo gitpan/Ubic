@@ -1,6 +1,6 @@
 package Ubic::Service;
 BEGIN {
-  $Ubic::Service::VERSION = '1.23';
+  $Ubic::Service::VERSION = '1.24';
 }
 
 use strict;
@@ -59,7 +59,7 @@ sub check_period {
 }
 
 sub check_timeout {
-    return 600;
+    return 60;
 }
 
 sub custom_commands {
@@ -114,7 +114,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.23
+version 1.24
 
 =head1 SYNOPSIS
 
@@ -204,7 +204,7 @@ This parameter exists as a precaution against incorrectly implemented C<status()
 
 This parameter is *not* a timeout for querying your service by HTTP or whatever your status check is. Service-specific timeouts should be configured by other means.
 
-Default value is 600 seconds. It should not be changed unless you have a very good reason to do so (i.e., your service is so horribly slow that it can't start in 10 minutes).
+Default value is 60 seconds. It should not be changed unless you have a very good reason to do so (i.e., your service is so horribly slow that it can't start in 1 minute).
 
 =back
 
@@ -281,7 +281,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Yandex LLC.
+This software is copyright (c) 2011 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package ubic_watchdog;
 BEGIN {
-  $ubic_watchdog::VERSION = '1.23';
+  $ubic_watchdog::VERSION = '1.24';
 }
 
 use strict;
@@ -97,6 +97,7 @@ sub check($) {
     if ($verbose) {
         INFO("Checking $name");
     }
+    $0 = "ubic-watchdog $name";
 
     try {
         alarm($service->check_timeout);
@@ -158,7 +159,7 @@ ubic_watchdog - watchdog which checks all ubic services.
 
 =head1 VERSION
 
-version 1.23
+version 1.24
 
 =head1 SYNOPSIS
 
@@ -194,7 +195,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Yandex LLC.
+This software is copyright (c) 2011 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
