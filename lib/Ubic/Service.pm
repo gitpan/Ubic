@@ -1,6 +1,6 @@
 package Ubic::Service;
 BEGIN {
-  $Ubic::Service::VERSION = '1.24';
+  $Ubic::Service::VERSION = '1.25';
 }
 
 use strict;
@@ -8,6 +8,14 @@ use warnings;
 
 # ABSTRACT: interface and base class for any ubic service
 
+
+BEGIN {
+    return if $^O ne 'MSWin32';
+
+    require Win32::pwent;
+    push @Win32::pwent::EXPORT_OK, 'endgrent';
+    Win32::pwent->import( qw( getpwent endpwent setpwent getpwnam getpwuid getgrent endgrent setgrent getgrnam getgrgid ) );
+}
 
 use Ubic::Result qw(result);
 
@@ -40,17 +48,7 @@ sub user {
 }
 
 sub group {
-    my $self = shift;
-    my $user = $self->user;
-    my $main_group = getgrgid((getpwnam $user)[3]);
-    setgrent();
-    my @groups;
-    while (my @grent = getgrent()) {
-        my @users = split / /, $grent[3];
-        push @groups, $grent[0] if grep { $_ eq $user } @users;
-    }
-    endgrent();
-    return ($main_group, @groups);
+    return ();
 }
 
 sub check_period {
@@ -104,7 +102,6 @@ sub parent_name($;$) {
 
 1;
 
-
 __END__
 =pod
 
@@ -114,7 +111,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.24
+version 1.25
 
 =head1 SYNOPSIS
 
@@ -188,7 +185,7 @@ Get list of groups from which the service can be controlled and will be running.
 
 First group from list will be used as real and effective group id, and other groups will be set as supplementary groups.
 
-Default is list of all groups of user as returned by C<user()> method.
+Default is an empty list, which will later be interpreted as default group of the user returned by C<user()> method.
 
 =item B<check_period()>
 

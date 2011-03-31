@@ -54,10 +54,12 @@ my %WriteMakefileArgs = (
     'Term::ANSIColor' => '0',
     'Time::HiRes' => '0',
     'Try::Tiny' => '0',
+    'Win32::pwent' => '0',
+    'Win32API::Net' => '0',
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.24',
+  'VERSION' => '1.25',
   'test' => {
     'TESTS' => 't/*.t'
   }

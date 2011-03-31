@@ -1,5 +1,11 @@
 Revision history for Ubic
 
+1.25    2011-03-31
+        * MacOSX support (and probably other POSIX systems too, including FreeBSD)
+        * lots of refactoring:
+         - Ubic::Daemon::OS modules family for OS-specific daemonization tasks
+         - Ubic::Credentials::OS modules family for OS-specific user/group tasks
+
 1.24    Wed Feb 23, 2011
         * ubic-watchdog: change process name while checking specific service
         * check that uid change was successful before calling service action methods

@@ -31,7 +31,15 @@ lib/Ubic.pm
 lib/Ubic/AccessGuard.pm
 lib/Ubic/Cmd.pm
 lib/Ubic/Cmd/Results.pm
+lib/Ubic/Credentials.pm
+lib/Ubic/Credentials/OS/MacOSX.pm
+lib/Ubic/Credentials/OS/POSIX.pm
+lib/Ubic/Credentials/OS/Windows.pm
 lib/Ubic/Daemon.pm
+lib/Ubic/Daemon/OS.pm
+lib/Ubic/Daemon/OS/Linux.pm
+lib/Ubic/Daemon/OS/POSIX.pm
+lib/Ubic/Daemon/PidState.pm
 lib/Ubic/Daemon/Status.pm
 lib/Ubic/Lockf.pm
 lib/Ubic/Lockf/Alarm.pm
@@ -52,6 +60,7 @@ lib/Ubic/Service/SimpleDaemon.pm
 lib/Ubic/Service/Skeleton.pm
 lib/Ubic/Service/Utils.pm
 lib/Ubic/SingletonLock.pm
+lib/Ubic/UserGroupInspection.pm
 root_t/Daemon.pm
 root_t/README
 root_t/groups.t

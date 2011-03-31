@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.24';
+  $Ubic::VERSION = '1.25';
 }
 
 use strict;
@@ -13,6 +13,7 @@ use POSIX qw();
 use Ubic::Result qw(result);
 use Ubic::Multiservice::Dir;
 use Ubic::AccessGuard;
+use Ubic::Credentials;
 use Params::Validate qw(:all);
 use Carp;
 use IO::Handle;
@@ -21,7 +22,6 @@ use Try::Tiny;
 use Ubic::Persistent;
 use Ubic::SingletonLock;
 use Scalar::Util qw(blessed);
-use List::MoreUtils qw(uniq);
 
 our $SINGLETON;
 
@@ -418,68 +418,24 @@ sub do_sub($$) {
     return result($result);
 }
 
-sub _groups_equal {
-    my ($g1, $g2) = @_;
-    my ($main1, @other1) = split / /, $g1;
-    my ($main2, @other2) = split / /, $g2;
-    return ($main1 == $main2 and join(' ', sort { $a <=> $b } uniq($main1, @other1)) eq join(' ', sort { $a <=> $b } uniq($main2, @other2)));
-}
-
 sub do_cmd($$$) {
     my ($self, $name, $cmd) = @_;
     $self->do_sub(sub {
         my $service = $self->service($name);
 
-        my $user = $service->user;
-        my $service_uid = getpwnam($user);
-        unless (defined $service_uid) {
-            die "user $user not found";
-        }
+        my $creds = Ubic::Credentials->new( service => $service );
 
-        my @group = $service->group;
-
-        my @gid;
-        for my $group (@group) {
-            my $gid = getgrnam($group);
-            unless (defined $gid) {
-                die "group $group not found";
-            }
-            push @gid, $gid;
-        }
-        @gid = (@gid, @gid) if @gid == 1; # otherwise $) = "1 0"; $) = "1" leaves 0 in group list
-        my $service_gid = join ' ', @gid;
-
-        if (
-            $service_uid == $>
-            and $service_uid == $<
-            and _groups_equal($service_gid, $))
-            and _groups_equal($service_gid, $()
-        ) {
-            # current euid, ruid, egid, rgid and supplementary groups are all conform to service expectations
+        if ($creds->eq(Ubic::Credentials->new)) {
+            # current credentials fit service expectations
             return $service->$cmd();
         }
 
         # setting just effective uid is not enough, because:
         # - we can accidentally enter tainted mode, and service authors don't expect this
-        # - local administrator may want to allow everyone to write service, and leaving root as real uid is an obvious security breach
-        # (ubic will have to learn to compare service user with service file's owner for such policy to be save, though - this is not implemented yet)
+        # - local administrator may want to allow everyone to write their own services, and leaving root as real uid is an obvious security breach
+        # (ubic will have to learn to compare service user with service file's owner for such policy to be safe, though - this is not implemented yet)
         $self->forked_call(sub {
-            $) = $service_gid;
-            unless (_groups_equal($), $service_gid)) {
-                die "Failed to set effective gid to $service_gid: $!";
-            }
-            $( = $gid[0];
-            unless (_groups_equal($(, $service_gid)) {
-                die "Failed to set real gid to $service_gid: $!";
-            }
-            $> = $service_uid;
-            unless ($> == $service_uid) {
-                die "Failed to set effective uid to $service_uid: $!";
-            }
-            $< = $service_uid;
-            unless ($< == $service_uid) {
-                die "Failed to set real uid to $service_uid: $!";
-            }
+            $creds->set();
             return $service->$cmd();
         });
     });
@@ -522,7 +478,7 @@ sub forked_call {
     }
     open my $fh, '<', $tmp_file or die "Can't read $tmp_file: $!";
     my $content = do { local $/; <$fh>; };
-    close $fh;
+    close $fh or die "Can't close $tmp_file: $!";
     unlink $tmp_file;
     my $result = thaw($content);
     if ($result->{error}) {
@@ -546,7 +502,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.24
+version 1.25
 
 =head1 SYNOPSIS
 

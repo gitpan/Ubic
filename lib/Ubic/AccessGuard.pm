@@ -1,6 +1,6 @@
 package Ubic::AccessGuard;
 BEGIN {
-  $Ubic::AccessGuard::VERSION = '1.24';
+  $Ubic::AccessGuard::VERSION = '1.25';
 }
 
 use strict;
@@ -11,12 +11,15 @@ use warnings;
 
 use Params::Validate;
 use Ubic::Result qw(result);
+use Ubic::Credentials;
 use Carp;
 use Scalar::Util qw(weaken);
+use Try::Tiny;
 
 # AccessGuard is actually a singleton - there can't be two guards for two different services, because process can't have two euids.
 # So we keep weakref to any created AccessGuard.
 my $ag_ref;
+
 
 sub new {
     my $class = shift;
@@ -34,48 +37,19 @@ sub new {
         }
     }
 
-    my $user = $service->user;
-    my ($group) = $service->group;
-
-    my $euid = $>;
-    my $egid = $);
-    $egid =~ s/^(\d+).*/$1/;
-    my $current_user = getpwuid($>);
-    my $current_group = getgrgid($egid);
+    my $creds = Ubic::Credentials->new(service => $service);
 
     my $self = bless {
         service_name => $service->full_name,
+        creds => $creds,
     } => $class;
 
-    if ($group ne $current_group) {
-        $self->{old_egid} = $);
-        my $new_gid = getgrnam($group);
-        unless (defined $new_gid) {
-            die "group $group not found";
-        }
-
-        # AccessGuard don't need to handle supplementary groups correctly, so this is ok
-        $) = "$new_gid 0";
-        my ($current_gid) = $) =~ /^(\d+)/;
-        if ($current_gid != $new_gid) {
-            die result('unknown', "Failed to change group from $egid to $new_gid: $!");
-        }
+    try {
+        $creds->set_effective;
     }
-
-    if ($user ne $current_user) {
-        $self->{old_euid} = $>;
-        if ($current_user ne 'root') {
-            die result('unknown', "You are $current_user, and service ".$service->name." should be operated from $user");
-        }
-        my $new_uid = getpwnam($user);
-        unless (defined $new_uid) {
-            die "user $user not found";
-        }
-        $> = $new_uid;
-        if ($> != $new_uid) {
-            die result('unknown', "Failed to change user from $> to $new_uid: $!");
-        }
-    }
+    catch {
+        die result('unknown', "$_");
+    };
 
     $ag_ref = \$self;
     weaken($ag_ref);
@@ -87,23 +61,11 @@ sub DESTROY {
     my $self = shift;
     local $@;
 
-    if (defined $self->{old_euid}) {
-        $> = $self->{old_euid}; # return euid back to normal
-        if ($> != $self->{old_euid}) {
-            warn "Failed to restore euid from $> to $self->{old_euid}: $!";
-        }
-    }
-    if (defined $self->{old_egid}) {
-        $) = $self->{old_egid}; # return egid back to normal
-        if ($) != $self->{old_egid}) {
-            warn "Failed to restore egid from '$)' to '$self->{old_egid}': $!";
-        }
-    }
+    $self->{creds}->reset_effective;
 }
 
 
 1;
-
 
 __END__
 =pod
@@ -114,7 +76,7 @@ Ubic::AccessGuard - class which guards simple service operations
 
 =head1 VERSION
 
-version 1.24
+version 1.25
 
 =head1 SYNOPSIS
 
