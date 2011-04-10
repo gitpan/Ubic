@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::Linux;
 BEGIN {
-  $Ubic::Daemon::OS::Linux::VERSION = '1.25';
+  $Ubic::Daemon::OS::Linux::VERSION = '1.26';
 }
 
 use strict;
@@ -67,7 +67,7 @@ Ubic::Daemon::OS::Linux
 
 =head1 VERSION
 
-version 1.25
+version 1.26
 
 =head1 AUTHOR
 

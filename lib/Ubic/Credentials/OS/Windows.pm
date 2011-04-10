@@ -1,20 +1,15 @@
 package Ubic::Credentials::OS::Windows;
 BEGIN {
-  $Ubic::Credentials::OS::Windows::VERSION = '1.25';
+  $Ubic::Credentials::OS::Windows::VERSION = '1.26';
 }
 
 use strict;
 use warnings;
 
+# ABSTRACT: dummy credentials module
+
+
 use parent qw(Ubic::Credentials);
-
-BEGIN {
-    return if $^O ne 'MSWin32';
-
-    require Win32::pwent;
-    push @Win32::pwent::EXPORT_OK, 'endgrent';
-    Win32::pwent->import( qw( getpwent endpwent setpwent getpwnam getpwuid getgrent endgrent setgrent getgrnam getgrgid ) );
-}
 
 sub new {
     my $class = shift;
@@ -28,17 +23,24 @@ sub set {}
 
 1;
 
-
 __END__
 =pod
 
 =head1 NAME
 
-Ubic::Credentials::OS::Windows
+Ubic::Credentials::OS::Windows - dummy credentials module
 
 =head1 VERSION
 
-version 1.25
+version 1.26
+
+=head1 DESCRIPTION
+
+This module does nothing and always says that credentials are good.
+
+If you are interested in proper Win32 credentials support, look for the patch I<9581a96> in git repo.
+
+You might also want to contact CPAN user I<MITHALDU>, he provided that patch and was generally interested in Win32 port some time ago.
 
 =head1 AUTHOR
 

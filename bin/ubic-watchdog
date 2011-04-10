@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package ubic_watchdog;
 BEGIN {
-  $ubic_watchdog::VERSION = '1.25';
+  $ubic_watchdog::VERSION = '1.26';
 }
 
 use strict;
@@ -159,7 +159,7 @@ ubic_watchdog - watchdog which checks all ubic services.
 
 =head1 VERSION
 
-version 1.25
+version 1.26
 
 =head1 SYNOPSIS
 

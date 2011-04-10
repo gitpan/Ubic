@@ -41,12 +41,10 @@ requires:
   Term::ANSIColor: 0
   Time::HiRes: 0
   Try::Tiny: 0
-  Win32::pwent: 0
-  Win32API::Net: 0
   overload: 0
   parent: 0
 resources:
   bugtracker: http://github.com/berekuk/Ubic/issues
   homepage: http://github.com/berekuk/Ubic/wiki
   repository: git://github.com/berekuk/Ubic.git
-version: 1.25
+version: 1.26

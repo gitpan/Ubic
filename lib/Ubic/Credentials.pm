@@ -1,6 +1,6 @@
 package Ubic::Credentials;
 BEGIN {
-  $Ubic::Credentials::VERSION = '1.25';
+  $Ubic::Credentials::VERSION = '1.26';
 }
 
 use strict;
@@ -61,7 +61,7 @@ Ubic::Credentials
 
 =head1 VERSION
 
-version 1.25
+version 1.26
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Ubic::Service;
 BEGIN {
-  $Ubic::Service::VERSION = '1.25';
+  $Ubic::Service::VERSION = '1.26';
 }
 
 use strict;
@@ -8,14 +8,6 @@ use warnings;
 
 # ABSTRACT: interface and base class for any ubic service
 
-
-BEGIN {
-    return if $^O ne 'MSWin32';
-
-    require Win32::pwent;
-    push @Win32::pwent::EXPORT_OK, 'endgrent';
-    Win32::pwent->import( qw( getpwent endpwent setpwent getpwnam getpwuid getgrent endgrent setgrent getgrnam getgrgid ) );
-}
 
 use Ubic::Result qw(result);
 
@@ -111,7 +103,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.25
+version 1.26
 
 =head1 SYNOPSIS
 

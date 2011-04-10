@@ -60,7 +60,6 @@ lib/Ubic/Service/SimpleDaemon.pm
 lib/Ubic/Service/Skeleton.pm
 lib/Ubic/Service/Utils.pm
 lib/Ubic/SingletonLock.pm
-lib/Ubic/UserGroupInspection.pm
 root_t/Daemon.pm
 root_t/README
 root_t/groups.t

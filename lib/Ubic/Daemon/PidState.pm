@@ -1,6 +1,6 @@
 package Ubic::Daemon::PidState;
 BEGIN {
-  $Ubic::Daemon::PidState::VERSION = '1.25';
+  $Ubic::Daemon::PidState::VERSION = '1.26';
 }
 
 use strict;
@@ -155,7 +155,7 @@ Ubic::Daemon::PidState - internal object representing process info stored on dis
 
 =head1 VERSION
 
-version 1.25
+version 1.26
 
 =head1 METHODS
 
