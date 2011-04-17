@@ -1,7 +1,7 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package ubic_daemon;
 BEGIN {
-  $ubic_daemon::VERSION = '1.26';
+  $ubic_daemon::VERSION = '1.27';
 }
 
 # ABSTRACT: daemonize any binary
@@ -43,7 +43,7 @@ ubic_daemon - daemonize any binary
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 

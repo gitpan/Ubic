@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.26';
+  $Ubic::VERSION = '1.27';
 }
 
 use strict;
@@ -10,18 +10,20 @@ use warnings;
 
 
 use POSIX qw();
-use Ubic::Result qw(result);
-use Ubic::Multiservice::Dir;
-use Ubic::AccessGuard;
-use Ubic::Credentials;
-use Params::Validate qw(:all);
 use Carp;
 use IO::Handle;
 use Storable qw(freeze thaw);
 use Try::Tiny;
+use Scalar::Util qw(blessed);
+use Params::Validate qw(:all);
+
+use Ubic::Result qw(result);
+use Ubic::Multiservice::Dir;
+use Ubic::AccessGuard;
+use Ubic::Credentials;
 use Ubic::Persistent;
 use Ubic::SingletonLock;
-use Scalar::Util qw(blessed);
+use Ubic::Settings;
 
 our $SINGLETON;
 
@@ -44,45 +46,28 @@ sub _obj {
 
 sub new {
     my $class = shift;
-    my $self = validate(@_, {
-        service_dir =>  { type => SCALAR, default => $ENV{UBIC_SERVICE_DIR} || "/etc/ubic/service" },
-        data_dir => { type => SCALAR, default => $ENV{UBIC_DIR} || '/var/lib/ubic' },
-        status_dir =>  { type => SCALAR, optional => 1 },
-        lock_dir =>  { type => SCALAR, optional => 1 },
-        tmp_dir =>  { type => SCALAR, optional => 1 },
+    my $options = validate(@_, {
+        service_dir =>  { type => SCALAR, optional => 1 },
+        data_dir => { type => SCALAR, optional => 1 },
     });
-    if ($self->{status_dir}) {
-        warn "'status_dir' option is deprecated; use 'data_dir' instead";
-    }
-    elsif ($ENV{UBIC_WATCHDOG_DIR}) {
-        warn "'UBIC_WATCHDOG_DIR' env variable is deprecated; use 'UBIC_DIR' instead";
-        $self->{status_dir} = $ENV{UBIC_WATCHDOG_DIR};
-    }
-    else {
-        $self->{status_dir} = "$self->{data_dir}/status";
+
+    if (caller ne 'Ubic') {
+        warn "Using Ubic->new constructor is discouraged. Just call methods as class methods.";
     }
 
-    if ($self->{lock_dir}) {
-        warn "'lock_dir' option is deprecated; use 'data_dir' instead";
-    }
-    elsif ($ENV{UBIC_LOCK_DIR}) {
-        warn "'UBIC_LOCK_DIR' env variable is deprecated; use 'UBIC_DIR' instead";
-        $self->{lock_dir} = $ENV{UBIC_LOCK_DIR};
-    }
-    else {
-        $self->{lock_dir} = "$self->{data_dir}/lock";
+    for my $key (qw/ service_dir data_dir /) {
+        Ubic::Settings->$key($options->{ $key }) if defined $options->{$key};
     }
 
-    if ($self->{tmp_dir}) {
-        warn "'tmp_dir' option is deprecated; use 'data_dir' instead";
-    }
-    elsif ($ENV{UBIC_TMP_DIR}) {
-        warn "'UBIC_TMP_DIR' env variable is deprecated; use 'UBIC_DIR' instead";
-        $self->{tmp_dir} = $ENV{UBIC_TMP_DIR};
-    }
-    else {
-        $self->{tmp_dir} = "$self->{data_dir}/tmp";
-    }
+    Ubic::Settings->check_settings;
+
+    my $self = {};
+    $self->{data_dir} = Ubic::Settings->data_dir;
+    $self->{service_dir} = Ubic::Settings->service_dir;
+
+    $self->{status_dir} = "$self->{data_dir}/status";
+    $self->{lock_dir} = "$self->{data_dir}/lock";
+    $self->{tmp_dir} = "$self->{data_dir}/tmp";
 
     $self->{root} = Ubic::Multiservice::Dir->new($self->{service_dir});
     $self->{service_cache} = {};
@@ -222,10 +207,14 @@ sub cached_status($$) {
     my ($self) = _obj(shift);
     my ($name) = validate_pos(@_, $validate_service);
 
+    my $type;
     unless ($self->is_enabled($name)) {
-        return result('disabled');
+        $type = 'disabled';
     }
-    return result($self->status_obj_ro($name)->{status});
+    else {
+        $type = $self->status_obj_ro($name)->{status};
+    }
+    return Ubic::Result::Class->new({ type => $type, cached => 1 });
 }
 
 sub do_custom_command($$) {
@@ -332,45 +321,52 @@ sub get_data_dir($) {
 }
 
 sub set_data_dir($$) {
-    my $self = _obj(shift);
-    my ($dir) = validate_pos(@_, 1);
+    my ($arg, $dir) = validate_pos(@_, 1, 1);
 
     my $md = sub {
         my $new_dir = shift;
         mkdir $new_dir or die "mkdir $new_dir failed: $!" unless -d $new_dir;
     };
 
-    # TODO - chmod 777, chmod +t?
-    # TODO - call set_data_dir method from postinst too?
     $md->($dir);
-    for my $subdir (qw(lock status tmp pid watchdog)) {
+    # FIXME - directory list is copy-pasted from Ubic::Admin::Setup
+    for my $subdir (qw[
+        status simple-daemon simple-daemon/pid lock ubic-daemon tmp watchdog watchdog/lock watchdog/status
+    ]) {
         $md->("$dir/$subdir");
     }
-    $md->("$dir/watchdog/lock");
 
-    $self->{lock_dir} = "$dir/lock";
-    $self->{status_dir} = "$dir/status";
-    $self->{tmp_dir} = "$dir/tmp";
-    $self->{data_dir} = $dir;
-    $ENV{UBIC_DIR} = $dir;
-    $ENV{UBIC_DAEMON_PID_DIR} = "$dir/pid";
+    Ubic::Settings->data_dir($dir);
+    if ($SINGLETON) {
+        $SINGLETON->{lock_dir} = "$dir/lock";
+        $SINGLETON->{status_dir} = "$dir/status";
+        $SINGLETON->{tmp_dir} = "$dir/tmp";
+        $SINGLETON->{data_dir} = $dir;
+    }
 }
 
 sub set_ubic_dir($$);
 *set_ubic_dir = \&set_data_dir;
 
+sub set_default_user($$) {
+    my ($arg, $user) = validate_pos(@_, 1, 1);
+
+    Ubic::Settings->default_user($user);
+}
+
 sub get_service_dir($) {
     my $self = _obj(shift);
-    validate_pos(@_, 0);
+    validate_pos(@_);
     return $self->{service_dir};
 }
 
 sub set_service_dir($$) {
-    my $self = _obj(shift);
-    my ($dir) = validate_pos(@_, 1);
-    $self->{service_dir} = $dir;
-    $ENV{UBIC_SERVICE_DIR} = $dir;
-    $self->{root} = Ubic::Multiservice::Dir->new($self->{service_dir}); # FIXME - copy-paste from constructor!
+    my ($arg, $dir) = validate_pos(@_, 1, 1);
+    Ubic::Settings->service_dir($dir);
+    if ($SINGLETON) {
+        $SINGLETON->{service_dir} = $dir;
+        $SINGLETON->{root} = Ubic::Multiservice::Dir->new($dir);
+    }
 }
 
 sub status_file($$) {
@@ -492,7 +488,6 @@ sub forked_call {
 
 1;
 
-
 __END__
 =pod
 
@@ -502,7 +497,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 
@@ -513,6 +508,12 @@ version 1.26
     $status = Ubic->status("my-service");
 
 =head1 DESCRIPTION
+
+This module is a singleton OOP class.
+
+All of its methods can be invoked as class methods or object methods.
+
+=head1 INTRODUCTION
 
 Ubic is a flexible perl-based service manager.
 
@@ -534,23 +535,21 @@ if you want to write your own service, see L<Ubic::Service> and other C<Ubic::Se
 
 =item B<< Ubic->new({ ... }) >>
 
-All methods in this package can be invoked as class methods, but sometimes you may need to override some status dirs. In this case you should construct your own instance.
+All methods in this package can be invoked as class methods, but sometimes you may need to override some status dirs. In this case you should construct your own C<Ubic> instance.
+
+Note that you can't create several instances in one process and have them work independently. So, this constructor is actually just a weird way to override service_dir and data_dir.
 
 Constructor options (all of them are optional):
 
 =over
 
-=item I<status_dir>
-
-Dir with persistent services' statuses.
-
 =item I<service_dir>
 
-Name of dir with service descriptions (which will be used to construct root Ubic::Multiservice::Dir object)
+Name of dir with service descriptions (which will be used to construct root C<Ubic::Multiservice::Dir> object).
 
-=item I<lock_dir>
+=item I<data_dir>
 
-Dir with services' locks.
+Dir into which ubic stores all of its data (locks, status files, tmp files).
 
 =back
 
@@ -558,7 +557,7 @@ Dir with services' locks.
 
 =head1 LSB METHODS
 
-See L<http://refspecs.freestandards.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html> for init-script method specifications.
+See L<LSB documentation|http://refspecs.freestandards.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html> for init-script method specifications.
 
 Following functions are trying to conform, except that all dashes in method names are replaced with underscores.
 
@@ -626,6 +625,8 @@ Unlike other methods, it doesn't require user to be root.
 
 =item B<do_custom_command($name, $command)>
 
+Execute custom command C<$command> for given service.
+
 =item B<service($name)>
 
 Get service object by name.
@@ -662,11 +663,11 @@ Get data dir.
 
 =item B<< set_data_dir($dir) >>
 
-Create and set data dir.
+Set data dir, creating it if necessary.
 
-Data dir is a directory with service statuses and locks. By default, ubic dir is C</var/lib/ubic>, but in tests you may want to change it.
+Data dir is a directory with service statuses and locks. (See C<Ubic::Settings> for more details on how it's calculated).
 
-These settings will be propagated into subprocesses using environment, so following code works:
+This setting will be propagated into subprocesses using environment, so following code works:
 
     Ubic->set_data_dir('tfiles/ubic');
     Ubic->set_service_dir('etc/ubic/service');
@@ -676,6 +677,12 @@ These settings will be propagated into subprocesses using environment, so follow
 =item B<< set_ubic_dir($dir) >>
 
 Deprecated. This method got renamed to C<set_data_dir()>.
+
+=item B<< set_default_user($user) >>
+
+Set default user for all services.
+
+This is a simple proxy for C<< Ubic::Settings->default_user($user) >>.
 
 =item B<< get_service_dir() >>
 
@@ -689,7 +696,7 @@ Set ubic services dir.
 
 =head1 INTERNAL METHODS
 
-You don't need to call these from code which doesn't belong to core Ubic distribution
+You shouldn't call these from code which doesn't belong to core Ubic distribution
 
 These methods can be changed or removed without further notice.
 

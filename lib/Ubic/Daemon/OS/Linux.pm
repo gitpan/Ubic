@@ -1,10 +1,13 @@
 package Ubic::Daemon::OS::Linux;
 BEGIN {
-  $Ubic::Daemon::OS::Linux::VERSION = '1.26';
+  $Ubic::Daemon::OS::Linux::VERSION = '1.27';
 }
 
 use strict;
 use warnings;
+
+# ABSTRACT: linux-specific daemonize helpers
+
 
 use POSIX;
 
@@ -36,9 +39,15 @@ sub pid2cmd {
 
     open my $daemon_cmd_fh, '<', "/proc/$pid/cmdline" or die "Can't open daemon's cmdline: $!";
     my $daemon_cmd = <$daemon_cmd_fh>;
+    unless ($daemon_cmd) {
+        # strange, open succeeded but file is empty
+        die "Can't read daemon cmdline";
+    }
     $daemon_cmd =~ s/\x{00}$//;
     $daemon_cmd =~ s/\x{00}/ /g;
     close $daemon_cmd_fh;
+
+    return $daemon_cmd;
 }
 
 sub close_all_fh {
@@ -63,11 +72,18 @@ __END__
 
 =head1 NAME
 
-Ubic::Daemon::OS::Linux
+Ubic::Daemon::OS::Linux - linux-specific daemonize helpers
 
 =head1 VERSION
 
-version 1.26
+version 1.27
+
+=head1 DESCRIPTION
+
+These functions use C<< /proc >> virtual filesystem for some operations.
+
+There is another C<< Ubic::Daemon::OS::POSIX >> module, which is more generic and should work on all POSIX-compatible systems.
+But this module is older and supposedly more stable. (Also, sometimes it's more optimal, compare implementation of C<close_all_fh()>, for example).
 
 =head1 AUTHOR
 

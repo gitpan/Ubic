@@ -12,7 +12,6 @@ my %WriteMakefileArgs = (
   'ABSTRACT' => 'flexible perl-based service manager',
   'AUTHOR' => 'Vyacheslav Matyukhin <mmcleric@yandex-team.ru>',
   'BUILD_REQUIRES' => {
-    'Config' => '0',
     'Cwd' => '0',
     'File::Find' => '0',
     'LWP::UserAgent' => '0',
@@ -29,13 +28,16 @@ my %WriteMakefileArgs = (
     'bin/ubic',
     'bin/ubic-watchdog',
     'bin/ubic-update',
-    'bin/ubic-daemon'
+    'bin/ubic-daemon',
+    'bin/ubic-periodic',
+    'bin/ubic-admin'
   ],
   'LICENSE' => 'perl',
   'NAME' => 'Ubic',
   'PREREQ_PM' => {
     'Carp' => '0',
     'Class::Accessor::Fast' => '0',
+    'Config' => '0',
     'Data::Dumper' => '0',
     'Exporter' => '0',
     'Fcntl' => '0',
@@ -44,6 +46,7 @@ my %WriteMakefileArgs = (
     'HTTP::Server::Simple::CGI' => '0',
     'IO::Handle' => '0',
     'JSON' => '0',
+    'LWP::Simple' => '0',
     'List::MoreUtils' => '0',
     'List::Util' => '0',
     'POSIX' => '0',
@@ -57,7 +60,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.26',
+  'VERSION' => '1.27',
   'test' => {
     'TESTS' => 't/*.t'
   }

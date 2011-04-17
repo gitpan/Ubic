@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "configure" ]; then
+    if [ -n "$2" ]; then
+        if dpkg --compare-versions "$2" lt 1.27; then
+            ubic-admin setup --batch-mode --no-crontab --no-install-services
+            ubic stop ubic-ping
+            rm /etc/ubic/service/ubic-ping
+            rm /etc/init.d/ubic-ping
+            update-rc.d ubic-ping remove
+            update-rc.d ubic-watchdog defaults
+            ubic start -f ubic
+        else
+            ubic try-restart -f ubic
+        fi
+    else
+        # first installation
+        # no-crontab is because we already have packaged crontab in deb package
+        ubic-admin setup --batch-mode --no-crontab --no-install-services
+        update-rc.d ubic-watchdog defaults
+        ubic start -f ubic
+    fi
+fi
+
+#DEBHELPER#

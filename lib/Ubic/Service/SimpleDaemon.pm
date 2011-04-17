@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.26';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.27';
 }
 
 use strict;
@@ -13,10 +13,24 @@ use parent qw(Ubic::Service::Skeleton);
 
 use Ubic::Daemon qw(start_daemon stop_daemon check_daemon);
 use Ubic::Result qw(result);
+use Ubic::Settings;
 
 use Params::Validate qw(:all);
 
-our $PID_DIR = $ENV{UBIC_DAEMON_PID_DIR} || "/var/lib/ubic/simple-daemon/pid";
+# Beware - this code will ignore any overrides if you're using custom Ubic->new(...) objects
+our $PID_DIR;
+
+sub _pid_dir {
+    return $PID_DIR if defined $PID_DIR;
+    if ($ENV{UBIC_DAEMON_PID_DIR}) {
+        warn "UBIC_DAEMON_PID_DIR env variable is deprecated, use Ubic->set_data_dir or configs instead (see Ubic::Settings for details)";
+        $PID_DIR = $ENV{UBIC_DAEMON_PID_DIR};
+    }
+    else {
+        $PID_DIR = Ubic::Settings->data_dir."/simple-daemon/pid";
+    }
+    return $PID_DIR;
+}
 
 sub new {
     my $class = shift;
@@ -36,7 +50,7 @@ sub new {
 sub pidfile {
     my ($self) = @_;
     my $name = $self->full_name or die "Can't start nameless SimpleDaemon";
-    return "$PID_DIR/$name";
+    return _pid_dir."/$name";
 }
 
 sub start_impl {
@@ -96,7 +110,7 @@ Ubic::Service::SimpleDaemon - variant of service when your service is simple dae
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 

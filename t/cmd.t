@@ -13,8 +13,8 @@ use t::Utils;
 rebuild_tfiles();
 
 use Ubic;
-Ubic->set_data_dir('tfiles/ubic');
-Ubic->set_service_dir('t/service');
+
+local_ubic;
 
 my $out = '';
 open my $fh, '>', \$out;
@@ -58,4 +58,4 @@ select $fh;
 my $results = Ubic::Cmd->start('broken');
 select $stdout;
 is($results->exit_code, 1, 'exit code when starting broken service');
-like($out, qr{^\QStarting broken... oops, this service can't stop at t/service/broken line \E\d+\.$}, 'stdout when starting broken service');
+like($out, qr{^\QStarting broken... oops, this service can't stop at tfiles/service/broken line \E\d+\.$}, 'stdout when starting broken service');

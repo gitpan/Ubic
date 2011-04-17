@@ -1,10 +1,12 @@
 package Ubic::Daemon::OS::POSIX;
 BEGIN {
-  $Ubic::Daemon::OS::POSIX::VERSION = '1.26';
+  $Ubic::Daemon::OS::POSIX::VERSION = '1.27';
 }
 
 use strict;
 use warnings;
+
+# ABSTRACT: POSIX-compatible daemonize helpers
 
 use Params::Validate qw(:all);
 use POSIX qw(:unistd_h);
@@ -60,11 +62,11 @@ __END__
 
 =head1 NAME
 
-Ubic::Daemon::OS::POSIX
+Ubic::Daemon::OS::POSIX - POSIX-compatible daemonize helpers
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 AUTHOR
 

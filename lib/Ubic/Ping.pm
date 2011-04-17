@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package Ubic::Ping;
 BEGIN {
-  $Ubic::Ping::VERSION = '1.26';
+  $Ubic::Ping::VERSION = '1.27';
 }
 
 use strict;
@@ -29,7 +29,7 @@ sub _print_status($;$) {
         print "disabled\n";
         return;
     }
-    my $status = Ubic->cached_status($name); # should read status from static file on disk
+    my $status = Ubic->cached_status($name)->status; # should read status from static file on disk
     if ($status eq 'running') {
         print "HTTP/1.0 200 OK\r\n\r\n";
         print "ok\n";
@@ -116,7 +116,7 @@ Ubic::Ping - http server which returns service status by it's name or port
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::POSIX;
 BEGIN {
-  $Ubic::Credentials::OS::POSIX::VERSION = '1.26';
+  $Ubic::Credentials::OS::POSIX::VERSION = '1.27';
 }
 
 use strict;
@@ -51,7 +51,11 @@ sub new {
 sub user {
     my $self = shift;
     unless (defined $self->{user}) {
-        $self->{user} = getpwuid($>);
+        my $user = getpwuid($>);
+        unless (defined $user) {
+            die "failed to get user name by uid $>";
+        }
+        $self->{user} = $user;
     }
     return $self->{user};
 }
@@ -72,7 +76,7 @@ sub _user2uid {
     my $user = $self->user;
     my $id = scalar getpwnam($user);
     unless (defined $id) {
-        croak "user $user not found";
+        die "user $user not found";
     }
     return $id;
 }
@@ -121,7 +125,17 @@ sub _user2group {
     my $user = $self->user;
     confess "user not defined" unless defined $user;
 
-    my $main_group = getgrgid((getpwnam $user)[3]);
+    my @pwnam = getpwnam $user;
+    unless (@pwnam) {
+        die "getpwnam failed for user $user";
+    }
+    my $group_id = $pwnam[3];
+    my $main_group = getgrgid($group_id);
+    unless ($main_group) {
+        die "failed to get group name by gid $group_id";
+    }
+
+    # TODO - can getgrent fail?
     setgrent();
     my @groups;
     while (my @grent = getgrent()) {
@@ -129,6 +143,7 @@ sub _user2group {
         push @groups, $grent[0] if grep { $_ eq $user } @users;
     }
     endgrent();
+
     $self->{group} = [ $main_group, @groups ];
 }
 
@@ -141,7 +156,13 @@ sub set_effective {
     $egid =~ s/^(\d+).*/$1/;
 
     my $current_user = getpwuid($euid);
+    unless (defined $current_user) {
+        die "failed to get current user name by euid $euid";
+    }
     my $current_group = getgrgid($egid);
+    unless (defined $current_group) {
+        die "failed to get current group name by egid $egid";
+    }
 
     my $user = $self->user;
     my ($group) = $self->group;
@@ -253,7 +274,7 @@ Ubic::Credentials::OS::POSIX - POSIX-specific credentials implementation
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 METHODS
 

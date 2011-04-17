@@ -1,10 +1,12 @@
 package Ubic::Credentials;
 BEGIN {
-  $Ubic::Credentials::VERSION = '1.26';
+  $Ubic::Credentials::VERSION = '1.27';
 }
 
 use strict;
 use warnings;
+
+# ABSTRACT: base class for OS-specific credential methods
 
 
 use List::MoreUtils qw(uniq);
@@ -57,11 +59,11 @@ __END__
 
 =head1 NAME
 
-Ubic::Credentials
+Ubic::Credentials - base class for OS-specific credential methods
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 

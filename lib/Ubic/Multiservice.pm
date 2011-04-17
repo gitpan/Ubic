@@ -1,6 +1,6 @@
 package Ubic::Multiservice;
 BEGIN {
-  $Ubic::Multiservice::VERSION = '1.26';
+  $Ubic::Multiservice::VERSION = '1.27';
 }
 # ABSTRACT: interface of multiservice representing several named services
 
@@ -117,7 +117,7 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 
@@ -210,7 +210,7 @@ This may be fixed in future: either C<Ubic::Multiservice> will no longer inherit
 
 C<user>, C<group> and other metadata methods are not used for multiservices too.
 
-Subservices are cached forever; this can cause troubles, but it is necessary to avoid memory leaks in C<ubic-ping>.
+Subservices are cached forever; this can cause troubles, but it is necessary to avoid memory leaks in C<Ubic::Ping>.
 
 =head1 SEE ALSO
 

@@ -1,6 +1,6 @@
 package Ubic::Result::Class;
 BEGIN {
-  $Ubic::Result::Class::VERSION = '1.26';
+  $Ubic::Result::Class::VERSION = '1.27';
 }
 
 use strict;
@@ -29,6 +29,7 @@ sub new {
     my $self = validate(@_, {
         type => { type => SCALAR, optional => 1 },
         msg => { optional => 1 },
+        cached => { optional => 1 },
     });
     $self->{type} ||= 'unknown';
     return bless $self => $class;
@@ -62,16 +63,17 @@ sub action {
 
 sub as_string {
     my $self = shift;
+    my $cached_str = ($self->{cached} ? ' [cached]' : '');
     if (defined $self->{msg}) {
         if ($self->{type} eq 'unknown') {
             return "$self->{msg}\n";
         }
         else {
-            return "$self->{type} ($self->{msg})";
+            return "$self->{type} ($self->{msg})".$cached_str;
         }
     }
     else {
-        return $self->type;
+        return $self->type.$cached_str;
     }
 }
 
@@ -87,7 +89,7 @@ Ubic::Result::Class - ubic result object
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 

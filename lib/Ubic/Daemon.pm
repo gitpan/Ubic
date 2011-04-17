@@ -1,6 +1,6 @@
 package Ubic::Daemon;
 BEGIN {
-  $Ubic::Daemon::VERSION = '1.26';
+  $Ubic::Daemon::VERSION = '1.27';
 }
 
 use strict;
@@ -337,6 +337,7 @@ sub check_daemon {
         return undef;
     }
 
+    # TODO - wrap in eval and return undef if pid2cmd fails?
     my $daemon_cmd = $OS->pid2cmd($piddata->{daemon});
 
     my $guid = $OS->pid2guid($piddata->{daemon});
@@ -370,7 +371,7 @@ Ubic::Daemon - toolkit for creating daemonized process
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 
