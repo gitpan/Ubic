@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 BEGIN {
-  $Ubic::Cmd::VERSION = '1.27';
+  $Ubic::Cmd::VERSION = '1.28';
 }
 
 use strict;
@@ -217,6 +217,7 @@ sub print_status($$;$$) {
     my $force_cached = shift;
     my $results = shift || Ubic::Cmd::Results->new;
 
+    # TODO - use Credentials instead
     my $user = getpwuid($>);
     unless (defined $user) {
         die "Can't detect user by uid $>";
@@ -235,7 +236,7 @@ sub print_status($$;$$) {
 
         my $status;
         my $cached;
-        if ($force_cached or $user ne Ubic->service($name)->user) {
+        if ($force_cached or ($> and $user ne Ubic->service($name)->user)) {
             $status = Ubic->cached_status($name);
             $cached = 1;
         }
@@ -387,7 +388,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.27
+version 1.28
 
 =head1 SYNOPSIS
 

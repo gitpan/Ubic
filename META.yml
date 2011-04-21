@@ -5,7 +5,6 @@ author:
 build_requires:
   Cwd: 0
   File::Find: 0
-  LWP::UserAgent: 0
   Test::Class: 0
   Test::Exception: 0
   Test::More: 0
@@ -31,7 +30,7 @@ requires:
   HTTP::Server::Simple::CGI: 0
   IO::Handle: 0
   JSON: 0
-  LWP::Simple: 0
+  LWP::UserAgent: 0
   List::MoreUtils: 0
   List::Util: 0
   POSIX: 0
@@ -48,4 +47,4 @@ resources:
   bugtracker: http://github.com/berekuk/Ubic/issues
   homepage: http://github.com/berekuk/Ubic/wiki
   repository: git://github.com/berekuk/Ubic.git
-version: 1.27
+version: 1.28

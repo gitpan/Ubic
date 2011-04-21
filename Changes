@@ -1,5 +1,9 @@
 Revision history for Ubic
 
+1.28    2011-04-21
+        * 'ubic status' always shows non-cached statuses if called by root
+        * ubic.ping status now uses sane timeout when it checks service via http
+
 1.27    2011-04-17
         * ubic-admin script:
          - system-wide setup with one command 'ubic-admin setup'

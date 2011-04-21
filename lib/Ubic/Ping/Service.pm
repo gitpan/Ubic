@@ -1,6 +1,6 @@
 package Ubic::Ping::Service;
 BEGIN {
-  $Ubic::Ping::Service::VERSION = '1.27';
+  $Ubic::Ping::Service::VERSION = '1.28';
 }
 
 # ABSTRACT: ubic.ping service
@@ -11,7 +11,7 @@ use warnings;
 use Ubic::Service::Common;
 use Ubic::Daemon qw(:all);
 use Ubic::Result qw(result);
-use LWP::Simple;
+use LWP::UserAgent;
 use POSIX;
 use Time::HiRes qw(sleep);
 
@@ -47,10 +47,18 @@ sub new {
             unless ($daemon) {
                 return 'not running';
             }
-            my $result = get("http://localhost:$port/ping") || '';
-            return ((
-                $result =~ /^ok$/
-            ) ? result('running', "pid ".$daemon->pid) : result('broken'));
+            my $ua = LWP::UserAgent->new(timeout => 1);
+            my $response = $ua->get("http://localhost:$port/ping");
+            unless ($response->is_success) {
+                return result('broken', $response->status_line);
+            }
+            my $result = $response->decoded_content;
+            if ($result =~ /^ok$/) {
+                return result('running', "pid ".$daemon->pid);
+            }
+            else {
+                return result('broken', $result);
+            }
         },
         port => $port,
         timeout_options => { start => { step => 0.1, trials => 3 }},
@@ -69,7 +77,7 @@ Ubic::Ping::Service - ubic.ping service
 
 =head1 VERSION
 
-version 1.27
+version 1.28
 
 =head1 INTERFACE SUPPORT
 

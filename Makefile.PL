@@ -14,7 +14,6 @@ my %WriteMakefileArgs = (
   'BUILD_REQUIRES' => {
     'Cwd' => '0',
     'File::Find' => '0',
-    'LWP::UserAgent' => '0',
     'Test::Class' => '0',
     'Test::Exception' => '0',
     'Test::More' => '0',
@@ -46,7 +45,7 @@ my %WriteMakefileArgs = (
     'HTTP::Server::Simple::CGI' => '0',
     'IO::Handle' => '0',
     'JSON' => '0',
-    'LWP::Simple' => '0',
+    'LWP::UserAgent' => '0',
     'List::MoreUtils' => '0',
     'List::Util' => '0',
     'POSIX' => '0',
@@ -60,7 +59,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.27',
+  'VERSION' => '1.28',
   'test' => {
     'TESTS' => 't/*.t'
   }
