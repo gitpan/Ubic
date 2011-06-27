@@ -1,12 +1,12 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.29';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.30';
 }
 
 use strict;
 use warnings;
 
-# ABSTRACT: variant of service when your service is simple daemonized binary
+# ABSTRACT: declarative service for daemonizing any binary
 
 
 use parent qw(Ubic::Service::Skeleton);
@@ -100,28 +100,33 @@ sub status_impl {
 
 1;
 
-
 __END__
 =pod
 
 =head1 NAME
 
-Ubic::Service::SimpleDaemon - variant of service when your service is simple daemonized binary
+Ubic::Service::SimpleDaemon - declarative service for daemonizing any binary
 
 =head1 VERSION
 
-version 1.29
+version 1.30
 
 =head1 SYNOPSIS
 
     use Ubic::Service::SimpleDaemon;
     my $service = Ubic::Service::SimpleDaemon->new(
-        bin => "sleep 1000"
+        bin => "sleep 1000",
+        stdout => "/var/log/sleep.log",
+        stderr => "/var/log/sleep.err.log",
+        ubic_log => "/var/log/sleep.ubic.log",
+        user => "nobody",
     );
 
 =head1 DESCRIPTION
 
-Unlike L<Ubic::Service::Common>, this class allows you to specify only name and binary of your service.
+Use this class to daemonize any binary.
+
+This module uses L<Ubic::Daemon> module for process daemonization. All pidfiles are stored in ubic data dir, with their names based on service names.
 
 =head1 METHODS
 
@@ -138,12 +143,6 @@ Parameters:
 =item I<bin>
 
 Daemon binary.
-
-=item I<name>
-
-Service's name.
-
-Optional, will usually be set by upper-level multiservice. Don't set it unless you know what you're doing.
 
 =item I<user>
 
@@ -162,6 +161,12 @@ File into which daemon's stdout will be redirected. Default is C</dev/null>.
 =item I<stderr>
 
 File into which daemon's stderr will be redirected. Default is C</dev/null>.
+
+=item I<name>
+
+Service's name.
+
+Optional, will usually be set by upper-level multiservice. Don't set it unless you know what you're doing.
 
 =back
 

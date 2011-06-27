@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.29';
+  $Ubic::VERSION = '1.30';
 }
 
 use strict;
@@ -22,6 +22,7 @@ use Ubic::Multiservice::Dir;
 use Ubic::AccessGuard;
 use Ubic::Credentials;
 use Ubic::Persistent;
+use Ubic::AtomicFile;
 use Ubic::SingletonLock;
 use Ubic::Settings;
 
@@ -454,12 +455,9 @@ sub forked_call {
         };
 
         try {
-            open my $fh, '>', "$tmp_file.tmp" or die "Can't write to '$tmp_file.tmp: $!";
-            print {$fh} freeze($result);
-            close $fh or die "Can't close $tmp_file.tmp: $!";
+            Ubic::AtomicFile::store( freeze($result) => $tmp_file );
             STDOUT->flush;
             STDERR->flush;
-            rename "$tmp_file.tmp", $tmp_file;
             POSIX::_exit(0); # don't allow to lock to be released - this process was forked from unknown environment, don't want to run unknown destructors
         }
         catch {
@@ -497,7 +495,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.29
+version 1.30
 
 =head1 SYNOPSIS
 

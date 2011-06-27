@@ -1,6 +1,6 @@
 package Ubic::Daemon::PidState;
 BEGIN {
-  $Ubic::Daemon::PidState::VERSION = '1.29';
+  $Ubic::Daemon::PidState::VERSION = '1.30';
 }
 
 use strict;
@@ -11,6 +11,7 @@ use warnings;
 
 use Params::Validate qw(:all);
 use Ubic::Lockf;
+use Ubic::AtomicFile;
 
 use overload '""' => sub {
     my $self = shift;
@@ -134,13 +135,13 @@ sub write {
 
     my ($pid, $guid) = @$params{qw/ pid guid /};
     my $self_pid = $$;
-    open my $fh, '>', "$dir/pid.new" or die "Can't write '$dir/pid.new': $!";
-    print {$fh} "pid $self_pid\n";
-    print {$fh} "guid $guid\n";
-    print {$fh} "daemon $pid\n";
-    $fh->flush;
-    close $fh or die "Can't close '$dir/pid.new': $!";
-    rename "$dir/pid.new" => "$dir/pid" or die "Can't commit pidfile $dir: $!";
+
+    Ubic::AtomicFile::store(
+        "pid $self_pid\n".
+        "guid $guid\n".
+        "daemon $pid\n"
+        => "$dir/pid"
+    );
 }
 
 
@@ -155,7 +156,7 @@ Ubic::Daemon::PidState - internal object representing process info stored on dis
 
 =head1 VERSION
 
-version 1.29
+version 1.30
 
 =head1 METHODS
 

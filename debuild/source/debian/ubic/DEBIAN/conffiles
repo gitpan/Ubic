@@ -1,7 +1,0 @@
-/etc/init.d/ubic-watchdog
-/etc/ubic/service/ubic/watchdog
-/etc/ubic/service/ubic/ping
-/etc/ubic/service/ubic/update
-/etc/logrotate.d/ubic
-/etc/bash_completion.d/ubic
-/etc/cron.d/ubic
