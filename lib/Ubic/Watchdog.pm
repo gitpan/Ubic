@@ -1,6 +1,6 @@
 package Ubic::Watchdog;
 BEGIN {
-  $Ubic::Watchdog::VERSION = '1.30';
+  $Ubic::Watchdog::VERSION = '1.31';
 }
 
 use strict;
@@ -10,6 +10,7 @@ use warnings;
 
 
 use POSIX;
+use IO::Handle;
 use Params::Validate qw(:all);
 use Try::Tiny;
 use List::MoreUtils qw(any);
@@ -173,7 +174,7 @@ Ubic::Watchdog - watchdog code
 
 =head1 VERSION
 
-version 1.30
+version 1.31
 
 =head1 SYNOPSIS
 
