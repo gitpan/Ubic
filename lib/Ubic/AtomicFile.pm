@@ -1,12 +1,15 @@
 package Ubic::AtomicFile;
 BEGIN {
-  $Ubic::AtomicFile::VERSION = '1.31';
+  $Ubic::AtomicFile::VERSION = '1.32';
 }
 
 use strict;
 use warnings;
 
 # ABSTRACT: atomic file operations
+
+
+use IO::Handle;
 
 sub store($$) {
     my ($data, $file) = @_;
@@ -33,7 +36,7 @@ Ubic::AtomicFile - atomic file operations
 
 =head1 VERSION
 
-version 1.31
+version 1.32
 
 =head1 SYNOPSIS
 
