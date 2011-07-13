@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.32';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.32_01';
 }
 
 use strict;
@@ -11,9 +11,11 @@ use warnings;
 
 use parent qw(Ubic::Service::Skeleton);
 
+use Cwd;
 use Ubic::Daemon qw(start_daemon stop_daemon check_daemon);
 use Ubic::Result qw(result);
 use Ubic::Settings;
+use File::Spec;
 
 use Params::Validate qw(:all);
 
@@ -42,6 +44,8 @@ sub new {
         stdout => { type => SCALAR, optional => 1 },
         stderr => { type => SCALAR, optional => 1 },
         ubic_log => { type => SCALAR, optional => 1 },
+        cwd => { type => SCALAR, optional => 1 },
+        env => { type => HASHREF, optional => 1 },
     });
 
     return bless {%$params} => $class;
@@ -55,6 +59,20 @@ sub pidfile {
 
 sub start_impl {
     my ($self) = @_;
+
+    my $old_cwd;
+    if (defined $self->{cwd}) {
+        $old_cwd = getcwd;
+        chdir $self->{cwd} or die "chdir to '$self->{cwd}' failed: $!";
+    }
+
+    local %ENV = %ENV;
+    if (defined $self->{env}) {
+        for my $key (keys %{ $self->{env} }) {
+            $ENV{$key} = $self->{env}{$key};
+        }
+    }
+
     my $start_params = {
         pidfile => $self->pidfile,
         bin => $self->{bin},
@@ -62,10 +80,17 @@ sub start_impl {
         stderr => $self->{stderr} || "/dev/null",
         ubic_log => $self->{ubic_log} || "/dev/null",
     };
-    if ($self->{user}) {
-        $start_params->{user} = $self->{user}; # do we actually need this? Ubic.pm should call setuid for us...
+    if ($old_cwd) {
+        for my $key (qw/ pidfile stdout stderr ubic_log /) {
+            next unless defined $start_params->{$key};
+            $start_params->{$key} = File::Spec->rel2abs($start_params->{$key}, $old_cwd);
+        }
     }
     start_daemon($start_params);
+
+    if (defined $old_cwd) {
+        chdir $old_cwd or die "chdir to '$old_cwd' failed: $!";
+    }
 }
 
 sub user {
@@ -109,7 +134,7 @@ Ubic::Service::SimpleDaemon - declarative service for daemonizing any binary
 
 =head1 VERSION
 
-version 1.32
+version 1.32_01
 
 =head1 SYNOPSIS
 

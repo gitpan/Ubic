@@ -1,59 +1,13 @@
 #!/usr/bin/env perl
 package ubic;
 BEGIN {
-  $ubic::VERSION = '1.32';
+  $ubic::VERSION = '1.32_01';
 }
 
 use strict;
 use warnings;
 
 # ABSTRACT: command-line frontend to ubic services
-
-
-use Getopt::Long 2.33;
-use Pod::Usage;
-
-use Ubic;
-use Ubic::Cmd;
-
-return 1 if caller();
-
-my $force;
-GetOptions(
-    'f|force' => \$force,
-) or pod2usage(2);
-
-unless (@ARGV) {
-    pod2usage(2);
-}
-
-my $command = shift @ARGV;
-if (@ARGV) {
-    Ubic::Cmd->run({
-        name => [@ARGV],
-        command => $command,
-        force => $force,
-    });
-}
-else {
-    Ubic::Cmd->run({
-        name => undef,
-        command => $command,
-        force => $force,
-    });
-}
-
-
-__END__
-=pod
-
-=head1 NAME
-
-ubic - command-line frontend to ubic services
-
-=head1 VERSION
-
-version 1.32
 
 =head1 SYNOPSIS
 
@@ -106,16 +60,38 @@ When managing several services, exit code is non-zero if any service fails, and 
 
 L<LSB - Init Script Actions|http://refspecs.freestandards.org/LSB_4.0.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html>
 
-=head1 AUTHOR
-
-Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Yandex LLC.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =cut
+
+use Getopt::Long 2.33;
+use Pod::Usage;
+
+use Ubic;
+use Ubic::Cmd;
+
+return 1 if caller();
+
+my $force;
+GetOptions(
+    'f|force' => \$force,
+) or pod2usage(2);
+
+unless (@ARGV) {
+    pod2usage(2);
+}
+
+my $command = shift @ARGV;
+if (@ARGV) {
+    Ubic::Cmd->run({
+        name => [@ARGV],
+        command => $command,
+        force => $force,
+    });
+}
+else {
+    Ubic::Cmd->run({
+        name => undef,
+        command => $command,
+        force => $force,
+    });
+}
 

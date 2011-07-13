@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
@@ -12,7 +12,6 @@ my %WriteMakefileArgs = (
   'ABSTRACT' => 'flexible perl-based service manager',
   'AUTHOR' => 'Vyacheslav Matyukhin <mmcleric@yandex-team.ru>',
   'BUILD_REQUIRES' => {
-    'Cwd' => '0',
     'File::Find' => '0',
     'Test::Class' => '0',
     'Test::Exception' => '0',
@@ -20,16 +19,16 @@ my %WriteMakefileArgs = (
     'Test::TCP' => '0'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31'
+    'ExtUtils::MakeMaker' => '6.30'
   },
   'DISTNAME' => 'Ubic',
   'EXE_FILES' => [
     'bin/ubic',
-    'bin/ubic-watchdog',
-    'bin/ubic-update',
+    'bin/ubic-admin',
     'bin/ubic-daemon',
     'bin/ubic-periodic',
-    'bin/ubic-admin'
+    'bin/ubic-update',
+    'bin/ubic-watchdog'
   ],
   'LICENSE' => 'perl',
   'NAME' => 'Ubic',
@@ -37,10 +36,12 @@ my %WriteMakefileArgs = (
     'Carp' => '0',
     'Class::Accessor::Fast' => '0',
     'Config' => '0',
+    'Cwd' => '0',
     'Data::Dumper' => '0',
     'Exporter' => '0',
     'Fcntl' => '0',
     'File::Basename' => '0',
+    'File::Spec' => '0',
     'Getopt::Long' => '2.33',
     'HTTP::Server::Simple::CGI' => '0',
     'IO::Handle' => '0',
@@ -60,7 +61,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.32',
+  'VERSION' => '1.32_01',
   'test' => {
     'TESTS' => 't/*.t'
   }

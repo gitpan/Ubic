@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_update;
 BEGIN {
-  $ubic_update::VERSION = '1.32';
+  $ubic_update::VERSION = '1.32_01';
 }
 
 use strict;
@@ -9,6 +9,15 @@ use warnings;
 
 # ABSTRACT: update ubic metadata
 
+=head1 SYNOPSIS
+
+    ubic-update [--help]
+
+=head1 DESCRIPTION
+
+This script maintains ubic portmap - small database which allows to get service by port without full traversing of all services.
+
+=cut
 
 use Getopt::Long 2.33;
 use Pod::Usage;
@@ -22,26 +31,6 @@ use Ubic::PortMap;
 
 Ubic::PortMap::update();
 
-
-__END__
-=pod
-
-=head1 NAME
-
-ubic_update - update ubic metadata
-
-=head1 VERSION
-
-version 1.32
-
-=head1 SYNOPSIS
-
-    ubic-update [--help]
-
-=head1 DESCRIPTION
-
-This script maintains ubic portmap - small database which allows to get service by port without full traversing of all services.
-
 =head1 FUTURE DIRECTIONS
 
 This script can (and possibly will) be reimplemented as ubic service.
@@ -50,16 +39,4 @@ This script can (and possibly will) be reimplemented as ubic service.
 
 There is an entry about ubic-update in L<Ubic::Manual::FAQ>.
 
-=head1 AUTHOR
-
-Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Yandex LLC.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =cut
-

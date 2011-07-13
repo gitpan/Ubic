@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_daemon;
 BEGIN {
-  $ubic_daemon::VERSION = '1.32';
+  $ubic_daemon::VERSION = '1.32_01';
 }
 
 # ABSTRACT: daemonize any binary
@@ -9,6 +9,15 @@ BEGIN {
 use strict;
 use warnings;
 
+=head1 SYNOPSIS
+
+    ubic-daemon --name=sleep 'sleep 1000'
+
+=head1 DECSRIPTION
+
+This program can be used to easily daemonize any binary.
+
+=cut
 
 use Getopt::Long 2.33;
 use Pod::Usage;
@@ -33,42 +42,10 @@ start_daemon({
     bin => shift(@ARGV),
 });
 
-
-__END__
-=pod
-
-=head1 NAME
-
-ubic_daemon - daemonize any binary
-
-=head1 VERSION
-
-version 1.32
-
-=head1 SYNOPSIS
-
-    ubic-daemon --name=sleep 'sleep 1000'
-
-=head1 DECSRIPTION
-
-This program can be used to easily daemonize any binary.
-
 =head1 SEE ALSO
 
 L<Ubic::Daemon>
 
 There is a similar program named C<start-stop-daemon> in Debian and some other Linux distributions which does daemonization and have some other powerful features.
 
-=head1 AUTHOR
-
-Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Yandex LLC.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =cut
-

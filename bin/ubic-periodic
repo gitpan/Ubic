@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_periodic;
 BEGIN {
-  $ubic_periodic::VERSION = '1.32';
+  $ubic_periodic::VERSION = '1.32_01';
 }
 
 # ABSTRACT: run given command every N seconds
@@ -9,6 +9,11 @@ BEGIN {
 use strict;
 use warnings;
 
+=head1 SYNOPSIS
+
+    ubic-periodic --period=60 --stdout=/var/log/ubic/watchdog.log --stderr=/var/log/ubic/watchdog.err.log ubic-watchdog
+
+=cut
 
 use Getopt::Long 2.33;
 use Pod::Usage;
@@ -87,32 +92,3 @@ while (1) {
         sleep $start_time + $period - $time;
     }
 }
-
-__END__
-=pod
-
-=head1 NAME
-
-ubic_periodic - run given command every N seconds
-
-=head1 VERSION
-
-version 1.32
-
-=head1 SYNOPSIS
-
-    ubic-periodic --period=60 --stdout=/var/log/ubic/watchdog.log --stderr=/var/log/ubic/watchdog.err.log ubic-watchdog
-
-=head1 AUTHOR
-
-Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Yandex LLC.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
-=cut
-
