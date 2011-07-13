@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_watchdog;
 BEGIN {
-  $ubic_watchdog::VERSION = '1.32_01';
+  $ubic_watchdog::VERSION = '1.32_02';
 }
 
 use strict;

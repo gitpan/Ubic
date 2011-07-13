@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.32_01';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.32_02';
 }
 
 use strict;
@@ -11,11 +11,9 @@ use warnings;
 
 use parent qw(Ubic::Service::Skeleton);
 
-use Cwd;
 use Ubic::Daemon qw(start_daemon stop_daemon check_daemon);
 use Ubic::Result qw(result);
 use Ubic::Settings;
-use File::Spec;
 
 use Params::Validate qw(:all);
 
@@ -60,37 +58,14 @@ sub pidfile {
 sub start_impl {
     my ($self) = @_;
 
-    my $old_cwd;
-    if (defined $self->{cwd}) {
-        $old_cwd = getcwd;
-        chdir $self->{cwd} or die "chdir to '$self->{cwd}' failed: $!";
-    }
-
-    local %ENV = %ENV;
-    if (defined $self->{env}) {
-        for my $key (keys %{ $self->{env} }) {
-            $ENV{$key} = $self->{env}{$key};
-        }
-    }
-
     my $start_params = {
         pidfile => $self->pidfile,
         bin => $self->{bin},
-        stdout => $self->{stdout} || "/dev/null",
-        stderr => $self->{stderr} || "/dev/null",
-        ubic_log => $self->{ubic_log} || "/dev/null",
     };
-    if ($old_cwd) {
-        for my $key (qw/ pidfile stdout stderr ubic_log /) {
-            next unless defined $start_params->{$key};
-            $start_params->{$key} = File::Spec->rel2abs($start_params->{$key}, $old_cwd);
-        }
+    for (qw/ env cwd stdout stderr ubic_log /) {
+        $start_params->{$_} = $self->{$_} if defined $self->{$_};
     }
     start_daemon($start_params);
-
-    if (defined $old_cwd) {
-        chdir $old_cwd or die "chdir to '$old_cwd' failed: $!";
-    }
 }
 
 sub user {
@@ -134,7 +109,7 @@ Ubic::Service::SimpleDaemon - declarative service for daemonizing any binary
 
 =head1 VERSION
 
-version 1.32_01
+version 1.32_02
 
 =head1 SYNOPSIS
 
@@ -186,6 +161,18 @@ File into which daemon's stdout will be redirected. Default is C</dev/null>.
 =item I<stderr>
 
 File into which daemon's stderr will be redirected. Default is C</dev/null>.
+
+=item I<ubic_log>
+
+Optional filename of ubic log. Log will contain some technical information about running daemon.
+
+=item I<cwd>
+
+Change working directory before starting a daemon. Optional.
+
+=item I<env>
+
+Modify environment before starting a daemon. Optional. Must be a plain hashref if specified.
 
 =item I<name>
 

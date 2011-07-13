@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_daemon;
 BEGIN {
-  $ubic_daemon::VERSION = '1.32_01';
+  $ubic_daemon::VERSION = '1.32_02';
 }
 
 # ABSTRACT: daemonize any binary

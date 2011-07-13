@@ -3,6 +3,7 @@ abstract: 'flexible perl-based service manager'
 author:
   - 'Vyacheslav Matyukhin <mmcleric@yandex-team.ru>'
 build_requires:
+  Cwd: 0
   File::Find: 0
   Test::Class: 0
   Test::Exception: 0
@@ -21,12 +22,10 @@ requires:
   Carp: 0
   Class::Accessor::Fast: 0
   Config: 0
-  Cwd: 0
   Data::Dumper: 0
   Exporter: 0
   Fcntl: 0
   File::Basename: 0
-  File::Spec: 0
   Getopt::Long: 2.33
   HTTP::Server::Simple::CGI: 0
   IO::Handle: 0
@@ -49,4 +48,4 @@ resources:
   bugtracker: http://github.com/berekuk/Ubic/issues
   homepage: http://github.com/berekuk/Ubic/wiki
   repository: git://github.com/berekuk/Ubic.git
-version: 1.32_01
+version: 1.32_02
