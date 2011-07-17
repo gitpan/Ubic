@@ -1,5 +1,9 @@
 Revision history for Ubic
 
+1.32_04 2011-07-18
+        * don't mess with crontab on setup tests
+        (see https://github.com/berekuk/Ubic/issues/17)
+
 1.32_03 2011-07-17
         * fix daemon tests
 
