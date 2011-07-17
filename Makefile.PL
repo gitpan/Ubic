@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.30;
+use ExtUtils::MakeMaker 6.31;
 
 
 
@@ -20,15 +20,15 @@ my %WriteMakefileArgs = (
     'Test::TCP' => '0'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.30'
+    'ExtUtils::MakeMaker' => '6.31'
   },
   'DISTNAME' => 'Ubic',
   'EXE_FILES' => [
-    'bin/ubic',
-    'bin/ubic-admin',
     'bin/ubic-daemon',
     'bin/ubic-periodic',
+    'bin/ubic-admin',
     'bin/ubic-update',
+    'bin/ubic',
     'bin/ubic-watchdog'
   ],
   'LICENSE' => 'perl',
@@ -60,7 +60,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.32_02',
+  'VERSION' => '1.32_03',
   'test' => {
     'TESTS' => 't/*.t'
   }

@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_admin;
 BEGIN {
-  $ubic_admin::VERSION = '1.32_02';
+  $ubic_admin::VERSION = '1.32_03';
 }
 
 use strict;
@@ -9,11 +9,6 @@ use warnings;
 
 # ABSTRACT: ubic administration script
 
-=head1 SYNOPSIS
-
-    ubic-admin setup [--batch-mode] [--quiet] [other options]
-
-=cut
 
 use Pod::Usage;
 use Ubic::Admin::Setup;
@@ -27,3 +22,32 @@ if (not defined $command or $command ne 'setup') {
 }
 
 Ubic::Admin::Setup::setup();
+
+__END__
+=pod
+
+=head1 NAME
+
+ubic_admin - ubic administration script
+
+=head1 VERSION
+
+version 1.32_03
+
+=head1 SYNOPSIS
+
+    ubic-admin setup [--batch-mode] [--quiet] [other options]
+
+=head1 AUTHOR
+
+Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2011 by Yandex LLC.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+

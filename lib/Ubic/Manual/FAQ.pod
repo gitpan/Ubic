@@ -11,7 +11,7 @@ Ubic::Manual::FAQ - frequently asked questions about Ubic
 
 =head1 VERSION
 
-version 1.32_02
+version 1.32_03
 
 =head1 QUESTIONS
 

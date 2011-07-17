@@ -1,6 +1,6 @@
 package Ubic::Cmd::Results;
 BEGIN {
-  $Ubic::Cmd::Results::VERSION = '1.32_02';
+  $Ubic::Cmd::Results::VERSION = '1.32_03';
 }
 
 use strict;
@@ -104,7 +104,7 @@ Ubic::Cmd::Results - console results set
 
 =head1 VERSION
 
-version 1.32_02
+version 1.32_03
 
 =head1 SYNOPSIS
 
