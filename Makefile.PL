@@ -24,12 +24,12 @@ my %WriteMakefileArgs = (
   },
   'DISTNAME' => 'Ubic',
   'EXE_FILES' => [
+    'bin/ubic',
+    'bin/ubic-watchdog',
+    'bin/ubic-update',
     'bin/ubic-daemon',
     'bin/ubic-periodic',
-    'bin/ubic-admin',
-    'bin/ubic-update',
-    'bin/ubic',
-    'bin/ubic-watchdog'
+    'bin/ubic-admin'
   ],
   'LICENSE' => 'perl',
   'NAME' => 'Ubic',
@@ -60,7 +60,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.32_04',
+  'VERSION' => '1.33',
   'test' => {
     'TESTS' => 't/*.t'
   }

@@ -1,6 +1,6 @@
 package Ubic::PortMap;
 BEGIN {
-  $Ubic::PortMap::VERSION = '1.32_04';
+  $Ubic::PortMap::VERSION = '1.33';
 }
 
 use strict;
@@ -86,7 +86,7 @@ Ubic::PortMap - update and read mapping of ports to service names.
 
 =head1 VERSION
 
-version 1.32_04
+version 1.33
 
 =head1 SYNOPSIS
 
