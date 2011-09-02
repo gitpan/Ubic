@@ -12,7 +12,7 @@ Ubic::Manual::Intro - Initial introduction
 
 =head1 VERSION
 
-version 1.33
+version 1.33_01
 
 =head1 DESCRIPTION
 

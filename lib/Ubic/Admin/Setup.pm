@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
 BEGIN {
-  $Ubic::Admin::Setup::VERSION = '1.33';
+  $Ubic::Admin::Setup::VERSION = '1.33_01';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -226,6 +226,7 @@ sub setup {
         print_tty "there are any problems with their statuses.\n";
         print_tty "It is very simple and robust, but since it's important that watchdog never\n";
         print_tty "goes down, we recommended to install the cron job which checks watchdog itself.\n";
+        print_tty "Also, this cron job will bring watchdog and all other services online on host reboots.\n";
         $enable_crontab = prompt_bool("Install watchdog's watchdog as a cron job?", $opt_crontab);
     }
 
@@ -339,7 +340,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.33
+version 1.33_01
 
 =head1 DESCRPITION
 

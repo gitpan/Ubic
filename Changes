@@ -1,5 +1,14 @@
 Revision history for Ubic
 
+1.33_01 2011-09-02
+        * fix setup.t - don't fail if ubic is already installed
+        * more questions in Ubic::Manual::FAQ, other various doc improvements
+        * partially align status column on 'ubic status' command
+        * silently skip configs with taboo extensions, complain about others to stderr
+          (see https://github.com/berekuk/Ubic/issues/15)
+        * Ubic::Daemon on linux doesn't fail if can't read from /proc cmdline file:
+          there are cases when it is a possible state (usually after reboot)
+
 1.33    2011-07-22
         * stable release
 

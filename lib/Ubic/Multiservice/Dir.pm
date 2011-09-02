@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 BEGIN {
-  $Ubic::Multiservice::Dir::VERSION = '1.33';
+  $Ubic::Multiservice::Dir::VERSION = '1.33_01';
 }
 
 use strict;
@@ -71,12 +71,33 @@ sub service_names($) {
     my @names;
     for my $file (glob("$self->{service_dir}/*")) {
         next unless -f $file or -d $file;
-        $file = basename($file);
+        my $name = basename($file);
 
-        # we skip files with dots, for example old debian configs like my-service.dpkg-old
-        next if $file !~ /^[\w-]+$/;
+        # list of taboo extensions is stolen from logrotate(8)
+        if ($name =~ /(
+                \.rpmorig   |
+                \.rpmsave   |
+                ,v          |
+                \.swp       |
+                \.rpmnew    |
+                ~           |
+                \.cfsaved   |
+                \.rhn-cfg-tmp-.*    |
+                \.dpkg-dist |
+                \.dpkg-old  |
+                \.dpkg-new  |
+                \.disabled
+            )$/x
+        ) {
+            next; # skip silently
+        }
 
-        push @names, $file;
+        if ($name !~ /^[\w-]+$/) {
+            warn "Invalid file $file - only alphanumerics, underscores and hyphens are allowed\n";
+            next;
+        }
+
+        push @names, $name;
     }
     return @names;
 }
@@ -94,7 +115,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.33
+version 1.33_01
 
 =head1 METHODS
 
