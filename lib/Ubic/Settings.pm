@@ -1,6 +1,6 @@
 package Ubic::Settings;
 BEGIN {
-  $Ubic::Settings::VERSION = '1.33_02';
+  $Ubic::Settings::VERSION = '1.33_03';
 }
 
 use strict;
@@ -22,7 +22,7 @@ sub _file_settings {
         push @files, "$ENV{HOME}/.ubic.cfg";
     }
     push @files, '/etc/ubic/ubic.cfg';
-    push @files, '/usr/lib/etc/ubic/ubic.cfg';
+    push @files, '/usr/local/etc/ubic/ubic.cfg';
     for my $file (@files) {
         next unless -e $file;
         return Ubic::Settings::ConfigFile->read($file);
@@ -107,7 +107,7 @@ Ubic::Settings - ubic settings
 
 =head1 VERSION
 
-version 1.33_02
+version 1.33_03
 
 =head1 SYNOPSIS
 
