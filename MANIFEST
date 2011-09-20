@@ -106,6 +106,7 @@ t/service/root/sleeping-daemon-root
 t/service/slow-compile/slow-compile
 t/setup.t
 t/simple-daemon.t
+t/ubic-daemon-script.t
 t/ubic-script.t
 t/ubic.t
 t/watchdog.t

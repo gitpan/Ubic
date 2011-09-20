@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
 BEGIN {
-  $Ubic::Admin::Setup::VERSION = '1.33_01';
+  $Ubic::Admin::Setup::VERSION = '1.33_02';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -19,6 +19,26 @@ use Ubic::Settings::ConfigFile;
 
 my $batch_mode;
 my $quiet;
+
+sub _defaults {
+    if ($^O eq 'freebsd') {
+        return (
+            config => '/usr/local/etc/ubic/ubic.cfg',
+            data_dir => '/var/db/ubic',
+            service_dir => '/usr/local/etc/ubic/service',
+            log_dir => '/var/log/ubic',
+        );
+    }
+    else {
+        # fhs
+        return (
+            config => '/etc/ubic/ubic.cfg',
+            data_dir => '/var/lib/ubic',
+            service_dir => '/etc/ubic/service',
+            log_dir => '/var/log/ubic',
+        );
+    }
+};
 
 sub print_tty {
     print @_ unless $quiet or $batch_mode;
@@ -125,6 +145,8 @@ sub setup {
 
     die "Unexpected arguments '@ARGV'" if @ARGV;
 
+    my %defaults = _defaults();
+
     eval { Ubic::Settings->check_settings };
     unless ($@) {
         my $go = prompt_bool("Looks like ubic is already configured, do you want to reconfigure?", $opt_reconfigure);
@@ -162,19 +184,31 @@ sub setup {
     }
 
     print_tty "\nService dir is a directory with descriptions of your services.\n";
-    my $default_service_dir = (defined($local_dir) ? "$local_dir/ubic/service" : '/etc/ubic/service');
+    my $default_service_dir = (
+        defined($local_dir)
+        ? "$local_dir/ubic/service"
+        : $defaults{service_dir}
+    );
     $default_service_dir = $opt_service_dir if defined $opt_service_dir;
     my $service_dir = prompt_str("Service dir?", $default_service_dir);
 
     print_tty "\nData dir is a directory into which ubic stores all of its data: locks,\n";
     print_tty "status files, tmp files.\n";
-    my $default_data_dir = (defined($local_dir) ? "$local_dir/ubic/data" : '/var/lib/ubic');
+    my $default_data_dir = (
+        defined($local_dir)
+        ? "$local_dir/ubic/data"
+        : $defaults{data_dir}
+    );
     $default_data_dir = $opt_data_dir if defined $opt_data_dir;
     my $data_dir = prompt_str("Data dir?", $default_data_dir);
 
     print_tty "\nLog dir is a directory into which ubic.watchdog will write its logs.\n";
     print_tty "(Your own services are free to write logs wherever they want.)\n";
-    my $default_log_dir = (defined($local_dir) ? "$local_dir/ubic/log" : '/var/log/ubic');
+    my $default_log_dir = (
+        defined($local_dir)
+        ? "$local_dir/ubic/log"
+        : $defaults{log_dir}
+    );
     $default_log_dir = $opt_log_dir if defined $opt_log_dir;
     my $log_dir = prompt_str("Log dir?", $default_log_dir);
 
@@ -230,7 +264,11 @@ sub setup {
         $enable_crontab = prompt_bool("Install watchdog's watchdog as a cron job?", $opt_crontab);
     }
 
-    my $config_file = ($local_dir ? "$local_dir/.ubic.cfg" : '/etc/ubic/ubic.cfg');
+    my $config_file = (
+        defined($local_dir)
+        ?  "$local_dir/.ubic.cfg"
+        : $defaults{config}
+    );
 
     {
         print_tty "\nThat's all I need to know.\n";
@@ -340,7 +378,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.33_01
+version 1.33_02
 
 =head1 DESCRPITION
 

@@ -1,6 +1,6 @@
 package Ubic::Settings;
 BEGIN {
-  $Ubic::Settings::VERSION = '1.33_01';
+  $Ubic::Settings::VERSION = '1.33_02';
 }
 
 use strict;
@@ -17,13 +17,17 @@ our $settings;
 
 sub _file_settings {
     my $file_settings = {};
-    if ($ENV{HOME} and -e "$ENV{HOME}/.ubic.cfg") {
-        $file_settings = Ubic::Settings::ConfigFile->read("$ENV{HOME}/.ubic.cfg");
+    my @files;
+    if ($ENV{HOME}) {
+        push @files, "$ENV{HOME}/.ubic.cfg";
     }
-    elsif (-e "/etc/ubic/ubic.cfg") {
-        $file_settings = Ubic::Settings::ConfigFile->read("/etc/ubic/ubic.cfg");
+    push @files, '/etc/ubic/ubic.cfg';
+    push @files, '/usr/lib/etc/ubic/ubic.cfg';
+    for my $file (@files) {
+        next unless -e $file;
+        return Ubic::Settings::ConfigFile->read($file);
     }
-    return $file_settings;
+    return {};
 }
 
 sub _env_settings {
@@ -103,7 +107,7 @@ Ubic::Settings - ubic settings
 
 =head1 VERSION
 
-version 1.33_01
+version 1.33_02
 
 =head1 SYNOPSIS
 
@@ -133,11 +137,11 @@ Environment variables I<UBIC_SERVICE_DIR>, I<UBIC_DIR> and I<UBIC_DEFAULT_USER> 
 
 =item *
 
-Config file at I<~/.ubic.cfg>, if it exists;
+Config file at I<~/.ubic.cfg>, I</etc/ubic/ubic.cfg> or I</usr/local/etc/ubic/ubic.cfg>, in this order;
 
 =item *
 
-Config file at I</etc/ubic/ubic.cfg>, if it exists and config file in home directory doesn't exist.
+If none of these settings are set, it will fail and advice to run C<ubic-admin setup>.
 
 =back
 
