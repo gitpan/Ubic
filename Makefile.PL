@@ -41,6 +41,7 @@ my %WriteMakefileArgs = (
     'Exporter' => '0',
     'Fcntl' => '0',
     'File::Basename' => '0',
+    'File::Path' => '0',
     'Getopt::Long' => '2.33',
     'HTTP::Server::Simple::CGI' => '0',
     'IO::Handle' => '0',
@@ -60,7 +61,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.33_03',
+  'VERSION' => '1.33_04',
   'test' => {
     'TESTS' => 't/*.t'
   }

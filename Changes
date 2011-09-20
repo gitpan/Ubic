@@ -1,5 +1,8 @@
 Revision history for Ubic
 
+1.33_04 2011-09-20
+        * use pure perl for mkdir and chmod operations
+
 1.33_03 2011-09-20
         * fix typo in the path to freebsd ubic.cfg
 

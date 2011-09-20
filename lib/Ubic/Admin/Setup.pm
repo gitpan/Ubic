@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
 BEGIN {
-  $Ubic::Admin::Setup::VERSION = '1.33_03';
+  $Ubic::Admin::Setup::VERSION = '1.33_04';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -12,6 +12,7 @@ use warnings;
 use Getopt::Long 2.33;
 use Carp;
 use IPC::Open3;
+use File::Path;
 
 use Ubic::AtomicFile;
 use Ubic::Settings;
@@ -280,18 +281,16 @@ sub setup {
 
     print "Installing dirs...\n";
 
-    xsystem('mkdir', '-p', '--', $service_dir);
-    xsystem('mkdir', '-p', '--', $data_dir);
-    xsystem('mkdir', '-p', '--', $log_dir);
+    mkpath($_) for ($service_dir, $data_dir, $log_dir);
 
     for my $subdir (qw[
         status simple-daemon/pid lock ubic-daemon tmp watchdog/lock watchdog/status
     ]) {
-        xsystem('mkdir', '-p', '--', "$data_dir/$subdir");
-        xsystem('chmod', '1777', '--', "$data_dir/$subdir") if $enable_1777;
+        mkpath("$data_dir/$subdir");
+        chmod(01777, "$data_dir/$subdir") or die "chmod failed: $!";
     }
 
-    xsystem('mkdir', '-p', '--', "$service_dir/ubic");
+    mkpath("$service_dir/ubic");
 
     if ($install_services) {
         my $add_service = sub {
@@ -378,7 +377,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.33_03
+version 1.33_04
 
 =head1 DESCRPITION
 
