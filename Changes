@@ -1,5 +1,9 @@
 Revision history for Ubic
 
+1.34    2011-09-25
+        * example system paths in setup depend on os
+        * contrubitors section in Ubic.pm
+
 1.33_04 2011-09-20
         * use pure perl for mkdir and chmod operations
 

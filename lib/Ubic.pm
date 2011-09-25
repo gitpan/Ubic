@@ -1,6 +1,6 @@
 package Ubic;
 BEGIN {
-  $Ubic::VERSION = '1.33_04';
+  $Ubic::VERSION = '1.34';
 }
 
 use strict;
@@ -495,7 +495,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.33_04
+version 1.34
 
 =head1 SYNOPSIS
 
@@ -739,6 +739,18 @@ Run C<$callback> inside fork and return its return value.
 Interaction happens through temporary file in C<$ubic->{tmp_dir}> dir.
 
 =back
+
+=head1 CONTRIBUTORS
+
+Andrei Mishchenko <druxa@yandex-team.ru>
+
+Yury Zavarin <yury.zavarin@gmail.com>
+
+Dmitry Yashin
+
+Christian Walde <walde.christian@googlemail.com>
+
+Ivan Bessarabov <ivan@bessarabov.ru>
 
 =head1 SEE ALSO
 

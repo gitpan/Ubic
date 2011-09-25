@@ -61,7 +61,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.33_04',
+  'VERSION' => '1.34',
   'test' => {
     'TESTS' => 't/*.t'
   }

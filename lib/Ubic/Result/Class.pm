@@ -1,6 +1,6 @@
 package Ubic::Result::Class;
 BEGIN {
-  $Ubic::Result::Class::VERSION = '1.33_04';
+  $Ubic::Result::Class::VERSION = '1.34';
 }
 
 use strict;
@@ -89,7 +89,7 @@ Ubic::Result::Class - ubic result object
 
 =head1 VERSION
 
-version 1.33_04
+version 1.34
 
 =head1 SYNOPSIS
 

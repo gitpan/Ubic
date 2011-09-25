@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
 BEGIN {
-  $Ubic::Admin::Setup::VERSION = '1.33_04';
+  $Ubic::Admin::Setup::VERSION = '1.34';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -28,6 +28,7 @@ sub _defaults {
             data_dir => '/var/db/ubic',
             service_dir => '/usr/local/etc/ubic/service',
             log_dir => '/var/log/ubic',
+            example => '/usr/local/etc, /var',
         );
     }
     else {
@@ -37,6 +38,7 @@ sub _defaults {
             data_dir => '/var/lib/ubic',
             service_dir => '/etc/ubic/service',
             log_dir => '/var/log/ubic',
+            example => '/etc, /var',
         );
     }
 };
@@ -155,7 +157,7 @@ sub setup {
         print_tty "\n";
     }
 
-    print_tty "Ubic can be installed either in your home dir or into standard system paths (/etc, /var).\n";
+    print_tty "Ubic can be installed either in your home dir or into standard system paths ($defaults{example}).\n";
     print_tty "You need to be root to install it into system.\n";
 
     # ideally, we want is_root option and local option to be orthogonal
@@ -377,7 +379,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.33_04
+version 1.34
 
 =head1 DESCRPITION
 
