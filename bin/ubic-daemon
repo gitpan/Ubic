@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_daemon;
 BEGIN {
-  $ubic_daemon::VERSION = '1.34';
+  $ubic_daemon::VERSION = '1.35';
 }
 
 # ABSTRACT: daemonize any binary
@@ -16,11 +16,11 @@ use Pod::Usage;
 use Ubic::Daemon qw(:all);
 use Ubic::Settings;
 
+return 1 if caller();
+
 my $name;
 my $pid_dir = Ubic::Settings->data_dir.'/ubic-daemon';
 my ($stop, $list);
-
-return 1 if caller();
 
 GetOptions(
     'name=s'    => \$name,
@@ -71,7 +71,7 @@ ubic_daemon - daemonize any binary
 
 =head1 VERSION
 
-version 1.34
+version 1.35
 
 =head1 SYNOPSIS
 
