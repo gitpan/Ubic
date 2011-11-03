@@ -10,9 +10,9 @@ build_requires:
   Test::More: 0
   Test::TCP: 0
 configure_requires:
-  ExtUtils::MakeMaker: 6.31
+  ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.102340, CPAN::Meta::Converter version 2.102160'
+generated_by: 'Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.112621'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -45,8 +45,10 @@ requires:
   Try::Tiny: 0
   overload: 0
   parent: 0
+  strict: 0
+  warnings: 0
 resources:
   bugtracker: http://github.com/berekuk/Ubic/issues
   homepage: http://github.com/berekuk/Ubic/wiki
   repository: git://github.com/berekuk/Ubic.git
-version: 1.35
+version: 1.35_01

@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
-BEGIN {
-  $Ubic::Admin::Setup::VERSION = '1.35';
+{
+  $Ubic::Admin::Setup::VERSION = '1.35_01';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -132,7 +132,10 @@ sub setup {
     my $opt_crontab = 1;
     my $opt_local;
 
+    # These options are documented in ubic-admin script POD.
+    # Don't forget to update their description if you change them.
     GetOptions(
+        'local!' => \$opt_local,
         'batch-mode' => \$batch_mode,
         'quiet' => \$quiet,
         'reconfigure!' => \$opt_reconfigure,
@@ -143,7 +146,6 @@ sub setup {
         'sticky-777!' => \$opt_sticky_777,
         'install-services!' => \$opt_install_services,
         'crontab!' => \$opt_crontab,
-        'local!' => \$opt_local,
     ) or die "Getopt failed";
 
     die "Unexpected arguments '@ARGV'" if @ARGV;
@@ -172,6 +174,7 @@ sub setup {
         else {
             my $ok = prompt_bool("You are not root, install locally?", 1);
             return unless $ok; # non-root user can't install into system
+            $local = 1;
         }
     }
 
@@ -379,7 +382,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.35
+version 1.35_01
 
 =head1 DESCRPITION
 

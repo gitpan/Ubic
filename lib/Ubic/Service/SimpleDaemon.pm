@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
-BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.35';
+{
+  $Ubic::Service::SimpleDaemon::VERSION = '1.35_01';
 }
 
 use strict;
@@ -109,7 +109,7 @@ Ubic::Service::SimpleDaemon - declarative service for daemonizing any binary
 
 =head1 VERSION
 
-version 1.35
+version 1.35_01
 
 =head1 SYNOPSIS
 
