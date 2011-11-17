@@ -1,6 +1,6 @@
 package Ubic;
-{
-  $Ubic::VERSION = '1.35_01';
+BEGIN {
+  $Ubic::VERSION = '1.35_02';
 }
 
 use strict;
@@ -82,7 +82,7 @@ sub start($$) {
 
     $self->enable($name);
     my $result = $self->do_cmd($name, 'start');
-    $self->set_cached_status($name, $result->status);
+    $self->set_cached_status($name, $result);
     return $result;
 }
 
@@ -92,8 +92,12 @@ sub stop($$) {
     my $lock = $self->lock($name);
 
     $self->disable($name);
+
+    # FIXME - 'stop' command can fail, in this case daemon will keep running.
+    # This is bad.
+    # We probably need to implement the same logic as when starting:
+    # retry stop attempts until actual status matches desired status.
     my $result = $self->do_cmd($name, 'stop');
-    # we can't save result in status file - it doesn't exist when service is disabled...
     return $result;
 }
 
@@ -106,7 +110,7 @@ sub restart($$) {
     my $result = $self->do_cmd($name, 'stop');
     $result = $self->do_cmd($name, 'start');
 
-    $self->set_cached_status($name, $result->status);
+    $self->set_cached_status($name, $result);
     return result('restarted'); # FIXME - should return original status
 }
 
@@ -310,6 +314,11 @@ sub set_cached_status($$$) {
     }
     my $lock = $self->lock($name);
 
+    if ($self->status_obj_ro($name)->{status} eq $status) {
+        # optimization - don't update status if nothing changed
+        return;
+    }
+
     my $status_obj = $self->status_obj($name);
     $status_obj->{status} = $status;
     $status_obj->commit;
@@ -495,7 +504,7 @@ Ubic - flexible perl-based service manager
 
 =head1 VERSION
 
-version 1.35_01
+version 1.35_02
 
 =head1 SYNOPSIS
 
@@ -619,7 +628,7 @@ Disabled service means that service is ignored by ubic. It's state will no longe
 
 Get cached status of enabled service.
 
-Unlike other methods, it doesn't require user to be root.
+Unlike other methods, it can be invoked by any user.
 
 =item B<do_custom_command($name, $command)>
 

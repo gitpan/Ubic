@@ -1,6 +1,6 @@
 package Ubic::Watchdog;
-{
-  $Ubic::Watchdog::VERSION = '1.35_01';
+BEGIN {
+  $Ubic::Watchdog::VERSION = '1.35_02';
 }
 
 use strict;
@@ -140,7 +140,7 @@ sub check($) {
         my $status = Ubic->status($name);
         unless ($status->status eq 'running') {
             # following code can throw an exception, so we want to cache invalid status immediately
-            Ubic->set_cached_status($name, $status->status);
+            Ubic->set_cached_status($name, $status);
 
             ERROR("$name status is '$status', restarting");
             Ubic->restart($name);
@@ -156,7 +156,7 @@ sub check($) {
         Ubic->set_cached_status($name, $status); # if service's start implementation is invalid, ubic-watchdog will restart it every minute, so be careful
     }
     catch {
-        ERROR("Failed to check $name: $_");
+        ERROR("Failed to revive $name: $_");
     };
 
     INFO("$name checked") if $self->{verbose};
@@ -174,7 +174,7 @@ Ubic::Watchdog - watchdog code
 
 =head1 VERSION
 
-version 1.35_01
+version 1.35_02
 
 =head1 SYNOPSIS
 

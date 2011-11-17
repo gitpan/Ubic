@@ -1,6 +1,6 @@
 package Ubic::Daemon;
-{
-  $Ubic::Daemon::VERSION = '1.35_01';
+BEGIN {
+  $Ubic::Daemon::VERSION = '1.35_02';
 }
 
 use strict;
@@ -409,7 +409,7 @@ Ubic::Daemon - daemon management utilities
 
 =head1 VERSION
 
-version 1.35_01
+version 1.35_02
 
 =head1 SYNOPSIS
 
