@@ -1,5 +1,8 @@
 Revision history for Ubic
 
+1.36    2011-12-09
+    * Ubic::Multiservice::Dir: don't warn about configs with taboo extensions
+
 1.35_02 2011-11-17
         * custom service loaders:
          - ini-style syntax for configs with .ini extension

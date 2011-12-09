@@ -62,7 +62,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '1.35_02',
+  'VERSION' => '1.36',
   'test' => {
     'TESTS' => 't/*.t t/loaders/*.t t/multiservice/*.t'
   }

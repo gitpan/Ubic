@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
 BEGIN {
-  $Ubic::Admin::Setup::VERSION = '1.35_02';
+  $Ubic::Admin::Setup::VERSION = '1.36';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -382,7 +382,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.35_02
+version 1.36
 
 =head1 DESCRPITION
 

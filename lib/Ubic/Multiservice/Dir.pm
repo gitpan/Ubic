@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 BEGIN {
-  $Ubic::Multiservice::Dir::VERSION = '1.35_02';
+  $Ubic::Multiservice::Dir::VERSION = '1.36';
 }
 
 use strict;
@@ -32,6 +32,35 @@ sub has_simple_service {
     }
 }
 
+sub _filter_files {
+    my $self = shift;
+    my @files = @_;
+
+    my @filtered;
+    for my $name (@files) {
+        # list of taboo extensions is stolen from logrotate(8)
+        if ($name =~ /(
+                \.rpmorig   |
+                \.rpmsave   |
+                ,v          |
+                \.swp       |
+                \.rpmnew    |
+                ~           |
+                \.cfsaved   |
+                \.rhn-cfg-tmp-.*    |
+                \.dpkg-dist |
+                \.dpkg-old  |
+                \.dpkg-new  |
+                \.disabled
+            )$/x
+        ) {
+            next; # skip silently
+        }
+        push @filtered, $name;
+    }
+    return @filtered;
+}
+
 sub _name2file {
     my $self = shift;
     my ($name) = @_;
@@ -40,7 +69,10 @@ sub _name2file {
     my @files = glob "$base.*";
     unshift @files, $base if -e $base;
 
+    @files = $self->_filter_files(@files);
+
     unless (@files) {
+        return;
     }
 
     if (@files > 1) {
@@ -76,28 +108,12 @@ sub service_names {
     my $self = shift;
 
     my %names;
-    for my $file (glob("$self->{service_dir}/*")) {
+
+    my @files = glob("$self->{service_dir}/*");
+    @files = $self->_filter_files(@files);
+    for my $file (@files) {
         next unless -f $file or -d $file;
         my $name = basename($file);
-
-        # list of taboo extensions is stolen from logrotate(8)
-        if ($name =~ /(
-                \.rpmorig   |
-                \.rpmsave   |
-                ,v          |
-                \.swp       |
-                \.rpmnew    |
-                ~           |
-                \.cfsaved   |
-                \.rhn-cfg-tmp-.*    |
-                \.dpkg-dist |
-                \.dpkg-old  |
-                \.dpkg-new  |
-                \.disabled
-            )$/x
-        ) {
-            next; # skip silently
-        }
 
         my ($service_name, $ext) = Ubic::ServiceLoader->split_service_filename($name);
         unless (defined $service_name) {
@@ -122,7 +138,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.35_02
+version 1.36
 
 =head1 METHODS
 
