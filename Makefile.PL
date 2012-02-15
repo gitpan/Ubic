@@ -14,6 +14,7 @@ my %WriteMakefileArgs = (
   "BUILD_REQUIRES" => {
     "Cwd" => 0,
     "File::Find" => 0,
+    "LWP::UserAgent" => 0,
     "Test::Class" => 0,
     "Test::Exception" => 0,
     "Test::More" => 0,
@@ -46,9 +47,9 @@ my %WriteMakefileArgs = (
     "Getopt::Long" => "2.33",
     "HTTP::Server::Simple::CGI" => 0,
     "IO::Handle" => 0,
+    "IO::Socket" => 0,
     "IPC::Open3" => 0,
     "JSON" => 0,
-    "LWP::UserAgent" => 0,
     "List::MoreUtils" => 0,
     "List::Util" => 0,
     "POSIX" => 0,
@@ -64,7 +65,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.36_01",
+  "VERSION" => "1.36_02",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }

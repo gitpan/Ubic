@@ -1,6 +1,6 @@
 package Ubic::Ping::Service;
 {
-  $Ubic::Ping::Service::VERSION = '1.36_01';
+  $Ubic::Ping::Service::VERSION = '1.36_02';
 }
 
 # ABSTRACT: ubic.ping service
@@ -11,7 +11,7 @@ use warnings;
 use Ubic::Service::Common;
 use Ubic::Daemon qw(:all);
 use Ubic::Result qw(result);
-use LWP::UserAgent;
+use Ubic::UA;
 use POSIX;
 use Time::HiRes qw(sleep);
 
@@ -20,7 +20,6 @@ use Ubic::Settings;
 use Config;
 
 sub new {
-    # ugly; waiting for druxa's Mopheus to save us all...
     my $port = $ENV{UBIC_SERVICE_PING_PORT} || 12345;
     my $pidfile = Ubic::Settings->data_dir."/ubic-ping.pid";
     my $log = $ENV{UBIC_SERVICE_PING_LOG} || '/dev/null';
@@ -47,21 +46,20 @@ sub new {
             unless ($daemon) {
                 return 'not running';
             }
-            my $ua = LWP::UserAgent->new(timeout => 1);
+            my $ua = Ubic::UA->new(timeout => 1);
             my $response = $ua->get("http://localhost:$port/ping");
-            unless ($response->is_success) {
-                return result('broken', $response->status_line);
+            if ($response->{error}) {
+                return result('broken', $response->{error});
             }
-            my $result = $response->decoded_content;
-            if ($result =~ /^ok$/) {
+            if ($response->{body} =~ /^ok$/ and $response->{code} == 200) {
                 return result('running', "pid ".$daemon->pid);
             }
             else {
-                return result('broken', $result);
+                return result('broken', $response->{body});
             }
         },
         port => $port,
-        timeout_options => { start => { step => 0.1, trials => 3 }},
+        timeout_options => { start => { step => 0.1, trials => 8 }},
     });
 }
 
@@ -77,7 +75,7 @@ Ubic::Ping::Service - ubic.ping service
 
 =head1 VERSION
 
-version 1.36_01
+version 1.36_02
 
 =head1 INTERFACE SUPPORT
 

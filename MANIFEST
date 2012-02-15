@@ -63,6 +63,7 @@ lib/Ubic/ServiceLoader/Ext/ini.pm
 lib/Ubic/Settings.pm
 lib/Ubic/Settings/ConfigFile.pm
 lib/Ubic/SingletonLock.pm
+lib/Ubic/UA.pm
 lib/Ubic/Watchdog.pm
 root_t/Daemon.pm
 root_t/README
