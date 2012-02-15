@@ -1,6 +1,6 @@
 package Ubic::Service;
-BEGIN {
-  $Ubic::Service::VERSION = '1.36';
+{
+  $Ubic::Service::VERSION = '1.36_01';
 }
 
 use strict;
@@ -105,7 +105,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.36
+version 1.36_01
 
 =head1 SYNOPSIS
 
@@ -272,7 +272,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Yandex LLC.
+This software is copyright (c) 2012 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
