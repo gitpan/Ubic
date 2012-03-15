@@ -1,6 +1,6 @@
 package Ubic::UA;
-{
-  $Ubic::UA::VERSION = '1.36_02';
+BEGIN {
+  $Ubic::UA::VERSION = '1.37';
 }
 
 # ABSTRACT: tiny http client
@@ -64,6 +64,7 @@ sub get {
     }
 }
 
+
 1;
 
 __END__
@@ -75,17 +76,33 @@ Ubic::UA - tiny http client
 
 =head1 VERSION
 
-version 1.36_02
+version 1.37
 
 =head1 DESCRIPTION
 
-This module is a tiny http useragent implementetion.
+This module is a tiny and horribly incomplete http useragent implementetion.
 
 It's used by L<Ubic::Ping::Service> and it allows ubic to avoid dependency on LWP.
 
 =head1 INTERFACE SUPPORT
 
 This is considered to be a non-public class. Its interface is subject to change without notice.
+
+=head1 METHODS
+
+=over
+
+=item B<< new(timeout => $timeout) >>
+
+Construct new useragent.
+
+=item B<< get($url) >>
+
+Fetch a given url.
+
+Returns a hashref with I<body>, I<status> and some others and some other fields.
+
+=back
 
 =head1 AUTHOR
 

@@ -1,5 +1,9 @@
 Revision history for Ubic
 
+1.37    2012-03-15
+    * Ubic::UA pod
+    * prohibit building on Solaris
+
 1.36_02 2012-02-15
     * ubic.ping improvements:
      - use Ubic::UA instead of LWP::UserAgent to reduce the number of dependencies
