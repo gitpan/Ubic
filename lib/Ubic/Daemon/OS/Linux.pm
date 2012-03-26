@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::Linux;
-BEGIN {
-  $Ubic::Daemon::OS::Linux::VERSION = '1.37';
+{
+  $Ubic::Daemon::OS::Linux::VERSION = '1.37_01';
 }
 
 use strict;
@@ -29,8 +29,12 @@ sub pid2guid {
         die "Open /proc/$pid/stat failed: $!";
     }
     my $line = <$fh>;
+    # cut first two fields (pid and process name)
+    # since process name can contain spaces, we can't just split line by \s+
+    $line =~ s/^\d+\s+\([^)]*\)\s+//;
+
     my @fields = split /\s+/, $line;
-    my $guid = $fields[21];
+    my $guid = $fields[19];
     return $guid;
 }
 
@@ -78,7 +82,7 @@ Ubic::Daemon::OS::Linux - linux-specific daemonize helpers
 
 =head1 VERSION
 
-version 1.37
+version 1.37_01
 
 =head1 DESCRIPTION
 

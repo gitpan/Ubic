@@ -1,6 +1,6 @@
 package Ubic::Daemon;
-BEGIN {
-  $Ubic::Daemon::VERSION = '1.37';
+{
+  $Ubic::Daemon::VERSION = '1.37_01';
 }
 
 use strict;
@@ -192,7 +192,7 @@ sub start_daemon($) {
             setsid; # ubic-daemon gets it's own session
             _log($ubic_fh, "guardian name: $0");
 
-            _log($ubic_fh, "getting lock...");
+            _log($ubic_fh, "obtaining lock...");
 
             # We're passing 'timeout' option to lockf call to get rid of races.
             # There should be no races when Ubic::Daemon is used in context of
@@ -216,6 +216,8 @@ sub start_daemon($) {
                 # guardian
 
                 my $child_guid = $OS->pid2guid($child);
+                die "Can't detect guid" unless $child_guid;
+                _log($ubic_fh, "child guid: $child_guid");
                 $pid_state->write({ pid => $child, guid => $child_guid });
 
                 _log($ubic_fh, "guardian pid: $$");
@@ -391,8 +393,8 @@ sub check_daemon {
         return undef;
     }
     $print->("daemon pid $piddata->{daemon} cached in pidfile $pidfile, ubic-guardian not found");
-    $print->("current process '$daemon_cmd' with that pid looks too fresh and will not be killed");
-    $print->("pidfile $pidfile removed");
+    $print->("current process '$daemon_cmd' with pid $piddata->{daemon} has wrong guid ($piddata->{guid}, expected $guid) and will not be killed");
+    $print->("removing pidfile $pidfile");
     $pid_state->remove;
     return undef;
 }
@@ -409,7 +411,7 @@ Ubic::Daemon - daemon management utilities
 
 =head1 VERSION
 
-version 1.37
+version 1.37_01
 
 =head1 SYNOPSIS
 

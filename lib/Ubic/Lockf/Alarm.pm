@@ -1,6 +1,6 @@
 package Ubic::Lockf::Alarm;
-BEGIN {
-  $Ubic::Lockf::Alarm::VERSION = '1.37';
+{
+  $Ubic::Lockf::Alarm::VERSION = '1.37_01';
 }
 
 # ABSTRACT: alarm guard
@@ -34,7 +34,7 @@ Ubic::Lockf::Alarm - alarm guard
 
 =head1 VERSION
 
-version 1.37
+version 1.37_01
 
 =head1 DESCRIPTION
 
