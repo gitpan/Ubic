@@ -101,7 +101,6 @@ t/result.t
 t/run.t
 t/service.t
 t/service/README
-t/service/common/broken
 t/service/common/fake-http-service
 t/service/common/fake-http-service2
 t/service/common/multi-impl
@@ -111,6 +110,9 @@ t/service/common/sleeping-common
 t/service/common/sleeping-daemon
 t/service/common/sleeping-daemon2
 t/service/common/slow-service
+t/service/freaks/broken
+t/service/freaks/multi-broken
+t/service/freaks/slow-compile
 t/service/loaders/bar.ini
 t/service/loaders/default-module.ini
 t/service/loaders/foo
@@ -124,7 +126,6 @@ t/service/multiservice-dir/foo/bar/zzz.ini
 t/service/multiservice-dir/foo2/blah
 t/service/multiservice-dir/foo3/blah
 t/service/root/sleeping-daemon-root
-t/service/slow-compile/slow-compile
 t/setup.t
 t/simple-daemon.t
 t/ubic-daemon-script.t

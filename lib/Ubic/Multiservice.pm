@@ -1,6 +1,6 @@
 package Ubic::Multiservice;
 {
-  $Ubic::Multiservice::VERSION = '1.37_01';
+  $Ubic::Multiservice::VERSION = '1.37_02';
 }
 # ABSTRACT: interface of multiservice representing several named services
 
@@ -101,7 +101,7 @@ sub has_simple_service($$) {
 }
 
 sub multiop($) {
-    return 'protected';
+    return 'allowed';
 }
 
 
@@ -117,7 +117,7 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.37_01
+version 1.37_02
 
 =head1 SYNOPSIS
 
@@ -189,10 +189,11 @@ Get multiop operation mode of a multiservice. There are three possible values wh
 =item I<allowed>
 
 C<start>, C<stop>, C<restart> actions for this module start/stop/restart all subservices.
+This is the default.
 
 =item I<protected>
 
-I<-f> flag in L<ubic(1)> binary is required to call any action. This is a default.
+I<-f> flag in L<ubic(1)> binary is required to call any action.
 
 =item I<forbidden>
 

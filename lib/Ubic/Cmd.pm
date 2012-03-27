@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 {
-  $Ubic::Cmd::VERSION = '1.37_01';
+  $Ubic::Cmd::VERSION = '1.37_02';
 }
 
 use strict;
@@ -322,11 +322,12 @@ sub _check_multiop {
     }
     elsif ($multiop eq 'protected') {
         unless ($force) {
-            die "$screen_name is protected multiservice, specify --force if you know what you're doing\n";
+            die "Use --force option if you want to $command all "
+            .($service->name ? $service->name.' ' : '')."services\n";
         }
     }
     elsif ($multiop ne 'allowed') {
-        die "$screen_name has strange multiop value '$multiop'\n";
+        die "$screen_name has invalid multiop value '$multiop'\n";
     }
 }
 
@@ -419,7 +420,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.37_01
+version 1.37_02
 
 =head1 SYNOPSIS
 

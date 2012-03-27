@@ -1,6 +1,6 @@
 package Ubic::Settings;
 {
-  $Ubic::Settings::VERSION = '1.37_01';
+  $Ubic::Settings::VERSION = '1.37_02';
 }
 
 use strict;
@@ -107,7 +107,7 @@ Ubic::Settings - ubic settings
 
 =head1 VERSION
 
-version 1.37_01
+version 1.37_02
 
 =head1 SYNOPSIS
 

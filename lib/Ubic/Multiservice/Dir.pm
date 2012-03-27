@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 {
-  $Ubic::Multiservice::Dir::VERSION = '1.37_01';
+  $Ubic::Multiservice::Dir::VERSION = '1.37_02';
 }
 
 use strict;
@@ -17,8 +17,15 @@ use Ubic::ServiceLoader;
 
 sub new {
     my $class = shift;
-    my ($dir) = validate_pos(@_, 1);
-    return bless { service_dir => $dir } => $class;
+    my ($dir, @options) = validate_pos(@_, 1, 0);
+
+    my $options = {};
+    if (@options) {
+        $options = validate(@options, {
+            protected => 0,
+        });
+    }
+    return bless { service_dir => $dir, %$options } => $class;
 }
 
 sub has_simple_service {
@@ -126,6 +133,11 @@ sub service_names {
     return sort keys %names;
 }
 
+sub multiop {
+    my $self = shift;
+    $self->{protected} ? 'protected' : 'allowed';
+}
+
 
 1;
 
@@ -138,7 +150,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.37_01
+version 1.37_02
 
 =head1 METHODS
 

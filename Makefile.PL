@@ -9,7 +9,7 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "flexible perl-based service manager",
+  "ABSTRACT" => "polymorphic service manager",
   "AUTHOR" => "Vyacheslav Matyukhin <mmcleric\@yandex-team.ru>",
   "BUILD_REQUIRES" => {
     "Cwd" => 0,
@@ -63,7 +63,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.37_01",
+  "VERSION" => "1.37_02",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }
