@@ -1,6 +1,6 @@
 package Ubic::Service;
-{
-  $Ubic::Service::VERSION = '1.37_02';
+BEGIN {
+  $Ubic::Service::VERSION = '1.37_03';
 }
 
 use strict;
@@ -105,7 +105,7 @@ Ubic::Service - interface and base class for any ubic service
 
 =head1 VERSION
 
-version 1.37_02
+version 1.37_03
 
 =head1 SYNOPSIS
 

@@ -1,9 +1,10 @@
 package Ubic::Lockf;
-{
-  $Ubic::Lockf::VERSION = '1.37_02';
+BEGIN {
+  $Ubic::Lockf::VERSION = '1.37_03';
 }
 
 use strict;
+use warnings;
 
 # ABSTRACT: file locker with an automatic out-of-scope unlocking mechanism
 
@@ -122,7 +123,7 @@ Ubic::Lockf - file locker with an automatic out-of-scope unlocking mechanism
 
 =head1 VERSION
 
-version 1.37_02
+version 1.37_03
 
 =head1 SYNOPSIS
 
