@@ -1,6 +1,6 @@
 package Ubic::AtomicFile;
-BEGIN {
-  $Ubic::AtomicFile::VERSION = '1.37_03';
+{
+  $Ubic::AtomicFile::VERSION = '1.38';
 }
 
 use strict;
@@ -49,7 +49,7 @@ Ubic::AtomicFile - atomic file operations
 
 =head1 VERSION
 
-version 1.37_03
+version 1.38
 
 =head1 SYNOPSIS
 

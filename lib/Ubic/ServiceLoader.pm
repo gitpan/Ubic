@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader;
-BEGIN {
-  $Ubic::ServiceLoader::VERSION = '1.37_03';
+{
+  $Ubic::ServiceLoader::VERSION = '1.38';
 }
 
 # ABSTRACT: load service from file
@@ -68,7 +68,7 @@ Ubic::ServiceLoader - load service from file
 
 =head1 VERSION
 
-version 1.37_03
+version 1.38
 
 =head1 SYNOPSIS
 

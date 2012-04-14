@@ -1,6 +1,6 @@
 package Ubic::Daemon;
-BEGIN {
-  $Ubic::Daemon::VERSION = '1.37_03';
+{
+  $Ubic::Daemon::VERSION = '1.38';
 }
 
 use strict;
@@ -221,7 +221,7 @@ sub start_daemon($) {
 
             # We're passing 'timeout' option to lockf call to get rid of races.
             # There should be no races when Ubic::Daemon is used in context of
-            # ubic service, because services has additional lock, but
+            # ubic service, because services have an additional lock, but
             # Ubic::Daemon can be useful without services as well.
             $lock = $pid_state->lock(5) or die "Can't lock $pid_state";
 
@@ -428,7 +428,7 @@ Ubic::Daemon - daemon management utilities
 
 =head1 VERSION
 
-version 1.37_03
+version 1.38
 
 =head1 SYNOPSIS
 

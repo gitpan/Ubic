@@ -1,6 +1,6 @@
 package Ubic::AccessGuard;
-BEGIN {
-  $Ubic::AccessGuard::VERSION = '1.37_03';
+{
+  $Ubic::AccessGuard::VERSION = '1.38';
 }
 
 use strict;
@@ -76,7 +76,7 @@ Ubic::AccessGuard - class which guards simple service operations
 
 =head1 VERSION
 
-version 1.37_03
+version 1.38
 
 =head1 SYNOPSIS
 
