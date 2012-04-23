@@ -1,5 +1,8 @@
 Revision history for Ubic
 
+1.38_01 2012-04-23
+    * freebsd credentials fix - set real uid first and effective uid after that
+
 1.38    2012-04-14
     * stable release
 

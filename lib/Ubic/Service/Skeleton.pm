@@ -1,6 +1,6 @@
 package Ubic::Service::Skeleton;
-{
-  $Ubic::Service::Skeleton::VERSION = '1.38';
+BEGIN {
+  $Ubic::Service::Skeleton::VERSION = '1.38_01';
 }
 
 use strict;
@@ -148,7 +148,7 @@ Ubic::Service::Skeleton - skeleton of any service with common start/stop logic
 
 =head1 VERSION
 
-version 1.38
+version 1.38_01
 
 =head1 ACTIONS
 
