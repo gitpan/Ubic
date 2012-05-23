@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader::Ext::ini;
-BEGIN {
-  $Ubic::ServiceLoader::Ext::ini::VERSION = '1.38_01';
+{
+  $Ubic::ServiceLoader::Ext::ini::VERSION = '1.39';
 }
 
 # ABSTRACT: loader for ini-style configs
@@ -60,11 +60,11 @@ Ubic::ServiceLoader::Ext::ini - loader for ini-style configs
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 SYNOPSIS
 
-    # in /etc/ubic/service/my.foo file:
+    # in /etc/ubic/service/my.ini file:
     module = Ubic::Service::SimpleDaemon
     [options]
     bin = sleep 100

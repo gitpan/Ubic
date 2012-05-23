@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader;
-BEGIN {
-  $Ubic::ServiceLoader::VERSION = '1.38_01';
+{
+  $Ubic::ServiceLoader::VERSION = '1.39';
 }
 
 # ABSTRACT: load service from file
@@ -20,9 +20,10 @@ sub ext2loader {
     my ($ext) = validate_pos(@_, { type => SCALAR, regex => qr/^\w+$/ });
 
     return $ext2loader{$ext} if $ext2loader{$ext};
-    require "Ubic/ServiceLoader/Ext/$ext.pm";
+    require "Ubic/ServiceLoader/Ext/$ext.pm"; # TODO - improve error message if ext.pm doesn't exist
     my $loader_class = "Ubic::ServiceLoader::Ext::$ext";
     return $loader_class->new;
+    # FIXME - cache loader_class!
 }
 
 sub split_service_filename {
@@ -68,7 +69,7 @@ Ubic::ServiceLoader - load service from file
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 SYNOPSIS
 

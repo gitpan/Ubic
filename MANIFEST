@@ -67,8 +67,10 @@ lib/Ubic/UA.pm
 lib/Ubic/Watchdog.pm
 root_t/Daemon.pm
 root_t/README
+root_t/daemon.t
 root_t/groups.t
 root_t/root.t
+root_t/service/daemon_user
 root_t/service/daemongroup-daemon
 root_t/service/daemongroup2-daemon
 root_t/service/nobody-daemon

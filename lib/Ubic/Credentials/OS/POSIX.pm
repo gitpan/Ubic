@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::POSIX;
-BEGIN {
-  $Ubic::Credentials::OS::POSIX::VERSION = '1.38_01';
+{
+  $Ubic::Credentials::OS::POSIX::VERSION = '1.39';
 }
 
 use strict;
@@ -262,6 +262,13 @@ sub set {
     }
 }
 
+sub as_string {
+    my $self = shift;
+    my $user = $self->user;
+    my ($group) = $self->group; # ignore complementary groups for the sake of readability
+    return "$user:$group";
+}
+
 
 1;
 
@@ -274,7 +281,7 @@ Ubic::Credentials::OS::POSIX - POSIX-specific credentials implementation
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 METHODS
 

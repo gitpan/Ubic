@@ -1,12 +1,12 @@
 package Ubic::Service::SimpleDaemon;
-BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.38_01';
+{
+  $Ubic::Service::SimpleDaemon::VERSION = '1.39';
 }
 
 use strict;
 use warnings;
 
-# ABSTRACT: declarative service for daemonizing any binary
+# ABSTRACT: service module for daemonizing any binary
 
 
 use parent qw(Ubic::Service::Skeleton);
@@ -38,12 +38,15 @@ sub new {
         bin => { type => SCALAR | ARRAYREF },
         user => { type => SCALAR, optional => 1 },
         group => { type => SCALAR | ARRAYREF, optional => 1 },
+        daemon_user => { type => SCALAR, optional => 1 },
+        daemon_group => { type => SCALAR | ARRAYREF, optional => 1 },
         name => { type => SCALAR, optional => 1 },
         stdout => { type => SCALAR, optional => 1 },
         stderr => { type => SCALAR, optional => 1 },
         ubic_log => { type => SCALAR, optional => 1 },
         cwd => { type => SCALAR, optional => 1 },
         env => { type => HASHREF, optional => 1 },
+        reload_signal => { type => SCALAR, optional => 1 },
     });
 
     return bless {%$params} => $class;
@@ -64,6 +67,12 @@ sub start_impl {
     };
     for (qw/ env cwd stdout stderr ubic_log /) {
         $start_params->{$_} = $self->{$_} if defined $self->{$_};
+    }
+    if (defined $self->{daemon_user}) {
+        $start_params->{credentials} = Ubic::Credentials->new(
+            user => $self->{daemon_user},
+            group => $self->{daemon_group},
+        );
     }
     start_daemon($start_params);
 }
@@ -97,6 +106,24 @@ sub status_impl {
     }
 }
 
+sub reload {
+    my $self = shift;
+    unless (defined $self->{reload_signal}) {
+        return result('unknown', 'not implemented');
+    }
+    my $daemon = check_daemon($self->pidfile);
+    unless ($daemon) {
+        return result('not running');
+    }
+
+    my $pid = $daemon->pid;
+    # TODO - should we send signal to guardian instead?
+    # reload doesn't reopen ubic_log/stdout/stderr by now.
+    kill $self->{reload_signal} => $pid;
+
+    return result('reloaded', "sent $self->{reload_signal} to $pid");
+}
+
 
 1;
 
@@ -105,11 +132,11 @@ __END__
 
 =head1 NAME
 
-Ubic::Service::SimpleDaemon - declarative service for daemonizing any binary
+Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 SYNOPSIS
 
@@ -124,7 +151,7 @@ version 1.38_01
 
 =head1 DESCRIPTION
 
-Use this class to daemonize any binary.
+Use this class to turn any binary into ubic service.
 
 This module uses L<Ubic::Daemon> module for process daemonization. All pidfiles are stored in ubic data dir, with their names based on service names.
 
@@ -144,41 +171,69 @@ Parameters:
 
 Daemon binary.
 
+Can be a plain string (i.e., C<sleep 10000>), or arrayref with separate arguments (i.e., C<['sleep', '1000']>).
+
+This is the only mandatory parameter, everything else is optional.
+
 =item I<user>
 
-User under which daemon will be started. Optional, default is C<root>.
+User under which the service will operate.
+
+Default user depends on the configuration chosen at C<ubic-admin setup> stage. See L<Ubic::Settings> for more defails.
 
 =item I<group>
 
-Group under which daemon will be started. Optional, default is all user groups.
+Group under which the service will operate.
 
-Value can be scalar or arrayref.
+Value can be either scalar or arrayref.
+
+Defaults to all groups of service's user.
 
 =item I<stdout>
 
-File into which daemon's stdout will be redirected. Default is C</dev/null>.
+File into which daemon's stdout will be redirected.  None by default.
 
 =item I<stderr>
 
-File into which daemon's stderr will be redirected. Default is C</dev/null>.
+File into which daemon's stderr will be redirected. None by default.
 
 =item I<ubic_log>
 
 Optional filename of ubic log. Log will contain some technical information about running daemon.
 
+None by default.
+
 =item I<cwd>
 
-Change working directory before starting a daemon. Optional.
+Change working directory before starting a daemon.
 
 =item I<env>
 
-Modify environment before starting a daemon. Optional. Must be a plain hashref if specified.
+Modify environment before starting a daemon.
+
+Must be a plain hashref if specified.
+
+=item I<reload_signal>
+
+Send given signal to the daemon on C<reload> command.
+
+Can take either integer value or signal name (i.e., I<HUP>).
+
+Note that this signal won't reopen I<stdout>, I<stderr> or I<ubic_log> logs. Sorry.
+
+=item I<daemon_user>
+
+=item I<daemon_group>
+
+Change credentials to the given user and group before execing into daemon.
+
+The difference between these options and I<user>/I<group> options is that for I<daemon_*> options, credentials will be set just before before starting the actual daemon. All other service operations will be done using default user. Refer to L<Ubic::Manual::Overview/"Permissions and security"> for the further explanations.
 
 =item I<name>
 
 Service's name.
 
-Optional, will usually be set by upper-level multiservice. Don't set it unless you know what you're doing.
+Name will usually be set by upper-level multiservice. Don't set it unless you know what you're doing.
 
 =back
 
@@ -190,7 +245,7 @@ Get pid filename. It will be concatenated from simple-daemon pid dir and service
 
 =head1 SEE ALSO
 
-L<Ubic::Daemon> - module to daemonize any binary
+L<Ubic::Daemon> - module for daemonizing any binary.
 
 =head1 AUTHOR
 

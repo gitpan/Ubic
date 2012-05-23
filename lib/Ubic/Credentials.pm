@@ -1,6 +1,6 @@
 package Ubic::Credentials;
-BEGIN {
-  $Ubic::Credentials::VERSION = '1.38_01';
+{
+  $Ubic::Credentials::VERSION = '1.39';
 }
 
 use strict;
@@ -51,6 +51,11 @@ sub set {
     croak 'not implemented';
 }
 
+sub as_string {
+    my $self = shift;
+    return "$self"; # ugly default stringification; please override in subclasses
+}
+
 
 1;
 
@@ -63,7 +68,7 @@ Ubic::Credentials - base class for OS-specific credential methods
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 SYNOPSIS
 
@@ -108,6 +113,10 @@ Returns true value if credentials are equivalent.
 =item B<< set() >>
 
 Set credentials as effective and real group and user permanently.
+
+=item B<< as_string() >>
+
+Returns human-readable string representation.
 
 =back
 

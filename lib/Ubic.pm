@@ -1,6 +1,6 @@
 package Ubic;
-BEGIN {
-  $Ubic::VERSION = '1.38_01';
+{
+  $Ubic::VERSION = '1.39';
 }
 
 use strict;
@@ -402,7 +402,9 @@ sub status_obj_ro($$) {
 sub access_guard($$) {
     my $self = _obj(shift);
     my ($name) = validate_pos(@_, $validate_service);
-    return Ubic::AccessGuard->new($self->service($name));
+    return Ubic::AccessGuard->new(
+        Ubic::Credentials->new(service => $self->service($name))
+    );
 }
 
 sub lock($$) {
@@ -506,7 +508,7 @@ Ubic - polymorphic service manager
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 SYNOPSIS
 

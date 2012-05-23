@@ -11,7 +11,7 @@ Ubic::Manual::FAQ - frequently asked questions about Ubic
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 QUESTIONS
 
@@ -28,6 +28,14 @@ In the future, this one-liner will be reimplemented as "ubic fix-permissions" co
 Dot is a reserved symbol, it separates service name parts in service tree (like C</> separates directories in unix filesystems). So, if you really want the service C<foo.bar>, put its description in C</etc/ubic/service/foo/bar>.
 
 By the way, this behavior is consistent with many classic unix programs, such as cron and logrotate.
+
+=head2 Why ubic creates a new daemon every minute in an endless loop if my binary daemonizes itself?
+
+Ubic can't distinguish self-daemonizing binary from program which instantly exits, so C<ubic.watchdog> thinks that service has failed and tries to respawn it every minute.
+
+You can either fix the daemon (hint: many daemons have C<--foreground> option), or implement your own service class.
+
+See L<Ubic::Service>, L<Ubic::Service::Skeleton>, L<Ubic::Service::Common> and L<Ubic::Manual::Overview/"Common service classes"> for more details on writing custom service classes.
 
 =head2 Why did ubic edit my crontab?
 
@@ -50,7 +58,7 @@ Anyway, don't worry about it, it's completely harmless.
 
 =head2 What does ubic.update service do?
 
-C<ubic.update> service (and ubic-update script) updates portmap - local C<{ port => service-name }> mapping.
+C<ubic.update> service (and ubic-update script) updates portmap - local C<< { port => service-name } >> mapping.
 It makes possible to check a service status via C<ubic.ping> using service port instead of its name:
 
     $ wget -q -O - 'http://localhost:12345/status/port/12345'

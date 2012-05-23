@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader::Base;
-BEGIN {
-  $Ubic::ServiceLoader::Base::VERSION = '1.38_01';
+{
+  $Ubic::ServiceLoader::Base::VERSION = '1.39';
 }
 
 # ABSTRACT: abstract base class for service loaders
@@ -28,7 +28,7 @@ Ubic::ServiceLoader::Base - abstract base class for service loaders
 
 =head1 VERSION
 
-version 1.38_01
+version 1.39
 
 =head1 DESCRIPTION
 
