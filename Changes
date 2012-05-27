@@ -1,5 +1,8 @@
 Revision history for Ubic
 
+1.40    2012-05-27
+    * improve tests stability
+
 1.39    2012-05-23
     * new SimpleDaemon options:
      - reload_signal
