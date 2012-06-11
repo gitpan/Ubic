@@ -1,6 +1,6 @@
 package Ubic::Daemon::PidState;
 {
-  $Ubic::Daemon::PidState::VERSION = '1.40';
+  $Ubic::Daemon::PidState::VERSION = '1.41';
 }
 
 use strict;
@@ -162,7 +162,11 @@ Ubic::Daemon::PidState - internal object representing process info stored on dis
 
 =head1 VERSION
 
-version 1.40
+version 1.41
+
+=head1 INTERFACE SUPPORT
+
+This is considered to be a non-public class. Its interface is subject to change without notice.
 
 =head1 METHODS
 

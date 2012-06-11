@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::Linux;
 {
-  $Ubic::Daemon::OS::Linux::VERSION = '1.40';
+  $Ubic::Daemon::OS::Linux::VERSION = '1.41';
 }
 
 use strict;
@@ -41,7 +41,12 @@ sub pid2guid {
 sub pid2cmd {
     my ($self, $pid) = @_;
 
-    open my $daemon_cmd_fh, '<', "/proc/$pid/cmdline" or die "Can't open daemon's cmdline: $!";
+    my $daemon_cmd_fh;
+    unless (open $daemon_cmd_fh, '<', "/proc/$pid/cmdline") {
+        # this can happen if pid got reused and now it belongs to the kernel process, e.g., [kthreadd]
+        warn "Can't open daemon's cmdline: $!";
+        return 'unknown';
+    }
     my $daemon_cmd = <$daemon_cmd_fh>;
     unless ($daemon_cmd) {
         # strange, open succeeded but file is empty
@@ -82,7 +87,7 @@ Ubic::Daemon::OS::Linux - linux-specific daemonize helpers
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 DESCRIPTION
 

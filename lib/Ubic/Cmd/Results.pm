@@ -1,6 +1,6 @@
 package Ubic::Cmd::Results;
 {
-  $Ubic::Cmd::Results::VERSION = '1.40';
+  $Ubic::Cmd::Results::VERSION = '1.41';
 }
 
 use strict;
@@ -104,7 +104,7 @@ Ubic::Cmd::Results - console results set
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 SYNOPSIS
 
@@ -120,7 +120,11 @@ version 1.40
 
 =head1 DESCRIPTION
 
-This class controls output of service actions.
+This class controls the output of service actions.
+
+=head1 INTERFACE SUPPORT
+
+This is considered to be a non-public class. Its interface is subject to change without notice.
 
 =head1 METHODS
 

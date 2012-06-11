@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader;
 {
-  $Ubic::ServiceLoader::VERSION = '1.40';
+  $Ubic::ServiceLoader::VERSION = '1.41';
 }
 
 # ABSTRACT: load service from file
@@ -69,7 +69,7 @@ Ubic::ServiceLoader - load service from file
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 SYNOPSIS
 

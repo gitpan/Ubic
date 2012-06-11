@@ -1,6 +1,6 @@
 package Ubic::Settings;
 {
-  $Ubic::Settings::VERSION = '1.40';
+  $Ubic::Settings::VERSION = '1.41';
 }
 
 use strict;
@@ -107,7 +107,7 @@ Ubic::Settings - ubic settings
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 SYNOPSIS
 
@@ -144,10 +144,6 @@ Config file at I<~/.ubic.cfg>, I</etc/ubic/ubic.cfg> or I</usr/local/etc/ubic/ub
 If none of these settings are set, it will fail and advice to run C<ubic-admin setup>.
 
 =back
-
-=head1 INTERFACE SUPPORT
-
-This is considered to be a public class. Any changes to its interface will go through a deprecation cycle.
 
 =head1 METHODS
 

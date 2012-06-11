@@ -84,6 +84,7 @@ t/Utils/IgnoreWarnGuard.pm
 t/author-memory-leak.t
 t/author-ping.t
 t/bin/any-init
+t/bin/explicit-init
 t/bin/locking-daemon
 t/bin/multi-init
 t/cmd.t

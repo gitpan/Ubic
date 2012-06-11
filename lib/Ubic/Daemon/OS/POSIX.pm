@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::POSIX;
 {
-  $Ubic::Daemon::OS::POSIX::VERSION = '1.40';
+  $Ubic::Daemon::OS::POSIX::VERSION = '1.41';
 }
 
 use strict;
@@ -28,7 +28,8 @@ sub pid2cmd {
     $result =~ s/^.*\n//; # drop first line
     my ($ps_pid, $ps_command) = $result =~ /^\s*(\d+)\s+(.*)$/;
     unless ($ps_pid) {
-        die "Daemon $pid not found";
+        warn "Daemon $pid not found";
+        return 'unknown';
     }
     unless ($ps_pid == $pid) {
         die "Internal error, expected pid $pid, got pid $ps_pid";
@@ -66,7 +67,7 @@ Ubic::Daemon::OS::POSIX - POSIX-compatible daemonize helpers
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 AUTHOR
 

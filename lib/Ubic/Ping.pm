@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package Ubic::Ping;
 {
-  $Ubic::Ping::VERSION = '1.40';
+  $Ubic::Ping::VERSION = '1.41';
 }
 
 use strict;
@@ -116,7 +116,7 @@ Ubic::Ping - http server which returns service status by it's name or port
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 AUTHOR
 
