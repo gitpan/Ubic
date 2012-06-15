@@ -1,6 +1,6 @@
 package Ubic::Logger;
 {
-  $Ubic::Logger::VERSION = '1.41';
+  $Ubic::Logger::VERSION = '1.42';
 }
 
 use strict;
@@ -42,7 +42,7 @@ Ubic::Logger - very simple logging functions
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::Linux;
 {
-  $Ubic::Daemon::OS::Linux::VERSION = '1.41';
+  $Ubic::Daemon::OS::Linux::VERSION = '1.42';
 }
 
 use strict;
@@ -87,7 +87,7 @@ Ubic::Daemon::OS::Linux - linux-specific daemonize helpers
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 DESCRIPTION
 

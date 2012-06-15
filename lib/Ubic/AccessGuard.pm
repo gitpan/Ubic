@@ -1,6 +1,6 @@
 package Ubic::AccessGuard;
 {
-  $Ubic::AccessGuard::VERSION = '1.41';
+  $Ubic::AccessGuard::VERSION = '1.42';
 }
 
 use strict;
@@ -73,7 +73,7 @@ Ubic::AccessGuard - guard for operations with temporarily different effective ui
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 SYNOPSIS
 
