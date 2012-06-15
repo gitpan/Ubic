@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS;
-{
-  $Ubic::Daemon::OS::VERSION = '1.42';
+BEGIN {
+  $Ubic::Daemon::OS::VERSION = '1.43';
 }
 
 use strict;
@@ -40,7 +40,7 @@ Ubic::Daemon::OS - base class for os-specific daemon methods
 
 =head1 VERSION
 
-version 1.42
+version 1.43
 
 =head1 METHODS
 

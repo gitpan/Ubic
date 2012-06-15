@@ -67,6 +67,7 @@ lib/Ubic/UA.pm
 lib/Ubic/Watchdog.pm
 root_t/Daemon.pm
 root_t/README
+root_t/credentials.t
 root_t/daemon.t
 root_t/groups.t
 root_t/root.t

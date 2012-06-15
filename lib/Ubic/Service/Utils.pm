@@ -1,6 +1,6 @@
 package Ubic::Service::Utils;
-{
-  $Ubic::Service::Utils::VERSION = '1.42';
+BEGIN {
+  $Ubic::Service::Utils::VERSION = '1.43';
 }
 
 use strict;
@@ -61,7 +61,7 @@ Ubic::Service::Utils - helpers for custom service authors
 
 =head1 VERSION
 
-version 1.42
+version 1.43
 
 =head1 FUNCTIONS
 

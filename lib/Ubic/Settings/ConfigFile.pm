@@ -1,6 +1,6 @@
 package Ubic::Settings::ConfigFile;
-{
-  $Ubic::Settings::ConfigFile::VERSION = '1.42';
+BEGIN {
+  $Ubic::Settings::ConfigFile::VERSION = '1.43';
 }
 
 use strict;
@@ -65,7 +65,7 @@ Ubic::Settings::ConfigFile - single ubic config file
 
 =head1 VERSION
 
-version 1.42
+version 1.43
 
 =head1 SYNOPSIS
 

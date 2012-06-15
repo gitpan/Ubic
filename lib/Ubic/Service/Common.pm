@@ -1,6 +1,6 @@
 package Ubic::Service::Common;
-{
-  $Ubic::Service::Common::VERSION = '1.42';
+BEGIN {
+  $Ubic::Service::Common::VERSION = '1.43';
 }
 
 use strict;
@@ -101,7 +101,7 @@ Ubic::Service::Common - common way to construct new service by specifying severa
 
 =head1 VERSION
 
-version 1.42
+version 1.43
 
 =head1 SYNOPSIS
 
