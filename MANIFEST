@@ -60,6 +60,7 @@ lib/Ubic/ServiceLoader.pm
 lib/Ubic/ServiceLoader/Base.pm
 lib/Ubic/ServiceLoader/Default.pm
 lib/Ubic/ServiceLoader/Ext/ini.pm
+lib/Ubic/ServiceLoader/Ext/json.pm
 lib/Ubic/Settings.pm
 lib/Ubic/Settings/ConfigFile.pm
 lib/Ubic/SingletonLock.pm
@@ -92,6 +93,7 @@ t/cmd.t
 t/daemon.t
 t/loaders/default.t
 t/loaders/ini.t
+t/loaders/json.t
 t/loaders/loader-frontend.t
 t/lock.t
 t/multiservice/dir.t
@@ -118,11 +120,15 @@ t/service/freaks/broken
 t/service/freaks/multi-broken
 t/service/freaks/slow-compile
 t/service/loaders/bar.ini
+t/service/loaders/baz.json
 t/service/loaders/default-module.ini
 t/service/loaders/foo
 t/service/loaders/invalid.ini
 t/service/loaders/invalid2.ini
 t/service/loaders/invalid3.ini
+t/service/loaders/j-default-module.json
+t/service/loaders/jinv.json
+t/service/loaders/jinv2.json
 t/service/multiservice-dir/foo/bar/xxx
 t/service/multiservice-dir/foo/bar/yyy
 t/service/multiservice-dir/foo/bar/yyy.ini

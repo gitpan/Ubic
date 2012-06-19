@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use parent qw(Test::Class);
+use Test::More;
+use Test::Fatal;
 
 use lib 'lib';
 
@@ -15,10 +17,12 @@ use t::Utils;
 use Ubic;
 use Ubic::Service::SimpleDaemon;
 
-{
+sub setup :Test(setup) {
     rebuild_tfiles;
     local_ubic;
+}
 
+sub basic :Tests(5) {
     my $service = Ubic::Service::SimpleDaemon->new({
         name => 'simple1',
         bin => ['perl', '-e', 'use IO::Handle; $SIG{TERM} = sub { exit 0 }; print "stdout\n"; print STDERR "stderr\n"; STDOUT->flush; STDERR->flush; sleep 1000'],
@@ -39,11 +43,7 @@ use Ubic::Service::SimpleDaemon;
     is(slurp('tfiles/stderr'), "stderr\n", 'daemon stderr');
 }
 
-# cwd
-{
-    rebuild_tfiles;
-    local_ubic;
-
+sub test_cwd :Tests(5) {
     use Cwd;
     my $service = Ubic::Service::SimpleDaemon->new({
         name => 'simple1',
@@ -68,11 +68,7 @@ use Ubic::Service::SimpleDaemon;
     like(slurp('tfiles/stdout'), qr/tfiles$/, 'daemon started with correct cwd');
 }
 
-# env
-{
-    rebuild_tfiles;
-    local_ubic;
-
+sub env :Tests(7) {
     local $ENV{BAR} = 123;
     local $ENV{XXX} = 666;
     my $service = Ubic::Service::SimpleDaemon->new({
@@ -103,11 +99,7 @@ use Ubic::Service::SimpleDaemon;
     is($lines[2], "XXX: 666", 'XXX unaffected in service');
 }
 
-# reload
-{
-    rebuild_tfiles;
-    local_ubic;
-
+sub reload :Tests(6) {
     my $result;
 
     my $reloadless_service = Ubic::Service::SimpleDaemon->new({
@@ -151,3 +143,40 @@ use Ubic::Service::SimpleDaemon;
 
     is(slurp('tfiles/stdout'), "hup\nhup\n", 'two sighups sent');
 }
+
+sub ulimit :Tests(4) {
+    use BSD::Resource; # TODO - test only if BSD::Resource is installed?
+    my $service = Ubic::Service::SimpleDaemon->new({
+        name => 'limited_service',
+        bin => ['perl', '-e', 'system(q{bash -c "ulimit -n"}); sleep 5'],
+        stdout => 'tfiles/stdout',
+        stderr => 'tfiles/stderr',
+        ulimit => {
+            RLIMIT_NOFILE => 100,
+        },
+    });
+
+    $service->start;
+    is $service->status->status, 'running', 'started successfully';
+
+    sleep 1;
+    my $out = slurp('tfiles/stdout');
+    is $out, "100\n";
+
+    $service->stop;
+    is $service->status->status, 'not running', 'stopped successfully';
+
+    my $invalid_service = Ubic::Service::SimpleDaemon->new({
+        name => 'limited_service',
+        bin => ['perl', '-e', 'sleep 100'],
+        stdout => 'tfiles/stdout',
+        stderr => 'tfiles/stderr',
+        ulimit => {
+            BLAH => 100,
+        },
+    });
+    my $exception = exception { $invalid_service->start };
+    like $exception, qr/Failed to create daemon: 'Error: setrlimit: Unknown limit 'BLAH'/, 'start with invalid ulimit fails';
+}
+
+__PACKAGE__->new->runtests;

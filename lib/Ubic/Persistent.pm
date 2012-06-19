@@ -1,6 +1,6 @@
 package Ubic::Persistent;
-BEGIN {
-  $Ubic::Persistent::VERSION = '1.43';
+{
+  $Ubic::Persistent::VERSION = '1.43_01';
 }
 
 use strict;
@@ -14,9 +14,8 @@ use Ubic::Lockf;
 use Ubic::AtomicFile;
 
 {
-    # JSON.pm v2 incompatibility with v1 is really, really annoying.
-    # Any JSON::Any don't help much too.
-    # So this code is here to stay, at least until Ubuntu Hardy support period will be over.
+    # support the compatibility with JSON.pm v1 just because we can
+    # see also: Ubic::ServiceLoader::Ext::json
     no strict;
     no warnings;
     sub jsonToObj; *jsonToObj = (*{JSON::from_json}{CODE}) ? \&JSON::from_json : \&JSON::jsonToObj;
@@ -87,7 +86,7 @@ Ubic::Persistent - simple hash-to-file persistence object
 
 =head1 VERSION
 
-version 1.43
+version 1.43_01
 
 =head1 SYNOPSIS
 

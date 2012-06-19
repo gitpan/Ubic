@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
-BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.43';
+{
+  $Ubic::Service::SimpleDaemon::VERSION = '1.43_01';
 }
 
 use strict;
@@ -47,7 +47,12 @@ sub new {
         cwd => { type => SCALAR, optional => 1 },
         env => { type => HASHREF, optional => 1 },
         reload_signal => { type => SCALAR, optional => 1 },
+        ulimit => { type => HASHREF, optional => 1 },
     });
+
+    if ($params->{ulimit}) {
+        require BSD::Resource; # fast fail if BSD::Resource is not installed
+    }
 
     return bless {%$params} => $class;
 }
@@ -73,6 +78,17 @@ sub start_impl {
             user => $self->{daemon_user},
             group => $self->{daemon_group},
         );
+    }
+    if (defined $self->{ulimit}) {
+        $start_params->{start_hook} = sub {
+            for my $name (keys $self->{ulimit}) {
+                my $value = $self->{ulimit}{$name};
+                my $result = BSD::Resource::setrlimit($name, $value, $value);
+                unless ($result) {
+                    die "Failed to set $name=$value ulimit";
+                }
+            }
+        };
     }
     start_daemon($start_params);
 }
@@ -136,7 +152,7 @@ Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.43
+version 1.43_01
 
 =head1 SYNOPSIS
 
@@ -212,6 +228,18 @@ Change working directory before starting a daemon.
 Modify environment before starting a daemon.
 
 Must be a plain hashref if specified.
+
+=item I<ulimit>
+
+Set resource limits before starting a daemon.
+
+Must be a plain hashref with resource names as keys if specified. For example: C<< ulimit => { RLIMIT_NOFILE => 100 } >>. Pass C<-1> as a value to make the resource unlimited.
+
+These limits won't affect anything outside of this service code.
+
+If your service's I<user> is C<root> and I<daemon_user> is something else, you can not just lower limits but raise them as well.
+
+L<BSD::Resource> must be installed to use this feature.
 
 =item I<reload_signal>
 
