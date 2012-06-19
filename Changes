@@ -1,5 +1,8 @@
 Revision history for Ubic
 
+1.43_02 2012-06-19
+    * dependency on BSD::Resource is optional in code and tests
+
 1.43_01 2012-06-19
     * ulimit support in SimpleDaemon
     * json-style configs

@@ -33,7 +33,6 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Ubic",
   "PREREQ_PM" => {
-    "BSD::Resource" => 0,
     "Carp" => 0,
     "Class::Accessor::Fast" => 0,
     "Config" => 0,
@@ -64,7 +63,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.43_01",
+  "VERSION" => "1.43_02",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }
