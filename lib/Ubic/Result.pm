@@ -1,6 +1,6 @@
 package Ubic::Result;
 {
-  $Ubic::Result::VERSION = '1.43_03';
+  $Ubic::Result::VERSION = '1.43_04';
 }
 
 use strict;
@@ -41,7 +41,7 @@ Ubic::Result - common return value for many ubic interfaces
 
 =head1 VERSION
 
-version 1.43_03
+version 1.43_04
 
 =head1 SYNOPSIS
 

@@ -23,12 +23,12 @@ my %WriteMakefileArgs = (
   },
   "DISTNAME" => "Ubic",
   "EXE_FILES" => [
-    "bin/ubic",
-    "bin/ubic-admin",
-    "bin/ubic-daemon",
     "bin/ubic-periodic",
+    "bin/ubic-watchdog",
+    "bin/ubic",
+    "bin/ubic-daemon",
     "bin/ubic-update",
-    "bin/ubic-watchdog"
+    "bin/ubic-admin"
   ],
   "LICENSE" => "perl",
   "NAME" => "Ubic",
@@ -63,7 +63,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.43_03",
+  "VERSION" => "1.43_04",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }

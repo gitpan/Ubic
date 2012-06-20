@@ -1,6 +1,6 @@
 package Ubic::Persistent;
 {
-  $Ubic::Persistent::VERSION = '1.43_03';
+  $Ubic::Persistent::VERSION = '1.43_04';
 }
 
 use strict;
@@ -86,7 +86,7 @@ Ubic::Persistent - simple hash-to-file persistence object
 
 =head1 VERSION
 
-version 1.43_03
+version 1.43_04
 
 =head1 SYNOPSIS
 

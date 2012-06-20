@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.43_03';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.43_04';
 }
 
 use strict;
@@ -85,7 +85,7 @@ sub start_impl {
     }
     if (defined $self->{ulimit}) {
         $start_params->{start_hook} = sub {
-            for my $name (keys $self->{ulimit}) {
+            for my $name (keys %{$self->{ulimit}}) {
                 my $value = $self->{ulimit}{$name};
                 my $result = BSD::Resource::setrlimit($name, $value, $value);
                 unless ($result) {
@@ -156,7 +156,7 @@ Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.43_03
+version 1.43_04
 
 =head1 SYNOPSIS
 

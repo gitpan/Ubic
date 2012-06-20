@@ -1,6 +1,6 @@
 package Ubic::UA;
 {
-  $Ubic::UA::VERSION = '1.43_03';
+  $Ubic::UA::VERSION = '1.43_04';
 }
 
 # ABSTRACT: tiny http client
@@ -76,7 +76,7 @@ Ubic::UA - tiny http client
 
 =head1 VERSION
 
-version 1.43_03
+version 1.43_04
 
 =head1 DESCRIPTION
 
