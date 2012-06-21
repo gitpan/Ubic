@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader::Ext::ini;
 {
-  $Ubic::ServiceLoader::Ext::ini::VERSION = '1.43_04';
+  $Ubic::ServiceLoader::Ext::ini::VERSION = '1.44';
 }
 
 # ABSTRACT: loader for ini-style configs
@@ -60,7 +60,7 @@ Ubic::ServiceLoader::Ext::ini - loader for ini-style configs
 
 =head1 VERSION
 
-version 1.43_04
+version 1.44
 
 =head1 SYNOPSIS
 

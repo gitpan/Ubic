@@ -1,5 +1,8 @@
 Revision history for Ubic
 
+1.44    2012-06-21
+    * stable release, no code changes
+
 1.43_04 2012-06-20
     * fix SimpleDaemon to work on perl <5.14
 

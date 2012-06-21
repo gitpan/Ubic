@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Simple;
 {
-  $Ubic::Multiservice::Simple::VERSION = '1.43_04';
+  $Ubic::Multiservice::Simple::VERSION = '1.44';
 }
 
 use strict;
@@ -61,7 +61,7 @@ Ubic::Multiservice::Simple - simplest multiservice, configured in constructor
 
 =head1 VERSION
 
-version 1.43_04
+version 1.44
 
 =head1 SYNOPSIS
 

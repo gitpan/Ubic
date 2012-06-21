@@ -12,7 +12,7 @@ Ubic::Manual::Multiservices - Multiservices - dynamic generation of service tree
 
 =head1 VERSION
 
-version 1.43_04
+version 1.44
 
 =head1 DESCRIPTION
 

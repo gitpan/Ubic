@@ -51,4 +51,4 @@ resources:
   bugtracker: http://github.com/berekuk/Ubic/issues
   homepage: http://github.com/berekuk/Ubic/wiki
   repository: git://github.com/berekuk/Ubic.git
-version: 1.43_04
+version: 1.44
