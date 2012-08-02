@@ -1,5 +1,8 @@
 Revision history for Ubic
 
+1.44_01 2012-08-02
+    * support perlbrew, custom PATH and custom PELR5LIB
+
 1.44    2012-06-21
     * stable release, no code changes
 
