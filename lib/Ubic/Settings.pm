@@ -1,6 +1,6 @@
 package Ubic::Settings;
 {
-  $Ubic::Settings::VERSION = '1.44_01';
+  $Ubic::Settings::VERSION = '1.44_02';
 }
 
 use strict;
@@ -99,6 +99,7 @@ sub check_settings {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -107,7 +108,7 @@ Ubic::Settings - ubic settings
 
 =head1 VERSION
 
-version 1.44_01
+version 1.44_02
 
 =head1 SYNOPSIS
 
@@ -191,4 +192,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

@@ -1,6 +1,6 @@
 package Ubic::Cmd::Results;
 {
-  $Ubic::Cmd::Results::VERSION = '1.44_01';
+  $Ubic::Cmd::Results::VERSION = '1.44_02';
 }
 
 use strict;
@@ -94,8 +94,8 @@ sub finish($$) {
 
 1;
 
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -104,7 +104,7 @@ Ubic::Cmd::Results - console results set
 
 =head1 VERSION
 
-version 1.44_01
+version 1.44_02
 
 =head1 SYNOPSIS
 
@@ -188,4 +188,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

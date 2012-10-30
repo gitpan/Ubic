@@ -2,8 +2,8 @@ package Ubic::Manual::Overview;
 
 # ABSTRACT: General ubic concepts and architecture
 
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -12,7 +12,7 @@ Ubic::Manual::Overview - General ubic concepts and architecture
 
 =head1 VERSION
 
-version 1.44_01
+version 1.44_02
 
 =head1 DESCRIPTION
 
@@ -95,4 +95,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

@@ -1,6 +1,6 @@
 package Ubic::SingletonLock;
 {
-  $Ubic::SingletonLock::VERSION = '1.44_01';
+  $Ubic::SingletonLock::VERSION = '1.44_02';
 }
 
 use strict;
@@ -40,6 +40,7 @@ sub DESTROY {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -48,7 +49,7 @@ Ubic::SingletonLock - lock which can be safely created several times from the sa
 
 =head1 VERSION
 
-version 1.44_01
+version 1.44_02
 
 =head1 SYNOPSIS
 
@@ -95,4 +96,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

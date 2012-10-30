@@ -1,6 +1,6 @@
 package Ubic::Multiservice::Dir;
 {
-  $Ubic::Multiservice::Dir::VERSION = '1.44_01';
+  $Ubic::Multiservice::Dir::VERSION = '1.44_02';
 }
 
 use strict;
@@ -142,6 +142,7 @@ sub multiop {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -150,7 +151,7 @@ Ubic::Multiservice::Dir - multiservice which uses directory with configs to inst
 
 =head1 VERSION
 
-version 1.44_01
+version 1.44_02
 
 =head1 METHODS
 
@@ -180,4 +181,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

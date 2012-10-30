@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::POSIX;
 {
-  $Ubic::Daemon::OS::POSIX::VERSION = '1.44_01';
+  $Ubic::Daemon::OS::POSIX::VERSION = '1.44_02';
 }
 
 use strict;
@@ -24,7 +24,8 @@ sub pid2guid {
 sub pid2cmd {
     my ($self, $pid) = validate_pos(@_, 1, { type => SCALAR, regex => qr/^\d+$/ });
 
-    my $result = qx(ps -p $pid -o pid,command 2>/dev/null);
+    # see POSIX specification - http://pubs.opengroup.org/onlinepubs/009696799/utilities/ps.html
+    my $result = qx(ps -p $pid -o pid,comm 2>/dev/null);
     $result =~ s/^.*\n//; # drop first line
     my ($ps_pid, $ps_command) = $result =~ /^\s*(\d+)\s+(.*)$/;
     unless ($ps_pid) {
@@ -59,6 +60,7 @@ sub pid_exists {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -67,7 +69,7 @@ Ubic::Daemon::OS::POSIX - POSIX-compatible daemonize helpers
 
 =head1 VERSION
 
-version 1.44_01
+version 1.44_02
 
 =head1 AUTHOR
 
@@ -81,4 +83,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
