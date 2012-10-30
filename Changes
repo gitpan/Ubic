@@ -1,5 +1,9 @@
 Revision history for Ubic
 
+1.44_03 2012-10-30
+    * setup process now offers auto-configuration
+    * typo fix in crontab code (thanks to Anton Ukolov)
+
 1.44_02 2012-10-30
     * Solaris compatibility (thanks to Martin Schultheis!)
 

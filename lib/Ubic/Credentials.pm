@@ -1,6 +1,6 @@
 package Ubic::Credentials;
 {
-  $Ubic::Credentials::VERSION = '1.44_02';
+  $Ubic::Credentials::VERSION = '1.44_03';
 }
 
 use strict;
@@ -69,7 +69,7 @@ Ubic::Credentials - base class for OS-specific credential methods
 
 =head1 VERSION
 
-version 1.44_02
+version 1.44_03
 
 =head1 SYNOPSIS
 
