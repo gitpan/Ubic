@@ -1,6 +1,6 @@
 package Ubic::Ping::Service;
-{
-  $Ubic::Ping::Service::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Ping::Service::VERSION = '1.45';
 }
 
 # ABSTRACT: ubic.ping service
@@ -67,7 +67,6 @@ sub new {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -76,7 +75,7 @@ Ubic::Ping::Service - ubic.ping service
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 INTERFACE SUPPORT
 
@@ -104,3 +103,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+

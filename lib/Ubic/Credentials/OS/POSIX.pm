@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::POSIX;
-{
-  $Ubic::Credentials::OS::POSIX::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Credentials::OS::POSIX::VERSION = '1.45';
 }
 
 use strict;
@@ -273,7 +273,6 @@ sub as_string {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -282,7 +281,7 @@ Ubic::Credentials::OS::POSIX - POSIX-specific credentials implementation
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 METHODS
 
@@ -332,3 +331,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+

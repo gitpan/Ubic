@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package Ubic::Ping;
-{
-  $Ubic::Ping::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Ping::VERSION = '1.45';
 }
 
 use strict;
@@ -108,7 +108,6 @@ sub handle_request {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -117,7 +116,7 @@ Ubic::Ping - http server which returns service status by it's name or port
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 AUTHOR
 
@@ -131,3 +130,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+

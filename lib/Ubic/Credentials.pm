@@ -1,6 +1,6 @@
 package Ubic::Credentials;
-{
-  $Ubic::Credentials::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Credentials::VERSION = '1.45';
 }
 
 use strict;
@@ -60,7 +60,6 @@ sub as_string {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -69,7 +68,7 @@ Ubic::Credentials - base class for OS-specific credential methods
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 SYNOPSIS
 
@@ -133,3 +132,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+

@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
-{
-  $Ubic::Admin::Setup::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Admin::Setup::VERSION = '1.45';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -412,7 +412,6 @@ sub setup {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -421,7 +420,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 DESCRPITION
 
@@ -483,3 +482,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+

@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::POSIX;
-{
-  $Ubic::Daemon::OS::POSIX::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Daemon::OS::POSIX::VERSION = '1.45';
 }
 
 use strict;
@@ -60,7 +60,6 @@ sub pid_exists {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -69,7 +68,7 @@ Ubic::Daemon::OS::POSIX - POSIX-compatible daemonize helpers
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 AUTHOR
 
@@ -83,3 +82,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+

@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::MacOSX;
-{
-  $Ubic::Credentials::OS::MacOSX::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Credentials::OS::MacOSX::VERSION = '1.45';
 }
 
 use strict;
@@ -233,7 +233,6 @@ sub set {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -242,7 +241,7 @@ Ubic::Credentials::OS::MacOSX - MacOSX-specific credentials implementation
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 METHODS
 
@@ -294,3 +293,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+

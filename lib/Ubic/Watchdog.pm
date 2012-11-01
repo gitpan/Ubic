@@ -1,6 +1,6 @@
 package Ubic::Watchdog;
-{
-  $Ubic::Watchdog::VERSION = '1.44_03';
+BEGIN {
+  $Ubic::Watchdog::VERSION = '1.45';
 }
 
 use strict;
@@ -166,7 +166,6 @@ sub check($) {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -175,7 +174,7 @@ Ubic::Watchdog - watchdog code
 
 =head1 VERSION
 
-version 1.44_03
+version 1.45
 
 =head1 SYNOPSIS
 
@@ -258,3 +257,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
