@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_periodic;
-BEGIN {
-  $ubic_periodic::VERSION = '1.45';
+{
+  $ubic_periodic::VERSION = '1.46';
 }
 
 # ABSTRACT: run given command every N seconds
@@ -97,7 +97,7 @@ ubic_periodic - run given command every N seconds
 
 =head1 VERSION
 
-version 1.45
+version 1.46
 
 =head1 SYNOPSIS
 

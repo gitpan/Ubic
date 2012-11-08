@@ -1,6 +1,6 @@
 package Ubic::Multiservice;
-BEGIN {
-  $Ubic::Multiservice::VERSION = '1.45';
+{
+  $Ubic::Multiservice::VERSION = '1.46';
 }
 # ABSTRACT: interface of multiservice representing several named services
 
@@ -117,7 +117,7 @@ Ubic::Multiservice - interface of multiservice representing several named servic
 
 =head1 VERSION
 
-version 1.45
+version 1.46
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
-BEGIN {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.45';
+{
+  $Ubic::Service::SimpleDaemon::VERSION = '1.46';
 }
 
 use strict;
@@ -55,6 +55,10 @@ sub new {
         eval "require BSD::Resource";
         if ($@) {
             die "BSD::Resource is not installed";
+        }
+        if (BSD::Resource->VERSION < 1.29) {
+            # 1.29 supports string names for resources
+            die "BSD::Resource >= 1.29 required";
         }
     }
 
@@ -156,7 +160,7 @@ Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.45
+version 1.46
 
 =head1 SYNOPSIS
 
