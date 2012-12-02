@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader;
 {
-  $Ubic::ServiceLoader::VERSION = '1.46';
+  $Ubic::ServiceLoader::VERSION = '1.47';
 }
 
 # ABSTRACT: load service from file
@@ -61,6 +61,7 @@ sub load {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -69,7 +70,7 @@ Ubic::ServiceLoader - load service from file
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -124,4 +125,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

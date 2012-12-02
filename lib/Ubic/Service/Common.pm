@@ -1,6 +1,6 @@
 package Ubic::Service::Common;
 {
-  $Ubic::Service::Common::VERSION = '1.46';
+  $Ubic::Service::Common::VERSION = '1.47';
 }
 
 use strict;
@@ -93,6 +93,7 @@ sub do_custom_command {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -101,7 +102,7 @@ Ubic::Service::Common - common way to construct new service by specifying severa
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -188,4 +189,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

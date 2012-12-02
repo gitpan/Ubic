@@ -1,6 +1,6 @@
 package Ubic::Settings::ConfigFile;
 {
-  $Ubic::Settings::ConfigFile::VERSION = '1.46';
+  $Ubic::Settings::ConfigFile::VERSION = '1.47';
 }
 
 use strict;
@@ -36,7 +36,7 @@ sub write {
 
     my $content = "";
 
-    for my $key (keys %$config) {
+    for my $key (sort keys %$config) {
         my $value = $config->{$key};
         if ($value =~ /\n/) {
             die "Invalid config line  '$key = $value', values can't contain line breaks";
@@ -57,6 +57,7 @@ sub write {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -65,7 +66,7 @@ Ubic::Settings::ConfigFile - single ubic config file
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -111,4 +112,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

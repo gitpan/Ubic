@@ -1,6 +1,6 @@
 package Ubic::Run;
 {
-  $Ubic::Run::VERSION = '1.46';
+  $Ubic::Run::VERSION = '1.47';
 }
 
 use strict;
@@ -55,6 +55,7 @@ sub import {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -63,7 +64,7 @@ Ubic::Run - really simple way to write init scripts
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -106,4 +107,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 {
-  $Ubic::Cmd::VERSION = '1.46';
+  $Ubic::Cmd::VERSION = '1.47';
 }
 
 use strict;
@@ -410,8 +410,8 @@ sub _run_impl {
 
 1;
 
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -420,7 +420,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -531,4 +531,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

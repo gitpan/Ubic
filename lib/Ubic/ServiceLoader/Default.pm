@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader::Default;
 {
-  $Ubic::ServiceLoader::Default::VERSION = '1.46';
+  $Ubic::ServiceLoader::Default::VERSION = '1.47';
 }
 
 # ABSTRACT: default service loader
@@ -45,6 +45,7 @@ sub load {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -53,7 +54,7 @@ Ubic::ServiceLoader::Default - default service loader
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -73,4 +74,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

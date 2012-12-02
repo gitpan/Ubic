@@ -1,6 +1,6 @@
 package Ubic::UA;
 {
-  $Ubic::UA::VERSION = '1.46';
+  $Ubic::UA::VERSION = '1.47';
 }
 
 # ABSTRACT: tiny http client
@@ -68,6 +68,7 @@ sub get {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -76,7 +77,7 @@ Ubic::UA - tiny http client
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 DESCRIPTION
 
@@ -116,4 +117,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
