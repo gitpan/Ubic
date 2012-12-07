@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
 {
-  $Ubic::Admin::Setup::VERSION = '1.47';
+  $Ubic::Admin::Setup::VERSION = '1.48';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -13,6 +13,7 @@ use Getopt::Long 2.33;
 use Carp;
 use IPC::Open3;
 use File::Path;
+use File::Which;
 
 use Ubic::AtomicFile;
 use Ubic::Settings;
@@ -275,6 +276,7 @@ sub setup {
     }
 
     my $crontab_env_fix = '';
+    my $ubic_watchdog_full_name = which('ubic-watchdog') or die "ubic-watchdog script not found in your current PATH";
     {
         my @path = split /:/, $ENV{PATH};
         my @perls = grep { -x $_ } map { "$_/perl" } @path;
@@ -388,7 +390,7 @@ sub setup {
                 print {$fh} @_ or die "Can't write to pipe: $!";
             };
             $printc->($old_crontab."\n");
-            $printc->("* * * * * ${crontab_env_fix}ubic-watchdog ubic.watchdog    >>$log_dir/watchdog.log 2>>$log_dir/watchdog.err.log\n");
+            $printc->("* * * * * $crontab_env_fix$ubic_watchdog_full_name ubic.watchdog    >>$log_dir/watchdog.log 2>>$log_dir/watchdog.err.log\n");
             close $fh or die "Can't close pipe: $!";
         }
     }
@@ -421,7 +423,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.47
+version 1.48
 
 =head1 DESCRPITION
 

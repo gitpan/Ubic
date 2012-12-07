@@ -1,6 +1,6 @@
 package Ubic;
 {
-  $Ubic::VERSION = '1.47';
+  $Ubic::VERSION = '1.48';
 }
 
 use strict;
@@ -509,7 +509,7 @@ Ubic - polymorphic service manager
 
 =head1 VERSION
 
-version 1.47
+version 1.48
 
 =head1 SYNOPSIS
 

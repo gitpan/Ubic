@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic;
 {
-  $ubic::VERSION = '1.47';
+  $ubic::VERSION = '1.48';
 }
 
 use strict;
@@ -23,7 +23,10 @@ GetOptions(
     'f|force' => \$force,
 ) or pod2usage(2);
 
-unless (@ARGV) {
+if (
+    not @ARGV
+    or @ARGV == 1 and $ARGV[0] eq 'help'
+) {
     pod2usage(2);
 }
 
@@ -53,7 +56,7 @@ ubic - command-line frontend to ubic services
 
 =head1 VERSION
 
-version 1.47
+version 1.48
 
 =head1 SYNOPSIS
 

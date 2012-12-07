@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::MacOSX;
 {
-  $Ubic::Credentials::OS::MacOSX::VERSION = '1.47';
+  $Ubic::Credentials::OS::MacOSX::VERSION = '1.48';
 }
 
 use strict;
@@ -242,7 +242,7 @@ Ubic::Credentials::OS::MacOSX - MacOSX-specific credentials implementation
 
 =head1 VERSION
 
-version 1.47
+version 1.48
 
 =head1 METHODS
 
