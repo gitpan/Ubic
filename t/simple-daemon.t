@@ -126,11 +126,11 @@ sub reload :Tests(6) {
 
     $service->start;
 
-    sleep 1; # let the code load and set sighub handler
+    sleep 1; # let the code load and set sighup handler
 
     $result = $service->reload;
     is($result->action, 'reloaded', 'reload successful');
-    like($result->msg, qr/^sent HUP to \d+$/, 'reload result message');
+    like($result->msg, qr/^sent HUP to \d+, sent HUP to \d+$/, 'reload result message');
 
     sleep 1; # wait while code handles the first exception
 

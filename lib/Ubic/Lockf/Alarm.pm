@@ -1,6 +1,6 @@
 package Ubic::Lockf::Alarm;
 {
-  $Ubic::Lockf::Alarm::VERSION = '1.48';
+  $Ubic::Lockf::Alarm::VERSION = '1.48_01';
 }
 
 use strict;
@@ -38,7 +38,7 @@ Ubic::Lockf::Alarm - alarm guard
 
 =head1 VERSION
 
-version 1.48
+version 1.48_01
 
 =head1 DESCRIPTION
 
@@ -60,7 +60,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Yandex LLC.
+This software is copyright (c) 2013 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -13,6 +13,7 @@ my %WriteMakefileArgs = (
   "AUTHOR" => "Vyacheslav Matyukhin <mmcleric\@yandex-team.ru>",
   "BUILD_REQUIRES" => {
     "Cwd" => 0,
+    "File::Copy" => 0,
     "File::Find" => 0,
     "Test::Class" => 0,
     "Test::Fatal" => 0,
@@ -46,6 +47,7 @@ my %WriteMakefileArgs = (
     "Getopt::Long" => "2.33",
     "HTTP::Server::Simple::CGI" => 0,
     "IO::Handle" => 0,
+    "IO::Select" => 0,
     "IO::Socket" => 0,
     "IPC::Open3" => 0,
     "JSON" => 0,
@@ -64,7 +66,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.48",
+  "VERSION" => "1.48_01",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }

@@ -96,6 +96,7 @@ t/loaders/ini.t
 t/loaders/json.t
 t/loaders/loader-frontend.t
 t/lock.t
+t/logrotate.t
 t/multiservice/dir.t
 t/multiservice/simple-names.t
 t/multiservice/simple.t

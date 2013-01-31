@@ -1,6 +1,6 @@
 package Ubic::Daemon;
 {
-  $Ubic::Daemon::VERSION = '1.48';
+  $Ubic::Daemon::VERSION = '1.48_01';
 }
 
 use strict;
@@ -10,6 +10,7 @@ use warnings;
 
 
 use IO::Handle;
+use IO::Select;
 use POSIX qw(setsid :sys_wait_h);
 use Time::HiRes qw(sleep);
 use Params::Validate qw(:all);
@@ -142,11 +143,12 @@ sub start_daemon($) {
         term_timeout => { type => SCALAR, default => 10, regex => qr/^\d+$/ },
         cwd => { type => SCALAR, optional => 1 },
         env => { type => HASHREF, optional => 1 },
+        proxy_logs => { type => SCALAR, optional => 1 },
         credentials => { isa => 'Ubic::Credentials', optional => 1 },
         start_hook => { type => CODEREF, optional => 1 },
     });
-    my           ($bin, $function, $name, $pidfile, $stdout, $stderr, $ubic_log, $term_timeout, $cwd, $env, $credentials, $start_hook)
-    = @options{qw/ bin   function   name   pidfile   stdout   stderr   ubic_log   term_timeout   cwd   env   credentials   start_hook /};
+    my           ($bin, $function, $name, $pidfile, $stdout, $stderr, $ubic_log, $term_timeout, $cwd, $env, $credentials, $start_hook, $proxy_logs)
+    = @options{qw/ bin   function   name   pidfile   stdout   stderr   ubic_log   term_timeout   cwd   env   credentials   start_hook   proxy_logs /};
     if (not defined $bin and not defined $function) {
         croak "One of 'bin' and 'function' should be specified";
     }
@@ -168,8 +170,6 @@ sub start_daemon($) {
 
     my $pid_state = Ubic::Daemon::PidState->new($pidfile);
     $pid_state->init;
-
-    my $stdin = '/dev/null';
 
     pipe my ($read_pipe, $write_pipe) or die "pipe failed";
     my $child;
@@ -204,17 +204,20 @@ sub start_daemon($) {
                 $OS->close_all_fh($write_pipe_fd_num); # except pipe
             }
 
-            {
+            my $open_handles_sub = sub {
                 my $guard;
                 $guard = Ubic::AccessGuard->new($credentials) if $credentials;
                 open STDOUT, ">>", $stdout or die "Can't write to '$stdout': $!";
                 open STDERR, ">>", $stderr or die "Can't write to '$stderr': $!";
-            }
+                if (defined $ubic_log) {
+                    open $ubic_fh, ">>", $ubic_log or die "Can't write to '$ubic_log': $!";
+                    $ubic_fh->autoflush(1);
+                }
+            };
+            $open_handles_sub->();
+            my $stdin = '/dev/null';
             open STDIN, "<", $stdin or die "Can't read from '$stdin': $!";
-            if (defined $ubic_log) {
-                open $ubic_fh, ">>", $ubic_log or die "Can't write to '$ubic_log': $!";
-                $ubic_fh->autoflush(1);
-            }
+
             $SIG{HUP} = 'ignore';
             $0 = "ubic-guardian $name";
             setsid; # ubic-daemon gets it's own session
@@ -231,6 +234,13 @@ sub start_daemon($) {
             $pid_state->remove;
             _log($ubic_fh, "got lock");
 
+            my %daemon_pipes;
+            if (defined $proxy_logs) {
+                for my $handle (qw/stdout stderr/) {
+                    pipe my ($read, $write) or die "pipe for daemon $handle failed";
+                    $daemon_pipes{$handle} = {read => $read, write => $write};
+                }
+            }
             my $child;
             if ($child = fork) {
                 # guardian
@@ -282,6 +292,48 @@ sub start_daemon($) {
                 close $write_pipe or die "Can't close pipe: $!";
                 undef $write_pipe;
 
+                if (defined $proxy_logs) {
+                    $SIG{HUP} = sub {
+                        eval { $open_handles_sub->() };
+                        if ($@) {
+                            _log($ubic_fh, "failed to reopen stdout/stderr handles: $@");
+                            $kill_sub->();
+                        }
+                        else {
+                            _log($ubic_fh, "reopened stdout/stderr");
+                        }
+                    };
+
+                    for my $handle (qw/stdout stderr/) {
+                        close($daemon_pipes{$handle}{write}) or do {
+                            _log($ubic_fh, "Can't close $handle write: $!");
+                            die "Can't close $handle write: $!" 
+                        };
+                    }
+                    my $sel = IO::Select->new();
+                    $sel->add($daemon_pipes{stdout}{read}, $daemon_pipes{stderr}{read});
+                    my $BUFF_SIZE = 4096;
+                    READ:
+                    while ($OS->pid_exists($child)) { # this loop is needed because of timeout in can_read
+                        while (my @ready = $sel->can_read(1)) {
+                            my $exhausted = 0;
+                            for my $handle (@ready) {
+                                my $data;
+                                my $bytes_read = sysread($handle, $data, $BUFF_SIZE);
+                                die "Can't poll $handle: $!" unless defined $bytes_read; # handle EWOULDBLOCK?
+                                $exhausted += 1 if $bytes_read == 0;
+                                if (fileno $handle == fileno $daemon_pipes{stdout}{read}) {
+                                    print STDOUT $data;
+                                }
+                                if (fileno $handle == fileno $daemon_pipes{stderr}{read}) {
+                                    print STDERR $data;
+                                }
+                            }
+                            last READ if $exhausted == @ready;
+                        }
+                    }
+                }
+
                 $? = 0;
                 waitpid($child, 0);
                 my $code = $?;
@@ -320,6 +372,13 @@ sub start_daemon($) {
                 print {$write_pipe} "execing into daemon\n" or die "Can't write to pipe: $!";
                 close($write_pipe) or die "Can't close pipe: $!";
                 undef $write_pipe;
+
+                if (defined $proxy_logs) {
+                    # redirecting standard streams to pipes
+                    close($daemon_pipes{$_}{read}) or die "Can't close $_ read: $!" for qw/stdout stderr/;
+                    open STDOUT, '>&=', $daemon_pipes{stdout}{write} or die "Can't open stdout write: $!";
+                    open STDERR, '>&=', $daemon_pipes{stderr}{write} or die "Can't open stderr write: $!";
+                }
 
                 # finally, run underlying binary
                 if (ref $bin) {
@@ -371,7 +430,7 @@ sub check_daemon {
     my $piddata = $pid_state->read;
     unless ($lock) {
         # locked => daemon is alive
-        return Ubic::Daemon::Status->new({ pid => $piddata->{daemon} });
+        return Ubic::Daemon::Status->new({ pid => $piddata->{daemon}, guardian_pid => $piddata->{pid} });
     }
 
     unless ($piddata) {
@@ -428,7 +487,7 @@ Ubic::Daemon - daemon management utilities
 
 =head1 VERSION
 
-version 1.48
+version 1.48_01
 
 =head1 SYNOPSIS
 
@@ -530,6 +589,20 @@ Change working directory before starting a daemon. Optional.
 
 Modify environment before starting a daemon. Optional. Must be a plain hashref if specified.
 
+=item I<proxy_logs>
+
+Boolean flag.
+
+If enabled, C<ubic-guardian> will replace daemon's stdout and stderr filehandles with pipes, proxy all data to the log files, and reopen them on I<SIGHUP>.
+
+There're two reasons why this is not the default:
+
+1) It's a bit slower than allowing the daemon to write its logs itself;
+
+2) The code is new and more complex than the simple "spawn the daemon and wait for it to finish".
+
+On the other hand, using this feature allows you to reopen all logs without restarting the service.
+
 =item I<credentials>
 
 Set given credentials before execing into a daemon. Optional, must be an C<Ubic::Credentials> object.
@@ -582,7 +655,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Yandex LLC.
+This software is copyright (c) 2013 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

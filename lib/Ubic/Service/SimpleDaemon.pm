@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.48';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.48_01';
 }
 
 use strict;
@@ -81,6 +81,9 @@ sub start_impl {
     for (qw/ env cwd stdout stderr ubic_log /) {
         $start_params->{$_} = $self->{$_} if defined $self->{$_};
     }
+    if ($self->{reload_signal}) {
+        $start_params->{proxy_logs} = 1;
+    }
     if (defined $self->{daemon_user}) {
         $start_params->{credentials} = Ubic::Credentials->new(
             user => $self->{daemon_user},
@@ -141,11 +144,12 @@ sub reload {
     }
 
     my $pid = $daemon->pid;
-    # TODO - should we send signal to guardian instead?
-    # reload doesn't reopen ubic_log/stdout/stderr by now.
     kill $self->{reload_signal} => $pid;
 
-    return result('reloaded', "sent $self->{reload_signal} to $pid");
+    my $guardian_pid = $daemon->guardian_pid;
+    kill HUP => $guardian_pid;
+
+    return result('reloaded', "sent $self->{reload_signal} to $pid, sent HUP to $guardian_pid");
 }
 
 
@@ -161,7 +165,7 @@ Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.48
+version 1.48_01
 
 =head1 SYNOPSIS
 
@@ -256,7 +260,7 @@ Send given signal to the daemon on C<reload> command.
 
 Can take either integer value or signal name (i.e., I<HUP>).
 
-Note that this signal won't reopen I<stdout>, I<stderr> or I<ubic_log> logs. Sorry.
+The signal will be sent both to the daemon, and to the guardian process. Guardian process will have I<proxy_logs> feature enabled, so it'll reopen I<stdout>, I<stderr> and I<ubic_log> as well.
 
 =item I<daemon_user>
 
@@ -290,7 +294,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Yandex LLC.
+This software is copyright (c) 2013 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

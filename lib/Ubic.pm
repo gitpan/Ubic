@@ -1,6 +1,6 @@
 package Ubic;
 {
-  $Ubic::VERSION = '1.48';
+  $Ubic::VERSION = '1.48_01';
 }
 
 use strict;
@@ -509,7 +509,7 @@ Ubic - polymorphic service manager
 
 =head1 VERSION
 
-version 1.48
+version 1.48_01
 
 =head1 SYNOPSIS
 
@@ -783,6 +783,8 @@ Christian Walde <walde.christian@googlemail.com>
 
 Ivan Bessarabov <ivan@bessarabov.ru>
 
+Oleg Komarov <komarov@cpan.org>
+
 =head1 SEE ALSO
 
 Most Ubic-related links are collected on github wiki: L<http://github.com/berekuk/Ubic/wiki>.
@@ -807,7 +809,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Yandex LLC.
+This software is copyright (c) 2013 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

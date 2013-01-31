@@ -1,6 +1,6 @@
 package Ubic::Daemon::Status;
 {
-  $Ubic::Daemon::Status::VERSION = '1.48';
+  $Ubic::Daemon::Status::VERSION = '1.48_01';
 }
 
 use strict;
@@ -15,6 +15,7 @@ sub new {
     my $class = shift;
     my $params = validate(@_, {
         pid => 1,
+        guardian_pid => 1,
     });
     return bless $params => $class;
 }
@@ -23,6 +24,12 @@ sub pid {
     my $self = shift;
     validate_pos(@_);
     return $self->{pid};
+}
+
+sub guardian_pid {
+    my $self = shift;
+    validate_pos(@_);
+    return $self->{guardian_pid};
 }
 
 
@@ -38,11 +45,12 @@ Ubic::Daemon::Status - daemon status structure
 
 =head1 VERSION
 
-version 1.48
+version 1.48_01
 
 =head1 SYNOPSIS
 
     say $status->pid;
+    say $status->guardian_pid;
 
 =head1 METHODS
 
@@ -56,6 +64,10 @@ Constructor. Should be called from L<Ubic::Daemon> only.
 
 Get daemon's PID.
 
+=item B<< guardian_pid() >>
+
+Get guardian's PID.
+
 =back
 
 =head1 SEE ALSO
@@ -68,7 +80,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Yandex LLC.
+This software is copyright (c) 2013 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

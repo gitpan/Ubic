@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 {
-  $Ubic::Cmd::VERSION = '1.48';
+  $Ubic::Cmd::VERSION = '1.48_01';
 }
 
 use strict;
@@ -178,7 +178,7 @@ sub do_custom_command {
 sub usage {
     my $self = _obj(shift);
     my $command = shift;
-    print STDERR "Unknown command '$command'\n";
+    print STDERR "Unknown command '$command'. See 'ubic help'.\n";
     exit(2); # or exit(3)? see LSB for details
 }
 
@@ -420,7 +420,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.48
+version 1.48_01
 
 =head1 SYNOPSIS
 
@@ -525,7 +525,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Yandex LLC.
+This software is copyright (c) 2013 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
