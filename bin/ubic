@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic;
 {
-  $ubic::VERSION = '1.48_02';
+  $ubic::VERSION = '1.49';
 }
 
 use strict;
@@ -56,7 +56,7 @@ ubic - command-line frontend to ubic services
 
 =head1 VERSION
 
-version 1.48_02
+version 1.49
 
 =head1 SYNOPSIS
 

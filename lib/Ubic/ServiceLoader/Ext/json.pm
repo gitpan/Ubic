@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader::Ext::json;
 {
-  $Ubic::ServiceLoader::Ext::json::VERSION = '1.48_02';
+  $Ubic::ServiceLoader::Ext::json::VERSION = '1.49';
 }
 
 # ABSTRACT: loader for json-style configs
@@ -69,7 +69,7 @@ Ubic::ServiceLoader::Ext::json - loader for json-style configs
 
 =head1 VERSION
 
-version 1.48_02
+version 1.49
 
 =head1 SYNOPSIS
 
