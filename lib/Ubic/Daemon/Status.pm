@@ -1,6 +1,6 @@
 package Ubic::Daemon::Status;
 {
-  $Ubic::Daemon::Status::VERSION = '1.49';
+  $Ubic::Daemon::Status::VERSION = '1.50_01';
 }
 
 use strict;
@@ -45,7 +45,7 @@ Ubic::Daemon::Status - daemon status structure
 
 =head1 VERSION
 
-version 1.49
+version 1.50_01
 
 =head1 SYNOPSIS
 

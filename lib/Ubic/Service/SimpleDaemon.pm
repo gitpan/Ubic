@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.49';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.50_01';
 }
 
 use strict;
@@ -47,6 +47,7 @@ sub new {
         cwd => { type => SCALAR, optional => 1 },
         env => { type => HASHREF, optional => 1 },
         reload_signal => { type => SCALAR, optional => 1 },
+        term_timeout => { type => SCALAR, optional => 1, regex => qr/^\d+$/ },
         ulimit => { type => HASHREF, optional => 1 },
     });
 
@@ -78,7 +79,7 @@ sub start_impl {
         pidfile => $self->pidfile,
         bin => $self->{bin},
     };
-    for (qw/ env cwd stdout stderr ubic_log /) {
+    for (qw/ env cwd stdout stderr ubic_log term_timeout /) {
         $start_params->{$_} = $self->{$_} if defined $self->{$_};
     }
     if ($self->{reload_signal}) {
@@ -165,7 +166,7 @@ Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.49
+version 1.50_01
 
 =head1 SYNOPSIS
 
@@ -253,6 +254,14 @@ These limits won't affect anything outside of this service code.
 If your service's I<user> is C<root> and I<daemon_user> is something else, you can not just lower limits but raise them as well.
 
 L<BSD::Resource> must be installed to use this feature.
+
+=item I<term_timeout>
+
+Number of seconds to wait between sending I<SIGTERM> and I<SIGKILL> to the daemon on stopping.
+
+Zero value means that guardian will send I<SIGKILL> to the daemon immediately.
+
+Default is 10 seconds.
 
 =item I<reload_signal>
 

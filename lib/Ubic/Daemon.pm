@@ -1,6 +1,6 @@
 package Ubic::Daemon;
 {
-  $Ubic::Daemon::VERSION = '1.49';
+  $Ubic::Daemon::VERSION = '1.50_01';
 }
 
 use strict;
@@ -487,7 +487,7 @@ Ubic::Daemon - daemon management utilities
 
 =head1 VERSION
 
-version 1.49
+version 1.50_01
 
 =head1 SYNOPSIS
 
@@ -617,9 +617,9 @@ Note that hook is called *before* the credentials are set. Raising the ulimits w
 
 =item I<term_timeout>
 
-Can contain integer number of seconds to wait between sending I<SIGTERM> and I<SIGKILL> to daemon.
+Number of seconds to wait between sending I<SIGTERM> and I<SIGKILL> to the daemon on stopping.
 
-Zero value means that guardian will send sigkill to daemon immediately.
+Zero value means that guardian will send I<SIGKILL> to the daemon immediately.
 
 Default is 10 seconds.
 

@@ -1,6 +1,6 @@
 package Ubic::Watchdog;
 {
-  $Ubic::Watchdog::VERSION = '1.49';
+  $Ubic::Watchdog::VERSION = '1.50_01';
 }
 
 use strict;
@@ -175,7 +175,7 @@ Ubic::Watchdog - watchdog code
 
 =head1 VERSION
 
-version 1.49
+version 1.50_01
 
 =head1 SYNOPSIS
 

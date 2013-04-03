@@ -1,6 +1,6 @@
 package Ubic::ServiceLoader::Default;
 {
-  $Ubic::ServiceLoader::Default::VERSION = '1.49';
+  $Ubic::ServiceLoader::Default::VERSION = '1.50_01';
 }
 
 # ABSTRACT: default service loader
@@ -54,7 +54,7 @@ Ubic::ServiceLoader::Default - default service loader
 
 =head1 VERSION
 
-version 1.49
+version 1.50_01
 
 =head1 SYNOPSIS
 
