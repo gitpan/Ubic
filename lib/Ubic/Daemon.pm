@@ -1,6 +1,6 @@
 package Ubic::Daemon;
 {
-  $Ubic::Daemon::VERSION = '1.50_01';
+  $Ubic::Daemon::VERSION = '1.51';
 }
 
 use strict;
@@ -209,6 +209,8 @@ sub start_daemon($) {
                 $guard = Ubic::AccessGuard->new($credentials) if $credentials;
                 open STDOUT, ">>", $stdout or die "Can't write to '$stdout': $!";
                 open STDERR, ">>", $stderr or die "Can't write to '$stderr': $!";
+                STDOUT->autoflush(1);
+                STDERR->autoflush(1);
                 if (defined $ubic_log) {
                     open $ubic_fh, ">>", $ubic_log or die "Can't write to '$ubic_log': $!";
                     $ubic_fh->autoflush(1);
@@ -487,7 +489,7 @@ Ubic::Daemon - daemon management utilities
 
 =head1 VERSION
 
-version 1.50_01
+version 1.51
 
 =head1 SYNOPSIS
 
