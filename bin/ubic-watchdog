@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_watchdog;
 {
-  $ubic_watchdog::VERSION = '1.51';
+  $ubic_watchdog::VERSION = '1.52';
 }
 
 use strict;
@@ -16,6 +16,9 @@ use Pod::Usage;
 use Ubic::Watchdog;
 
 return 1 if caller();
+unless (grep { $_ eq '/usr/local/bin' } split /:/, $ENV{PATH}) {
+    $ENV{PATH} .= "/usr/local/bin:$ENV{PATH}";
+}
 
 my $compile_timeout = 10;
 my $verbose;
@@ -41,7 +44,7 @@ ubic_watchdog - watchdog which checks all ubic services.
 
 =head1 VERSION
 
-version 1.51
+version 1.52
 
 =head1 SYNOPSIS
 

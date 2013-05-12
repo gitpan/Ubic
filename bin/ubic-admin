@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic_admin;
 {
-  $ubic_admin::VERSION = '1.51';
+  $ubic_admin::VERSION = '1.52';
 }
 
 use strict;
@@ -33,7 +33,7 @@ ubic_admin - ubic administration script
 
 =head1 VERSION
 
-version 1.51
+version 1.52
 
 =head1 SYNOPSIS
 

@@ -17,10 +17,10 @@ my %WriteMakefileArgs = (
   },
   "DISTNAME" => "Ubic",
   "EXE_FILES" => [
-    "bin/ubic",
-    "bin/ubic-admin",
-    "bin/ubic-daemon",
     "bin/ubic-periodic",
+    "bin/ubic-daemon",
+    "bin/ubic-admin",
+    "bin/ubic",
     "bin/ubic-update",
     "bin/ubic-watchdog"
   ],
@@ -67,7 +67,7 @@ my %WriteMakefileArgs = (
     "Test::Fatal" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "1.51",
+  "VERSION" => "1.52",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }

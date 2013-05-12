@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package ubic;
 {
-  $ubic::VERSION = '1.51';
+  $ubic::VERSION = '1.52';
 }
 
 use strict;
@@ -17,6 +17,9 @@ use Ubic;
 use Ubic::Cmd;
 
 return 1 if caller();
+unless (grep { $_ eq '/usr/local/bin' } split /:/, $ENV{PATH}) {
+    $ENV{PATH} = "/usr/local/bin:$ENV{PATH}";
+}
 
 my $force;
 GetOptions(
@@ -56,7 +59,7 @@ ubic - command-line frontend to ubic services
 
 =head1 VERSION
 
-version 1.51
+version 1.52
 
 =head1 SYNOPSIS
 
