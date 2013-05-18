@@ -1,6 +1,6 @@
 package Ubic::SingletonLock;
 {
-  $Ubic::SingletonLock::VERSION = '1.52';
+  $Ubic::SingletonLock::VERSION = '1.53';
 }
 
 use strict;
@@ -49,7 +49,7 @@ Ubic::SingletonLock - lock which can be safely created several times from the sa
 
 =head1 VERSION
 
-version 1.52
+version 1.53
 
 =head1 SYNOPSIS
 
