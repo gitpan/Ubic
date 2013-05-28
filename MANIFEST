@@ -109,6 +109,7 @@ t/result.t
 t/run.t
 t/service.t
 t/service/README
+t/service/autostart/sleeping-daemon-autostart
 t/service/common/fake-http-service
 t/service/common/fake-http-service2
 t/service/common/multi-impl
@@ -143,4 +144,5 @@ t/simple-daemon.t
 t/ubic-daemon-script.t
 t/ubic-script.t
 t/ubic.t
+t/watchdog-autostart.t
 t/watchdog.t

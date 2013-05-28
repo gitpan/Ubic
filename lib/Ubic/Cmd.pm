@@ -1,6 +1,6 @@
 package Ubic::Cmd;
 {
-  $Ubic::Cmd::VERSION = '1.53';
+  $Ubic::Cmd::VERSION = '1.54';
 }
 
 use strict;
@@ -420,7 +420,7 @@ Ubic::Cmd - ubic methods with pretty printing.
 
 =head1 VERSION
 
-version 1.53
+version 1.54
 
 =head1 SYNOPSIS
 

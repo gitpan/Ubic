@@ -1,6 +1,6 @@
 package Ubic::Service;
 {
-  $Ubic::Service::VERSION = '1.53';
+  $Ubic::Service::VERSION = '1.54';
 }
 
 use strict;
@@ -93,6 +93,10 @@ sub parent_name($;$) {
     }
 }
 
+sub auto_start($) {
+    return 0;
+}
+
 
 1;
 
@@ -106,7 +110,7 @@ Ubic::Service - interface and the base class for any ubic service
 
 =head1 VERSION
 
-version 1.53
+version 1.54
 
 =head1 SYNOPSIS
 
@@ -255,6 +259,12 @@ Full name is a concatenation of service's short C<name> and service's <parent_na
 Get or set a name of the service's parent.
 
 Service's loader (i.e. some kind of L<Ubic::Multiservice>) is responsible for calling this method immediately after a service is constructed, like this: C<< $service->parent_name($self->full_name) >> (check out L<Ubic::Multiservice> sources for more).
+
+=item B<auto_start()>
+
+A boolean value that determines the state of a service if it has never been explicitly enabled or disabled yet. Service is considered initially enabled when auto_start is true.
+
+Default is false, so initial service status is I<off>, and you have to run C<ubic start service_name> to start it.
 
 =back
 

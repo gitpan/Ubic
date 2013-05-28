@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.53';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.54';
 }
 
 use strict;
@@ -49,6 +49,7 @@ sub new {
         reload_signal => { type => SCALAR, optional => 1 },
         term_timeout => { type => SCALAR, optional => 1, regex => qr/^\d+$/ },
         ulimit => { type => HASHREF, optional => 1 },
+        auto_start => { type => BOOLEAN, default => 0 },
     });
 
     if ($params->{ulimit}) {
@@ -153,6 +154,11 @@ sub reload {
     return result('reloaded', "sent $self->{reload_signal} to $pid, sent HUP to $guardian_pid");
 }
 
+sub auto_start {
+    my $self = shift;
+    return $self->{auto_start};
+}
+
 
 1;
 
@@ -166,7 +172,7 @@ Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.53
+version 1.54
 
 =head1 SYNOPSIS
 
@@ -284,6 +290,10 @@ The difference between these options and I<user>/I<group> options is that for I<
 Service's name.
 
 Name will usually be set by upper-level multiservice. Don't set it unless you know what you're doing.
+
+=item I<auto_start>
+
+Autostart flag is off by default. See L<Ubic::Service> C<auto_start> method for details.
 
 =back
 

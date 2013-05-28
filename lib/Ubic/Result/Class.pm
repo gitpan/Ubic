@@ -1,6 +1,6 @@
 package Ubic::Result::Class;
 {
-  $Ubic::Result::Class::VERSION = '1.53';
+  $Ubic::Result::Class::VERSION = '1.54';
 }
 
 use strict;
@@ -47,6 +47,9 @@ sub status {
     elsif (grep { $_ eq $self->{type} } ('down')) {
         return 'down';
     }
+    elsif (grep { $_ eq $self->{type} } ('autostarting')) {
+        return 'autostarting';
+    }
     else {
         return 'broken';
     }
@@ -90,7 +93,7 @@ Ubic::Result::Class - ubic result object
 
 =head1 VERSION
 
-version 1.53
+version 1.54
 
 =head1 SYNOPSIS
 
@@ -125,6 +128,8 @@ Possible statuses:
 =item I<broken>
 
 =item I<down>
+
+=item I<autostarting>
 
 =back
 

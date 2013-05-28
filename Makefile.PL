@@ -11,7 +11,14 @@ use ExtUtils::MakeMaker 6.30;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "polymorphic service manager",
   "AUTHOR" => "Vyacheslav Matyukhin <mmcleric\@yandex-team.ru>",
-  "BUILD_REQUIRES" => {},
+  "BUILD_REQUIRES" => {
+    "Cwd" => 0,
+    "File::Copy" => 0,
+    "File::Find" => 0,
+    "Test::Class" => 0,
+    "Test::Fatal" => 0,
+    "Test::More" => 0
+  },
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
@@ -59,33 +66,12 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "TEST_REQUIRES" => {
-    "Cwd" => 0,
-    "File::Copy" => 0,
-    "File::Find" => 0,
-    "Test::Class" => 0,
-    "Test::Fatal" => 0,
-    "Test::More" => 0
-  },
-  "VERSION" => "1.53",
+  "VERSION" => "1.54",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }
 );
 
-
-unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
-  my $tr = delete $WriteMakefileArgs{TEST_REQUIRES};
-  my $br = $WriteMakefileArgs{BUILD_REQUIRES};
-  for my $mod ( keys %$tr ) {
-    if ( exists $br->{$mod} ) {
-      $br->{$mod} = $tr->{$mod} if $tr->{$mod} > $br->{$mod};
-    }
-    else {
-      $br->{$mod} = $tr->{$mod};
-    }
-  }
-}
 
 unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
   my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
