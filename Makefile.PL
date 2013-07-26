@@ -11,23 +11,16 @@ use ExtUtils::MakeMaker 6.30;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "polymorphic service manager",
   "AUTHOR" => "Vyacheslav Matyukhin <mmcleric\@yandex-team.ru>",
-  "BUILD_REQUIRES" => {
-    "Cwd" => 0,
-    "File::Copy" => 0,
-    "File::Find" => 0,
-    "Test::Class" => 0,
-    "Test::Fatal" => 0,
-    "Test::More" => 0
-  },
+  "BUILD_REQUIRES" => {},
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
   "DISTNAME" => "Ubic",
   "EXE_FILES" => [
-    "bin/ubic",
-    "bin/ubic-admin",
-    "bin/ubic-daemon",
     "bin/ubic-periodic",
+    "bin/ubic-daemon",
+    "bin/ubic-admin",
+    "bin/ubic",
     "bin/ubic-update",
     "bin/ubic-watchdog"
   ],
@@ -36,13 +29,13 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Carp" => 0,
     "Class::Accessor::Fast" => 0,
-    "Config" => 0,
     "Config::Tiny" => 0,
     "Data::Dumper" => 0,
     "Exporter" => 0,
     "Fcntl" => 0,
     "File::Basename" => 0,
     "File::Path" => 0,
+    "File::Spec" => 0,
     "File::Which" => 0,
     "Getopt::Long" => "2.33",
     "HTTP::Server::Simple::CGI" => 0,
@@ -66,12 +59,34 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.54",
+  "TEST_REQUIRES" => {
+    "Cwd" => 0,
+    "File::Copy" => 0,
+    "File::Find" => 0,
+    "Test::Class" => 0,
+    "Test::Fatal" => 0,
+    "Test::More" => 0,
+    "lib" => 0
+  },
+  "VERSION" => "1.55",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }
 );
 
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
+  my $tr = delete $WriteMakefileArgs{TEST_REQUIRES};
+  my $br = $WriteMakefileArgs{BUILD_REQUIRES};
+  for my $mod ( keys %$tr ) {
+    if ( exists $br->{$mod} ) {
+      $br->{$mod} = $tr->{$mod} if $tr->{$mod} > $br->{$mod};
+    }
+    else {
+      $br->{$mod} = $tr->{$mod};
+    }
+  }
+}
 
 unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
   my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};

@@ -1,6 +1,6 @@
 package Ubic::Admin::Setup;
 {
-  $Ubic::Admin::Setup::VERSION = '1.54';
+  $Ubic::Admin::Setup::VERSION = '1.55';
 }
 
 # ABSTRACT: this module handles ubic setup: asks user some questions and configures your system
@@ -14,6 +14,7 @@ use Carp;
 use IPC::Open3;
 use File::Path;
 use File::Which;
+use File::Spec;
 
 use Ubic::AtomicFile;
 use Ubic::Settings;
@@ -288,7 +289,7 @@ sub setup {
             unless ($HOME) {
                 die "HOME env variable not defined";
             }
-            my $perlbrew_config = "$HOME/perl5/perlbrew/etc/bashrc";
+            my $perlbrew_config = File::Spec->catfile($ENV{PERLBREW_ROOT} || "$HOME/perl5/perlbrew", "etc/bashrc");
             if (not -e $perlbrew_config) {
                 die "Can't find perlbrew config (assumed $perlbrew_config)";
             }
@@ -428,7 +429,7 @@ Ubic::Admin::Setup - this module handles ubic setup: asks user some questions an
 
 =head1 VERSION
 
-version 1.54
+version 1.55
 
 =head1 DESCRPITION
 

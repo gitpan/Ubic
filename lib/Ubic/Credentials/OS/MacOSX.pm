@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::MacOSX;
 {
-  $Ubic::Credentials::OS::MacOSX::VERSION = '1.54';
+  $Ubic::Credentials::OS::MacOSX::VERSION = '1.55';
 }
 
 use strict;
@@ -145,7 +145,7 @@ sub set_effective {
         $) = "$new_gid 0";
         my ($current_gid) = $) =~ /^(\d+)/;
         if ($current_gid != $new_gid) {
-            die "Failed to change group from $group to $current_group: $!";
+            die "Failed to change group from $current_group to $group: $!";
         }
     }
 
@@ -242,7 +242,7 @@ Ubic::Credentials::OS::MacOSX - MacOSX-specific credentials implementation
 
 =head1 VERSION
 
-version 1.54
+version 1.55
 
 =head1 METHODS
 

@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::Windows;
 {
-  $Ubic::Credentials::OS::Windows::VERSION = '1.54';
+  $Ubic::Credentials::OS::Windows::VERSION = '1.55';
 }
 
 use strict;
@@ -33,7 +33,7 @@ Ubic::Credentials::OS::Windows - dummy credentials module
 
 =head1 VERSION
 
-version 1.54
+version 1.55
 
 =head1 DESCRIPTION
 
