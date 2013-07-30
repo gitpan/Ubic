@@ -1,6 +1,6 @@
 package Ubic::Ping::Service;
 {
-  $Ubic::Ping::Service::VERSION = '1.55';
+  $Ubic::Ping::Service::VERSION = '1.56';
 }
 
 # ABSTRACT: ubic.ping service
@@ -76,7 +76,7 @@ Ubic::Ping::Service - ubic.ping service
 
 =head1 VERSION
 
-version 1.55
+version 1.56
 
 =head1 INTERFACE SUPPORT
 

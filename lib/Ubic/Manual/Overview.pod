@@ -12,7 +12,7 @@ Ubic::Manual::Overview - General ubic concepts and architecture
 
 =head1 VERSION
 
-version 1.55
+version 1.56
 
 =head1 DESCRIPTION
 
