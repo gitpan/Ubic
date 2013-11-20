@@ -1,6 +1,6 @@
 package Ubic::AccessGuard;
 {
-  $Ubic::AccessGuard::VERSION = '1.56';
+  $Ubic::AccessGuard::VERSION = '1.57';
 }
 
 use strict;
@@ -74,7 +74,7 @@ Ubic::AccessGuard - guard for operations with temporarily different effective ui
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 SYNOPSIS
 
@@ -106,7 +106,7 @@ This is considered to be a non-public class. Its interface is subject to change 
 
 Construct new access guard object.
 
-User and group will be changed into given C<$credentials>. It will be changed back on guard's desctruction.
+User and group will be changed into given C<$credentials>. It will be changed back on guard's destruction.
 
 =back
 

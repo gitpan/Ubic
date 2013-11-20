@@ -1,6 +1,6 @@
 package Ubic;
 {
-  $Ubic::VERSION = '1.56';
+  $Ubic::VERSION = '1.57';
 }
 
 use strict;
@@ -478,7 +478,7 @@ sub forked_call {
             POSIX::_exit(0); # don't allow to lock to be released - this process was forked from unknown environment, don't want to run unknown destructors
         }
         catch {
-            # probably tmp_file is not writtable
+            # probably tmp_file is not writable
             warn $_;
             POSIX::_exit(1);
         };
@@ -513,7 +513,7 @@ Ubic - polymorphic service manager
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 SYNOPSIS
 

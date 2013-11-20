@@ -17,10 +17,10 @@ my %WriteMakefileArgs = (
   },
   "DISTNAME" => "Ubic",
   "EXE_FILES" => [
-    "bin/ubic-periodic",
-    "bin/ubic-daemon",
-    "bin/ubic-admin",
     "bin/ubic",
+    "bin/ubic-admin",
+    "bin/ubic-daemon",
+    "bin/ubic-periodic",
     "bin/ubic-update",
     "bin/ubic-watchdog"
   ],
@@ -29,6 +29,7 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Carp" => 0,
     "Class::Accessor::Fast" => 0,
+    "Config" => 0,
     "Config::Tiny" => 0,
     "Data::Dumper" => 0,
     "Exporter" => 0,
@@ -65,10 +66,9 @@ my %WriteMakefileArgs = (
     "File::Find" => 0,
     "Test::Class" => 0,
     "Test::Fatal" => 0,
-    "Test::More" => 0,
-    "lib" => 0
+    "Test::More" => 0
   },
-  "VERSION" => "1.56",
+  "VERSION" => "1.57",
   "test" => {
     "TESTS" => "t/*.t t/loaders/*.t t/multiservice/*.t"
   }

@@ -1,6 +1,6 @@
 package Ubic::Daemon::PidState;
 {
-  $Ubic::Daemon::PidState::VERSION = '1.56';
+  $Ubic::Daemon::PidState::VERSION = '1.57';
 }
 
 use strict;
@@ -163,7 +163,7 @@ Ubic::Daemon::PidState - internal object representing process info stored on dis
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 INTERFACE SUPPORT
 
@@ -183,7 +183,7 @@ Check if pid dir doesn't exist yet.
 
 =item B<init()>
 
-Create pid dir. After tihs method is called, C<is_empty()> will start to return false value.
+Create pid dir. After this method is called, C<is_empty()> will start to return false value.
 
 =item B<read()>
 

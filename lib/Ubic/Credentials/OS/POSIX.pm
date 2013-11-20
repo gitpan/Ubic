@@ -1,6 +1,6 @@
 package Ubic::Credentials::OS::POSIX;
 {
-  $Ubic::Credentials::OS::POSIX::VERSION = '1.56';
+  $Ubic::Credentials::OS::POSIX::VERSION = '1.57';
 }
 
 use strict;
@@ -282,7 +282,7 @@ Ubic::Credentials::OS::POSIX - POSIX-specific credentials implementation
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 METHODS
 

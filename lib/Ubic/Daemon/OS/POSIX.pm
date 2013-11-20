@@ -1,6 +1,6 @@
 package Ubic::Daemon::OS::POSIX;
 {
-  $Ubic::Daemon::OS::POSIX::VERSION = '1.56';
+  $Ubic::Daemon::OS::POSIX::VERSION = '1.57';
 }
 
 use strict;
@@ -69,7 +69,7 @@ Ubic::Daemon::OS::POSIX - POSIX-compatible daemonize helpers
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 AUTHOR
 

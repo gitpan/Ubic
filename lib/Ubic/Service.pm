@@ -1,6 +1,6 @@
 package Ubic::Service;
 {
-  $Ubic::Service::VERSION = '1.56';
+  $Ubic::Service::VERSION = '1.57';
 }
 
 use strict;
@@ -110,7 +110,7 @@ Ubic::Service - interface and the base class for any ubic service
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 SYNOPSIS
 
@@ -215,17 +215,17 @@ Services can define custom commands which don't fit into the usual C<start/stop/
 
 =item B<custom_commands()>
 
-Get the list of service's custom commands, if there are any.
+Should return the list of service's custom commands, if there are any.
 
 =item B<do_custom_command($command)>
 
-Execute specified command, if it is supported. Throw an exception otherwise.
+Should execute specified command, if it is supported. Throw an exception otherwise.
 
 =back
 
 =head2 NAME METHODS
 
-These methods should not be overriden by specific service classes.
+These methods should not be overridden by specific service classes.
 They are usually used by the code which loads service (i.e. some kind of L<Ubic::Multiservice>) to associate service with its name.
 
 These methods are just the simple interdependent r/w accessors.

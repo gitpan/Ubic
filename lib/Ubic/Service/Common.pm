@@ -1,6 +1,6 @@
 package Ubic::Service::Common;
 {
-  $Ubic::Service::Common::VERSION = '1.56';
+  $Ubic::Service::Common::VERSION = '1.57';
 }
 
 use strict;
@@ -21,7 +21,7 @@ sub new {
         start       => { type => CODEREF },
         stop        => { type => CODEREF },
         status      => { type => CODEREF },
-        name        => { type => SCALAR, regex => qr/^[\w-]+$/, optional => 1 }, # violates Ubic::Service incapsulation...
+        name        => { type => SCALAR, regex => qr/^[\w-]+$/, optional => 1 }, # violates Ubic::Service encapsulation...
         port        => { type => SCALAR, regex => qr/^\d+$/, optional => 1 },
         custom_commands => { type => HASHREF, default => {} },
         user        => { type => SCALAR, optional => 1 },
@@ -102,7 +102,7 @@ Ubic::Service::Common - common way to construct new service by specifying severa
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 SYNOPSIS
 

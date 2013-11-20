@@ -1,6 +1,6 @@
 package Ubic::UA;
 {
-  $Ubic::UA::VERSION = '1.56';
+  $Ubic::UA::VERSION = '1.57';
 }
 
 # ABSTRACT: tiny http client
@@ -77,11 +77,11 @@ Ubic::UA - tiny http client
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 DESCRIPTION
 
-This module is a tiny and horribly incomplete http useragent implementetion.
+This module is a tiny and horribly incomplete http useragent implementation.
 
 It's used by L<Ubic::Ping::Service> and it allows ubic to avoid dependency on LWP.
 

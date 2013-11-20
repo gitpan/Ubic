@@ -1,6 +1,6 @@
 package Ubic::Service::SimpleDaemon;
 {
-  $Ubic::Service::SimpleDaemon::VERSION = '1.56';
+  $Ubic::Service::SimpleDaemon::VERSION = '1.57';
 }
 
 use strict;
@@ -172,7 +172,7 @@ Ubic::Service::SimpleDaemon - service module for daemonizing any binary
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 SYNOPSIS
 
@@ -215,7 +215,7 @@ This is the only mandatory parameter, everything else is optional.
 
 User under which the service will operate.
 
-Default user depends on the configuration chosen at C<ubic-admin setup> stage. See L<Ubic::Settings> for more defails.
+Default user depends on the configuration chosen at C<ubic-admin setup> stage. See L<Ubic::Settings> for more details.
 
 =item I<group>
 
@@ -283,7 +283,7 @@ The signal will be sent both to the daemon, and to the guardian process. Guardia
 
 Change credentials to the given user and group before execing into daemon.
 
-The difference between these options and I<user>/I<group> options is that for I<daemon_*> options, credentials will be set just before before starting the actual daemon. All other service operations will be done using default user. Refer to L<Ubic::Manual::Overview/"Permissions and security"> for the further explanations.
+The difference between these options and I<user>/I<group> options is that for I<daemon_*> options, credentials will be set just before starting the actual daemon. All other service operations will be done using default user. Refer to L<Ubic::Manual::Overview/"Permissions and security"> for the further explanations.
 
 =item I<name>
 

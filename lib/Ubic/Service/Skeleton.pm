@@ -1,6 +1,6 @@
 package Ubic::Service::Skeleton;
 {
-  $Ubic::Service::Skeleton::VERSION = '1.56';
+  $Ubic::Service::Skeleton::VERSION = '1.57';
 }
 
 use strict;
@@ -148,7 +148,7 @@ Ubic::Service::Skeleton - skeleton of any service with common start/stop logic
 
 =head1 VERSION
 
-version 1.56
+version 1.57
 
 =head1 ACTIONS
 
@@ -184,7 +184,7 @@ Subclass must overload following methods with simple status, start and stop impl
 
 =item B<status_impl>
 
-Status implentation. Should return result object or plain string which coerces to result object.
+Status implementation. Should return result object or plain string which coerces to result object.
 
 =item B<start_impl>
 
