@@ -1,6 +1,6 @@
 package Ubic::Settings;
 {
-  $Ubic::Settings::VERSION = '1.57';
+  $Ubic::Settings::VERSION = '1.57_01';
 }
 
 use strict;
@@ -102,13 +102,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Ubic::Settings - ubic settings
 
 =head1 VERSION
 
-version 1.57
+version 1.57_01
 
 =head1 SYNOPSIS
 
@@ -186,7 +188,7 @@ Vyacheslav Matyukhin <mmcleric@yandex-team.ru>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Yandex LLC.
+This software is copyright (c) 2014 by Yandex LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
